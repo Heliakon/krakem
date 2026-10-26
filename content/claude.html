@@ -17,7 +17,7 @@
 <section class="wrap section-pad" id="claude-md">
   <div class="section-heading"><div><p class="eyebrow section-label"><span class="section-no">02</span>REUSABLE INSTRUCTIONS</p><h2>Download. Save. Use.</h2></div></div>
   <div class="file-download">
-    <div class="file-summary"><h3>CLAUDE.md</h3><p>Coding rules for Claude Code.</p><p class="file-meta">Scope, simplicity, tests, honest reporting. Under 60 lines, no imports.</p></div>
+    <div class="file-summary"><h3>CLAUDE.md</h3><p>Coding rules for Claude Code.</p><p class="file-meta">Scope, simplicity, tests, honest reporting. About 480 words, no imports.</p></div>
     <div class="file-actions"><a class="button primary" href="/assets/downloads/CLAUDE.md" download="CLAUDE.md">Download CLAUDE.md <span aria-hidden="true">↓</span></a><button class="button" type="button" data-copy="claude-md-preview">Copy full file <span aria-hidden="true">⧉</span></button></div>
   </div>
   <details class="setup-details file-preview"><summary>Preview the file</summary><div><div class="snippet"><pre id="claude-md-preview" tabindex="0" aria-label="Complete downloadable CLAUDE.md"><!-- CLAUDE_MD_PREVIEW --></pre></div></div></details>
@@ -64,7 +64,7 @@ Write for a smart reader who is not a specialist.
 - Keep sentences short. Use one term for each thing.
 - Use numbered steps when I need to do something.
 - Keep code, commands, file names, numbers, and warnings exact.
-- Give more detail when I ask for it.</pre></div><p>Save it as <code>~/.claude/output-styles/plain-language.md</code>, restart Claude Code, then run <code>/output-style plain-language</code>. Keep <code>keep-coding-instructions: true</code> if Claude still writes code for you. Without it, a custom style drops Claude Code’s built-in software engineering instructions.</p></div></details>
+- Give more detail when I ask for it.</pre></div><p>Save it as <code>~/.claude/output-styles/plain-language.md</code>, restart Claude Code, then run <code>/output-style plain-language</code>. Keep <code>keep-coding-instructions: true</code> if Claude still writes code for you. Without it, a custom style leaves out Claude Code’s built-in software engineering instructions on the full system prompt. The shorter system prompt does not include them, so there the setting has no effect.</p></div></details>
   <h3 class="subsection-title">CLAUDE.md or an output style?</h3>
   <dl class="setup-options">
     <div><dt>CLAUDE.md</dt><dd>How Claude should work on your code: scope, simplicity, tests, and honest reporting. It stays loaded whichever style you pick, and a project file can be shared with your team.</dd></div>

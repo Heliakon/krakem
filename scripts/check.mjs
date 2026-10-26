@@ -139,6 +139,17 @@ const blocked=runGuide(null);
 blocked.get('task-brief').value=brief;blocked.get('task-brief').emit('input');
 assert.equal(blocked.get('copy-technical-prompt').disabled,false,'The creator works when storage is blocked.');
 assert.match(blocked.get('creator-draft-note').textContent,/not keeping drafts/);
+// Storage that fills up after a successful save: the page must say so, and a reload must not restore the stale draft.
+class FillingStorage extends MemoryStorage{setItem(k,v){if(this.full)throw new Error('QuotaExceededError');super.setItem(k,v);}}
+const filling=new FillingStorage(),fillingTab=runGuide(filling);
+fillingTab.get('task-brief').value='First version';fillingTab.get('task-brief').emit('input');
+assert.ok(filling.getItem('krakem-creator-draft'));assert.match(fillingTab.get('creator-draft-note').textContent,/stays in this tab/);
+filling.full=true;fillingTab.get('task-brief').value='Second version, longer';fillingTab.get('task-brief').emit('input');
+assert.match(fillingTab.get('creator-draft-note').textContent,/could not be saved/,'A failed save is reported.');
+assert.equal(fillingTab.windowEvents.dispatched.at(-1).detail,'Draft could not be saved.');
+assert.equal(runGuide(filling).get('task-brief').value,'','A reload does not restore the stale draft.');
+filling.full=false;fillingTab.get('task-brief').value='Third version';fillingTab.get('task-brief').emit('input');
+assert.match(fillingTab.get('creator-draft-note').textContent,/stays in this tab/,'The note recovers once saving works again.');
 const corrupt=new MemoryStorage();corrupt.setItem('krakem-creator-draft','{not json');
 assert.equal(runGuide(corrupt).get('task-brief').value,'','A corrupt draft is ignored.');
 const options=new Element('text');options.options=[{value:'text'},{value:'steps'}];
@@ -239,6 +250,10 @@ assert.ok(humanReload.get('writing-prompt').textContent.endsWith(original));asse
 humanReload.get('clear-humanize-draft').emit('click');
 assert.equal(humanTab.getItem('krakem-humanize-draft'),null);assert.equal(humanReload.get('writing-original').value,'');assert.equal(humanReload.get('writing-language').value,'en');
 assert.equal(humanReload.get('copy-writing-prompt').disabled,true);assert.equal(humanReload.get('writing-audience').focused,true);
+const humanFilling=new FillingStorage(),humanFull=runHuman(humanFilling);
+humanFull.get('writing-original').value='Draft';humanFull.get('writing-original').emit('input');humanFilling.full=true;
+humanFull.get('writing-original').value='Draft, edited';humanFull.get('writing-original').emit('input');
+assert.match(humanFull.get('humanize-draft-note').textContent,/could not be saved/);assert.equal(humanFilling.getItem('krakem-humanize-draft'),null);
 const humanBlocked=runHuman(null);humanBlocked.get('writing-audience').value='Readers';humanBlocked.get('writing-original').value='Text';humanBlocked.get('writing-original').emit('input');
 assert.equal(humanBlocked.get('copy-writing-prompt').disabled,false);assert.match(humanBlocked.get('humanize-draft-note').textContent,/not keeping drafts/);
 console.log('PASS: 27 Humanize combinations (3 languages × 3 surfaces × 3 voice-sample states) with exact original text, no placeholders, required-field checks, text-safe output, and draft restore/reset.');
@@ -279,6 +294,9 @@ assert.ok(claudePage.indexOf('class="subnav"')<claudePage.indexOf('</nav>'),'The
 assert.ok(!home.includes('class="subnav"'),'Only Claude setup has a section menu.');
 const claudeRules=await readFile(new URL('../assets/downloads/CLAUDE.md',import.meta.url),'utf8');
 assert.ok(claudeRules.split('\n').length<200,'CLAUDE.md stays under the documented 200-line target.');
+const claudeWords=claudeRules.split(/\s+/).filter(Boolean).length;
+assert.ok(claudeWords<=500,'CLAUDE.md stays under 500 words, so its reading cost does not creep back up.');
+assert.ok(claudePage.includes(`About ${Math.round(claudeWords/10)*10} words`),'The page states the current word count.');
 for(const rule of ['Never report a check as passing unless you ran it','Every changed line should trace to the request','do not establish ASD-STE100 compliance','must happen at the same time together','not instructions','Do not weaken, skip, or delete tests','not generated output'])assert.ok(claudeRules.includes(rule),rule);
 for(const text of ['id="output-styles"','/output-style concise','~/.claude/output-styles/','.claude/output-styles/','"outputStyle": "Concise"'])assert.ok(claudePage.includes(text),text);
 const evidence=await readFile(new URL('../dist/evidence/index.html',import.meta.url),'utf8');

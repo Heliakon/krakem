@@ -32,9 +32,16 @@ function buildPrompt(){
 }
 // Only a draft that differs from the starting form is stored; the output is rebuilt from the restored fields.
 function edited(){return formatChosen||Object.entries(draftFields).some(([key,field])=>field.value!==defaults[key]);}
+const keptNote='Built in your browser and never sent anywhere. Your draft stays in this tab until you clear it or close the tab.';
+let saveFailed=false;
 function saveDraft(){
- const dirty=edited();
- if(dirty)draft.save({...Object.fromEntries(Object.entries(draftFields).map(([key,field])=>[key,field.value])),formatChosen});else draft.clear();
+ const dirty=edited(),saved=!dirty||draft.save({...Object.fromEntries(Object.entries(draftFields).map(([key,field])=>[key,field.value])),formatChosen});
+ // A failed save would leave the previous draft behind; remove it so a reload cannot restore stale text.
+ if(!dirty||!saved)draft.clear();
+ if(draft.available&&saved===saveFailed){
+  saveFailed=!saved;draftNote.textContent=saveFailed?'This draft could not be saved. Copy your prompt before you leave the page.':keptNote;
+  if(saveFailed)window.dispatchEvent(new CustomEvent('krakem-toast',{detail:'Draft could not be saved.'}));
+ }
  clearDraft.disabled=!dirty;
 }
 function update(){buildPrompt();saveDraft();}
@@ -45,10 +52,10 @@ format.addEventListener('change',()=>{formatChosen=true;update();});
 document.getElementById('use-comparison').addEventListener('click',()=>{task.value='compare';changeTask();subjectA.focus();});
 clearDraft.addEventListener('click',()=>{
  for(const [key,field] of Object.entries(draftFields))field.value=defaults[key];
- formatChosen=false;draft.clear();buildPrompt();clearDraft.disabled=true;brief.focus();
+ formatChosen=false;buildPrompt();saveDraft();brief.focus();
  window.dispatchEvent(new CustomEvent('krakem-toast',{detail:'Draft cleared.'}));
 });
 const saved=draft.load();
 if(saved){for(const [key,field] of Object.entries(draftFields))restoreValue(field,saved[key]);formatChosen=saved.formatChosen===true;}
-draftNote.textContent=draft.available?'Built in your browser and never sent anywhere. Your draft stays in this tab until you clear it or close the tab.':'Built in your browser and never sent anywhere. This browser is not keeping drafts, so copy your prompt before you leave the page.';
+draftNote.textContent=draft.available?keptNote:'Built in your browser and never sent anywhere. This browser is not keeping drafts, so copy your prompt before you leave the page.';
 buildPrompt();clearDraft.disabled=!edited();

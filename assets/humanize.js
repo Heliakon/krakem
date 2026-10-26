@@ -25,18 +25,26 @@ function build(){
  status.classList.toggle('ready',Boolean(prompt));
 }
 function edited(){return Object.entries(draftFields).some(([key,field])=>field.value!==defaults[key]);}
-function update(){
- build();
- if(edited())draft.save(Object.fromEntries(Object.entries(draftFields).map(([key,field])=>[key,field.value])));else draft.clear();
- clearDraft.disabled=!edited();
+const keptNote='Built in your browser and never sent anywhere. Your draft stays in this tab until you clear it or close the tab.';
+let saveFailed=false;
+function saveDraft(){
+ const dirty=edited(),saved=!dirty||draft.save(Object.fromEntries(Object.entries(draftFields).map(([key,field])=>[key,field.value])));
+ // A failed save would leave the previous draft behind; remove it so a reload cannot restore stale text.
+ if(!dirty||!saved)draft.clear();
+ if(draft.available&&saved===saveFailed){
+  saveFailed=!saved;draftNote.textContent=saveFailed?'This draft could not be saved. Copy your brief before you leave the page.':keptNote;
+  if(saveFailed)window.dispatchEvent(new CustomEvent('krakem-toast',{detail:'Draft could not be saved.'}));
+ }
+ clearDraft.disabled=!dirty;
 }
+function update(){build();saveDraft();}
 Object.values(draftFields).forEach(field=>field.addEventListener('input',update));
 clearDraft.addEventListener('click',()=>{
  for(const [key,field] of Object.entries(draftFields))field.value=defaults[key];
- draft.clear();build();clearDraft.disabled=true;audience.focus();
+ build();saveDraft();audience.focus();
  window.dispatchEvent(new CustomEvent('krakem-toast',{detail:'Draft cleared.'}));
 });
 const saved=draft.load();
 if(saved)for(const [key,field] of Object.entries(draftFields))restoreValue(field,saved[key]);
-draftNote.textContent=draft.available?'Built in your browser and never sent anywhere. Your draft stays in this tab until you clear it or close the tab.':'Built in your browser and never sent anywhere. This browser is not keeping drafts, so copy your brief before you leave the page.';
+draftNote.textContent=draft.available?keptNote:'Built in your browser and never sent anywhere. This browser is not keeping drafts, so copy your brief before you leave the page.';
 build();clearDraft.disabled=!edited();
