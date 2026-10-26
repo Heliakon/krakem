@@ -25,8 +25,10 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-      - name: Build dist/
-        run: node scripts/build.mjs
+      - name: Build dist/ and the offline krakem.html
+        run: |
+          node scripts/build.mjs
+          node scripts/build-offline.mjs
       - name: Check prompts, drafts, animation, and metadata
         run: node scripts/check.mjs
       - name: Check HTML structure and links

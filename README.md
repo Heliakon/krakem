@@ -12,7 +12,18 @@ The site composes prompts in the browser. It does not call an AI model, and no v
 ## Use it
 
 - **Online:** https://heliakon.github.io/krakem/
+- **Offline:** [download krakem.html](https://github.com/Heliakon/krakem/releases/latest/download/krakem.html) and open it in your browser. It's the whole site in one file, so there's nothing to install, and the prompt tools work without an internet connection. Links to outside sources still need one.
 - **CLAUDE.md:** [download the coding rules](https://heliakon.github.io/krakem/assets/downloads/CLAUDE.md) or preview them on the [Claude setup page](https://heliakon.github.io/krakem/claude/#claude-md).
+
+Every release also has a `krakem.html.sha256` file. To check your download, run one of these and compare the result with it:
+
+```
+Get-FileHash .\krakem.html -Algorithm SHA256
+```
+
+```sh
+shasum -a 256 krakem.html
+```
 
 ## Source
 
@@ -23,7 +34,9 @@ The site composes prompts in the browser. It does not call an AI model, and no v
   - `field.js` and `field-shapes.js` draw the particle field.
 - `site.config.json`: the public site URL, used for canonical URLs and social preview tags.
 - `.github/workflows/pages.yml`: builds, checks, and deploys to GitHub Pages.
+- `.github/workflows/release.yml`: when a release is published, attaches `krakem.html` and its SHA-256 checksum.
 - `scripts/build.mjs`: assembles `dist/`.
+- `scripts/build-offline.mjs`: turns `dist/` into `release/krakem.html`, one file with every page, style, script, and download inline.
 - `scripts/check.mjs` and `scripts/check-html.py`: automated checks.
 - `scripts/social-preview.html`: source for `assets/social-preview.jpg`.
 - `evaluation/`: saved prompts, answers, and grades from two small evaluations.
@@ -32,6 +45,7 @@ The site composes prompts in the browser. It does not call an AI model, and no v
 
 ```sh
 node scripts/build.mjs
+node scripts/build-offline.mjs
 node scripts/check.mjs
 python3 scripts/check-html.py
 python3 -m http.server 8765 --directory dist

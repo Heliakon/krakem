@@ -45,3 +45,16 @@ for css in ROOT.rglob('*.css'):
         assert not ref.startswith('/'),(css,'root-relative url()',ref)
         assert (css.parent/ref.split('?')[0]).resolve().exists(),(css,'missing url() target',ref)
 print('PASS: all page titles, headings, IDs, form labels, relative navigation, internal anchors, script/style assets, CSS images, and download links.')
+
+# The offline copy must work from disk: every link is in-file, a data URL, or an external https page.
+OFFLINE = ROOT.parent / 'release' / 'krakem.html'
+if OFFLINE.exists():
+    page = Page(); page.feed(OFFLINE.read_text())
+    offline_pages = OFFLINE.read_text().count('class="offline-page"')
+    assert offline_pages == 4 and page.h1 == 4 and page.titles == 1, ('offline pages', offline_pages, page.h1)
+    assert all(target in page.ids for target in page.labels), 'broken offline form label'
+    for link in page.links:
+        if link.startswith(('https://', 'mailto:', 'data:')): continue
+        assert link.startswith('#') and link[1:] in page.ids, ('offline link has no in-file target', link[:80])
+    assert '<script src' not in OFFLINE.read_text() and 'rel="stylesheet"' not in OFFLINE.read_text(), 'offline file loads external files'
+    print('PASS: offline krakem.html has four pages, unique IDs, labelled fields, and only in-file, data, or https links.')
