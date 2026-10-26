@@ -1,0 +1,44 @@
+<!doctype html>
+<!-- Source for assets/social-preview.jpg (1200×630). Render it with the command in README.md. -->
+<html lang="en"><head><meta charset="utf-8"><title>Krakem social preview</title>
+<style>
+ * { box-sizing: border-box; margin: 0; }
+ html, body { width: 1200px; height: 630px; overflow: hidden; }
+ body { position: relative; background: radial-gradient(ellipse at 6% 100%, #263d23 0, transparent 46%), radial-gradient(ellipse at 82% 34%, #29451c66, transparent 52%), linear-gradient(115deg, #142019, #0b1118 62%); color: #f4f7fb; font: 18px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+ canvas { position: absolute; inset: 0; }
+ .content { position: absolute; left: 76px; top: 64px; width: 760px; }
+ .brand { display: flex; align-items: center; gap: 14px; font-size: 40px; font-weight: 650; letter-spacing: -1.6px; line-height: 1; }
+ .brand-mark { display: flex; flex-direction: column; gap: 6px; transform: rotate(-18deg); width: 34px; }
+ .brand-mark i { height: 5px; border-radius: 3px; background: #82c341; }
+ .brand-mark i:first-child { width: 19px; } .brand-mark i:nth-child(2) { width: 26px; }
+ .brand-dot { color: #82c341; font-size: 30px; margin-left: -6px; }
+ .eyebrow { margin-top: 62px; color: #aabaca; font: 500 20px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; display: flex; align-items: center; gap: 14px; }
+ .eyebrow i { width: 9px; height: 9px; border-radius: 50%; background: #82c341; box-shadow: 0 0 18px #82c34188; }
+ h1 { margin-top: 18px; font-size: 88px; font-weight: 550; line-height: 1.04; letter-spacing: -.05em; }
+ h1 em { color: #82c341; font-style: normal; }
+ p { margin-top: 26px; color: #c4d0de; font-size: 27px; line-height: 1.45; max-width: 720px; }
+ .grass { position: absolute; left: 0; right: 0; bottom: 0; height: 120px; background: url("../assets/grass.svg") left bottom / auto 120px repeat-x; opacity: .95; }
+</style></head>
+<body>
+<canvas id="dots" width="1200" height="630" aria-hidden="true"></canvas>
+<div class="content">
+ <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>Krakem<span class="brand-dot">✳</span></div>
+ <div class="eyebrow"><i></i>EXPERIMENTAL PROMPT CREATOR</div>
+ <h1>Better prompts.<br><em>Clearer answers.</em></h1>
+ <p>Describe your task. Copy a complete prompt into your AI tool.</p>
+</div>
+<div class="grass"></div>
+<script>
+// A cropped, nautilus-like spiral of soft particles, echoing the site's first animated shape.
+const ctx=document.getElementById('dots').getContext('2d');
+const cx=1010,cy=250;
+for(let i=0;i<620;i++){
+ const t=i/620,angle=i*0.32,radius=18+Math.pow(t,1.35)*360,wobble=Math.sin(i*1.7)*10*t;
+ const x=cx+Math.cos(angle)*(radius+wobble),y=cy+Math.sin(angle)*(radius+wobble)*.82;
+ const r=1.1+2.6*(1-t)*Math.abs(Math.sin(i*0.9))+.6;
+ const g=ctx.createRadialGradient(x,y,0,x,y,r*4);
+ g.addColorStop(0,`rgba(215,240,177,${.55-.35*t})`);g.addColorStop(.25,`rgba(130,195,65,${.32-.2*t})`);g.addColorStop(1,'rgba(102,162,40,0)');
+ ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r*4,0,Math.PI*2);ctx.fill();
+}
+</script>
+</body></html>

@@ -1,0 +1,2 @@
+# Keep LF line endings on every platform, so scripts/build.mjs produces the same asset revision everywhere.
+* text=auto eol=lf

@@ -1,0 +1,283 @@
+[
+ {
+  "fixture": "comparison",
+  "answers": [
+   {
+    "label": "R1",
+    "blindId": "4f65df16",
+    "arm": "ordinary",
+    "run": 2,
+    "checklist": {
+     "1": "preserved",
+     "2": "preserved",
+     "3": "preserved",
+     "4": "preserved",
+     "5": "preserved",
+     "6": "missing"
+    },
+    "unsupported_or_wrong": [],
+    "actionability": 3,
+    "actionability_reason": "Gives a clear recommendation (Cedar) tied to the two hard requirements and names the two things to settle first (Cedar's price, whether lacking URL fetching is acceptable).",
+    "readability": 3,
+    "readability_reason": "Recommendation up front, a compact four-row table, short analysis bullets and a bottom line make it easy to scan.",
+    "editing": "minor",
+    "editing_notes": "Add the caveat that prompts pasted from Cedar into another AI fall under that AI's retention, which Cedar's documentation does not cover."
+   },
+   {
+    "label": "R2",
+    "blindId": "c52805af",
+    "arm": "creator",
+    "run": 1,
+    "checklist": {
+     "1": "preserved",
+     "2": "preserved",
+     "3": "preserved",
+     "4": "preserved",
+     "5": "preserved",
+     "6": "preserved"
+    },
+    "unsupported_or_wrong": [],
+    "actionability": 3,
+    "actionability_reason": "States Cedar is the documented match for the team's requirements and gives concrete next checks for both vendors and for the downstream AI.",
+    "readability": 3,
+    "readability_reason": "Clear headings, a table, and separated evidence, trade-off, limits and next-check sections, though the documented-features list repeats the table.",
+    "editing": "minor",
+    "editing_notes": "The source-access row reads the criterion as source-code access and marks both tools unknown, even though the documented URL-fetching facts (shown only in later sections) likely answer it; also trim the repetition and the 'no universal winner' hedge."
+   },
+   {
+    "label": "R3",
+    "blindId": "aa5230f1",
+    "arm": "ordinary",
+    "run": 1,
+    "checklist": {
+     "1": "preserved",
+     "2": "preserved",
+     "3": "preserved",
+     "4": "preserved",
+     "5": "preserved",
+     "6": "preserved"
+    },
+    "unsupported_or_wrong": [],
+    "actionability": 3,
+    "actionability_reason": "Makes a clear recommendation with reasons for and against each tool, flags Cedar's price to confirm, and states what choosing Flint would cost the team.",
+    "readability": 3,
+    "readability_reason": "Leads with the recommendation, then a table and short 'why it fits / why it doesn't / gaps' bullet groups that are quick to follow.",
+    "editing": "none",
+    "editing_notes": "Ready to forward as is; it covers every checklist point and qualifies its claims as vendor statements in the gaps section."
+   },
+   {
+    "label": "R4",
+    "blindId": "068af737",
+    "arm": "creator",
+    "run": 2,
+    "checklist": {
+     "1": "preserved",
+     "2": "preserved",
+     "3": "preserved",
+     "4": "preserved",
+     "5": "preserved",
+     "6": "missing"
+    },
+    "unsupported_or_wrong": [],
+    "actionability": 3,
+    "actionability_reason": "Says Cedar fits the stated needs and gives specific next checks, including vendor questions and a way to verify Cedar's no-retention claim.",
+    "readability": 2,
+    "readability_reason": "Well structured, but the fit conclusion sits mid-document, and the table, documented-features list and six-item limits list repeat much of the same content.",
+    "editing": "minor",
+    "editing_notes": "Add the caveat about retention by the AI that Cedar prompts are pasted into, revisit treating URL fetching as 'outside your criteria' when the table leaves source access as unknown, and trim the redundancy."
+   }
+  ]
+ },
+ {
+  "fixture": "code-review",
+  "answers": [
+   {
+    "label": "R1",
+    "blindId": "0d352779",
+    "arm": "ordinary",
+    "run": 1,
+    "checklist": {
+     "1": "preserved",
+     "2": "preserved",
+     "3": "preserved",
+     "4": "preserved",
+     "5": "preserved",
+     "6": "preserved"
+    },
+    "unsupported_or_wrong": [],
+    "actionability": 3,
+    "actionability_reason": "Gives the exact code fix and a concrete contract-faithful fake with three specific assertions, plus the expected fail-then-pass outcome.",
+    "readability": 3,
+    "readability_reason": "Clear Verdict/Failure/Fix/Verification sections with a numbered failure sequence and short bullets.",
+    "editing": "none",
+    "editing_notes": "Ready to forward; secondary points (error filtering, persisting the key) are clearly marked as secondary."
+   },
+   {
+    "label": "R2",
+    "blindId": "28e9bc37",
+    "arm": "creator",
+    "run": 1,
+    "checklist": {
+     "1": "preserved",
+     "2": "preserved",
+     "3": "preserved",
+     "4": "preserved",
+     "5": "preserved",
+     "6": "preserved"
+    },
+    "unsupported_or_wrong": [],
+    "actionability": 3,
+    "actionability_reason": "Provides the corrected code and a step-by-step stub test with explicit assertions on key reuse and charge count.",
+    "readability": 3,
+    "readability_reason": "Bolded verdict up front, evidence bullets, numbered sequence and numbered test steps make it easy to scan.",
+    "editing": "minor",
+    "editing_notes": "The closing open question is muddled (the code already assumes charge throws on timeout) and could be tightened or dropped."
+   },
+   {
+    "label": "R3",
+    "blindId": "1f879347",
+    "arm": "ordinary",
+    "run": 2,
+    "checklist": {
+     "1": "preserved",
+     "2": "preserved",
+     "3": "preserved",
+     "4": "preserved",
+     "5": "preserved",
+     "6": "preserved"
+    },
+    "unsupported_or_wrong": [
+     "The retry's only purpose is to recover from timeouts"
+    ],
+    "actionability": 3,
+    "actionability_reason": "Supplies the fix and a contract-faithful fake with clear assertions, plus a useful negative case for a first call that did not complete.",
+    "readability": 3,
+    "readability_reason": "Well-sectioned with a code callout, numbered failure sequence and concise test bullets.",
+    "editing": "minor",
+    "editing_notes": "Remove or soften the claim that the retry exists only for timeouts, which the code (it retries every error) does not support and which the answer itself contradicts a paragraph later."
+   },
+   {
+    "label": "R4",
+    "blindId": "97634fb1",
+    "arm": "creator",
+    "run": 2,
+    "checklist": {
+     "1": "preserved",
+     "2": "preserved",
+     "3": "preserved",
+     "4": "preserved",
+     "5": "preserved",
+     "6": "preserved"
+    },
+    "unsupported_or_wrong": [],
+    "actionability": 3,
+    "actionability_reason": "Gives the corrected code and a four-step stub test with expected results before and after the fix.",
+    "readability": 3,
+    "readability_reason": "Short labelled sections, numbered steps and an explicit Qualifications section separating inference from evidence.",
+    "editing": "minor",
+    "editing_notes": "Drop the meta sentence 'This is evidence-based...' before forwarding; otherwise ready."
+   }
+  ]
+ },
+ {
+  "fixture": "paper",
+  "answers": [
+   {
+    "label": "R1",
+    "blindId": "6aecc0c1",
+    "arm": "creator",
+    "run": 2,
+    "checklist": {
+     "1": "preserved",
+     "2": "preserved",
+     "3": "preserved",
+     "4": "preserved",
+     "5": "preserved",
+     "6": "preserved",
+     "7": "preserved"
+    },
+    "unsupported_or_wrong": [],
+    "actionability": 3,
+    "actionability_reason": "Gives a clear not-ready verdict plus concrete checks (define a minimum worthwhile effect, randomized pilot, delayed test, completion time, sizing for precision) and labels the low-risk-trial suggestion as judgment.",
+    "readability": 3,
+    "readability_reason": "Short sections with a results table and numbered limitations, and source findings are kept apart from interpretation, so it is easy to scan.",
+    "editing": "none",
+    "editing_notes": "Accurate and properly hedged; it can be forwarded as is."
+   },
+   {
+    "label": "R2",
+    "blindId": "00ff5730",
+    "arm": "creator",
+    "run": 1,
+    "checklist": {
+     "1": "preserved",
+     "2": "preserved",
+     "3": "preserved",
+     "4": "preserved",
+     "5": "preserved",
+     "6": "preserved",
+     "7": "preserved"
+    },
+    "unsupported_or_wrong": [
+     "\"Values near 0.5 are not more likely than values near the edges in any way I can verify from the abstract.\" (misleading: under the standard reading of a confidence interval, values near the point estimate fit the data better than values at the edges)",
+     "\"Your outcome of interest (retention, speed, transfer) was not measured.\" (the abstract does not say what the 10 questions measured, so it cannot say transfer was unmeasured, and the answer itself admits this earlier)"
+    ],
+    "actionability": 3,
+    "actionability_reason": "Gives a clear no for adoption and concrete next steps (threshold, fit check, pilot with delayed test and timing, larger sample).",
+    "readability": 2,
+    "readability_reason": "Well structured, but the adoption guidance is spread over three overlapping sections and the confidence-interval explanation is dense and confusing.",
+    "editing": "minor",
+    "editing_notes": "Remove or fix the bullet about values near 0.5, drop the claim that transfer was not measured, and align the opening line's 'small benefit' with the later point that a gain of up to 1.3 could matter."
+   },
+   {
+    "label": "R3",
+    "blindId": "d787e348",
+    "arm": "ordinary",
+    "run": 1,
+    "checklist": {
+     "1": "preserved",
+     "2": "preserved",
+     "3": "preserved",
+     "4": "preserved",
+     "5": "preserved",
+     "6": "preserved",
+     "7": "preserved"
+    },
+    "unsupported_or_wrong": [
+     "\"Immediate scores often don't predict retention\" (an overstated general claim that the source does not support and the answer does not label as an inference)"
+    ],
+    "actionability": 3,
+    "actionability_reason": "Gives tiered readiness guidance (firm decision, low-risk experiment, costly decision) and a numbered list of steps that would make the evidence decision-ready.",
+    "readability": 3,
+    "readability_reason": "Clear headings and bolded limitation labels make it easy to scan.",
+    "editing": "minor",
+    "editing_notes": "Reword the bottom line, because 'does not show that it isn't [ready]' reads as contradicting the later 'not ready', and soften the retention claim."
+   },
+   {
+    "label": "R4",
+    "blindId": "2c9c0a2c",
+    "arm": "ordinary",
+    "run": 2,
+    "checklist": {
+     "1": "preserved",
+     "2": "preserved",
+     "3": "preserved",
+     "4": "preserved",
+     "5": "preserved",
+     "6": "preserved",
+     "7": "preserved"
+    },
+    "unsupported_or_wrong": [
+     "\"A 0.5-point difference on a 10-question test is also small in practical terms.\" (an unlabelled practical-significance judgment the abstract does not support, and it conflicts with the answer's later advice to set your own threshold)",
+     "\"The point estimate leans positive and there's no sign of harm.\" (overstates: the interval includes a text advantage of up to 0.3 points, which the answer itself calls plausible)"
+    ],
+    "actionability": 3,
+    "actionability_reason": "Separates cheap, reversible adoption from costly adoption and lays out a concrete pilot design with a delayed check, timing and a pre-set threshold.",
+    "readability": 3,
+    "readability_reason": "Bolded lead-ins, short bullets and a one-line summary make it easy to follow.",
+    "editing": "minor",
+    "editing_notes": "Remove or label the 'small in practical terms' judgment and fix 'no sign of harm' so the possible small text advantage is kept."
+   }
+  ]
+ }
+]

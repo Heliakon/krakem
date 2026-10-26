@@ -1,0 +1,58 @@
+<section class="wrap creator-section" id="prompt-studio" aria-labelledby="creator-heading">
+  <div class="creator-intro">
+    <div><p class="eyebrow"><span class="live-dot"></span>Experimental</p><h1 id="creator-heading">Better prompts.<br>Clearer answers.</h1></div>
+    <p>Describe your task. Choose the shape of the answer. Copy a complete prompt into your preferred AI tool.</p>
+  </div>
+  <div class="prompt-studio main-creator">
+    <div class="prompt-settings">
+      <label for="task-brief" id="task-label">WHAT ARE YOU WORKING ON?</label>
+      <textarea id="task-brief" rows="4" required aria-describedby="task-help" placeholder="For example: Compare two prompt tools for our team. Focus on accuracy and ease of use."></textarea>
+      <p id="task-help" class="field-help">Describe your task, the result you need, and any important constraints.</p>
+      <div class="creator-options">
+        <div><label for="task">TYPE OF TASK</label><select id="task"><option value="custom">Any task</option><option value="compare">Compare websites or products</option><option value="review">Review code</option><option value="debug">Troubleshoot a problem</option><option value="code">Write or change code</option><option value="architecture">Assess an architecture</option><option value="research">Research a topic</option><option value="paper">Understand a research paper</option><option value="procedure">Follow a procedure</option><option value="writing">Website or slide text</option></select></div>
+        <div><label for="format">SHAPE OF THE ANSWER</label><select id="format"><option value="text">A clear explanation</option><option value="steps">Step-by-step instructions</option><option value="code">Code with an explanation</option><option value="table">A comparison table</option><option value="diagram">A system diagram</option><option value="interactive">An interactive HTML tool</option><option value="animation">A stepped animation</option></select></div>
+      </div>
+      <div class="task-suggestion" id="task-suggestion" hidden><span>Comparing websites or products?</span><button type="button" id="use-comparison">Use comparison mode ↗</button></div>
+      <fieldset class="comparison-fields" id="comparison-fields" hidden>
+        <legend>Make the comparison specific.</legend>
+        <div class="comparison-pair">
+          <div><label for="compare-a">FIRST WEBSITE OR PRODUCT</label><input id="compare-a" type="text" autocomplete="off" aria-describedby="comparison-help" placeholder="Name or full URL"></div>
+          <div><label for="compare-b">SECOND WEBSITE OR PRODUCT</label><input id="compare-b" type="text" autocomplete="off" aria-describedby="comparison-help" placeholder="Name or full URL"></div>
+        </div>
+        <p id="comparison-help" class="field-help">Add both subjects. Include a URL or version if the name could be ambiguous.</p>
+        <label for="compare-criteria">WHAT MATTERS TO YOU?</label>
+        <textarea id="compare-criteria" rows="3" aria-describedby="criteria-help">Capabilities; ease of use; constraints; cost</textarea>
+        <p id="criteria-help" class="field-help">Edit these criteria to match your decision. The AI will compare both subjects against the same list.</p>
+      </fieldset>
+      <label for="source-material">SOURCE MATERIAL <span>(OPTIONAL)</span></label>
+      <textarea id="source-material" rows="4" aria-describedby="source-help" placeholder="Paste relevant code, notes, requirements, a draft, or source URLs."></textarea>
+      <p id="source-help" class="field-help">Included exactly as entered. If your AI cannot open links, paste the relevant text here.</p>
+      <div class="draft-row"><p class="fine-print" id="creator-draft-note">Built in your browser and never sent anywhere.</p><button type="button" class="text-button" id="clear-creator-draft" disabled>Clear draft</button></div>
+    </div>
+    <div class="prompt-result">
+      <div class="prompt-toolbar"><span class="eyebrow">YOUR COMPLETE PROMPT</span><button class="copy-button primary-copy" id="copy-technical-prompt" data-copy="technical-prompt" type="button" disabled>Copy prompt <span>⧉</span></button></div>
+      <p class="prompt-state" id="prompt-state" role="status">Start with your task.</p>
+      <div class="prompt-checklist" id="prompt-checklist" hidden><p>Complete these details to copy:</p><ul id="prompt-issues"></ul></div>
+      <pre id="technical-prompt" class="empty-prompt" tabindex="0" aria-label="Generated prompt">Your prompt will appear here as you type. Add your task and choose the answer you want.</pre>
+      <div class="prompt-result-foot"><span>01 DESCRIBE</span><span>02 CHOOSE</span><span>03 COPY &amp; PASTE</span></div>
+    </div>
+  </div>
+  <noscript><p class="source-note">Enable JavaScript to create and copy a prompt. The writing guide below is available without it.</p></noscript>
+</section>
+<div class="ticker result-ribbon"><div><span>CONSISTENT TERMS</span><i aria-hidden="true">✳</i><span>EVIDENCE VS. INFERENCE</span><i aria-hidden="true">✳</i><span>CAVEATS KEPT</span><i aria-hidden="true">✳</i><span>ASK, DON’T GUESS</span></div></div>
+<aside class="wrap setup-callout creator-followup"><div><p class="eyebrow">USING CLAUDE REGULARLY?</p><h2>Keep the rules. Skip the repetition.</h2><p>Save recurring writing rules in CLAUDE.md for your Claude Code projects.</p></div><a class="button" href="/claude/">Set up Claude once <span>↗</span></a></aside>
+<section class="wrap figure-section" aria-labelledby="figure-heading">
+  <div class="figure-heading"><div><p class="eyebrow">CHOOSE THE SHAPE OF THE ANSWER</p><h2 id="figure-heading">A little structure.<br>A clearer result.</h2></div><p>An explanation, steps, a table, a diagram, or a small tool: pick the form in the creator above. Press Chaos to see the same points without structure.</p></div>
+  <div class="signal-stage expanded-field" aria-label="Abstract three-dimensional particle animation">
+    <canvas id="signal-field" aria-hidden="true"></canvas>
+    <div class="field-controls" role="group" aria-label="Animation controls">
+      <button class="motion-toggle" type="button" aria-pressed="false" title="Pause decorative animation"><span class="motion-icon" aria-hidden="true">Ⅱ</span><span class="motion-label">Motion on</span></button>
+      <button class="chaos-toggle" id="chaos-toggle" type="button" aria-pressed="false" aria-controls="signal-field" title="Scatter the particles"><span aria-hidden="true">✳</span> Chaos</button>
+    </div>
+    <div class="stage-bottom"><span id="figure-timing">SLOWLY EVOLVING</span><div class="figure-selector" role="group" aria-label="Choose an abstract variation"><button type="button" data-figure="0" aria-pressed="true" aria-label="Show variation 1">01</button><button type="button" data-figure="1" aria-pressed="false" aria-label="Show variation 2">02</button><button type="button" data-figure="2" aria-pressed="false" aria-label="Show variation 3">03</button><button type="button" data-figure="3" aria-pressed="false" aria-label="Show variation 4">04</button><button type="button" data-figure="4" aria-pressed="false" aria-label="Show variation 5">05</button><button type="button" data-figure="5" aria-pressed="false" aria-label="Show variation 6">06</button><button type="button" data-figure="6" aria-pressed="false" aria-label="Show variation 7">07</button></div></div>
+    <div class="figure-progress" aria-hidden="true"><i id="figure-progress"></i></div>
+  </div>
+</section>
+<section class="light-section" id="principles"><div class="wrap section-pad"><div class="section-heading"><div><p class="eyebrow">WHAT THE PROMPT ASKS FOR</p><h2>Good technical writing<br>leaves less to guess.</h2></div><p>Fluent is not the same as clear. Ask for stable names, direct sentences, and an explicit boundary between evidence and inference.</p></div><div class="rule-grid"><article><span class="rule-no">01</span><h3>Give each thing<br> one name.</h3><p>If the component is a “worker,” keep calling it a worker. A fresh synonym can look like a different component.</p></article><article><span class="rule-no">02</span><h3>Give each step<br> one action.</h3><p>Break a procedure into actions you can perform and check. Put conditions before the actions they control.</p></article><article><span class="rule-no">03</span><h3>Give each claim<br> a clear status.</h3><p>Separate what the source says from what the model infers. Keep uncertainty visible. Ask how to verify the answer.</p></article></div><aside class="source-note"><span class="pill">INSPIRED BY ASD-STE100</span><p>The aerospace writing project began in 1979; its first guide appeared in 1986. Today’s standard allows <strong>at most 20 words</strong> in procedural sentences. These prompts borrow its spirit; they do not certify compliance. <a href="/evidence/#ste">Read the precise rules ↗</a></p></aside>
+<div class="example-header"><h3>Same intent. Less interpretation.</h3><div class="segmented light" aria-label="Choose a technical example"><button data-example="deploy" aria-pressed="true">Deployment</button><button data-example="review" aria-pressed="false">Code review</button><button data-example="research" aria-pressed="false">Research</button></div></div><div class="rewrite-pair"><article class="before"><span class="eyebrow">BEFORE / ILLUSTRATIVE EXAMPLE</span><p id="example-before">After saving the configuration, you might want to restart the service and check that the worker’s health endpoint returns HTTP 200, restoring the previous configuration if the process fails this check.</p><div class="annotation">A crowded sentence. Inconsistent names.</div></article><article class="after"><span class="eyebrow">AFTER / A MORE PRECISE BRIEF</span><div id="example-after"><ol><li>Save the configuration.</li><li>Restart the worker.</li><li>Check the worker’s health endpoint.</li></ol><p>Expected result: HTTP 200. If the check fails, restore the previous configuration.</p></div><div class="annotation">One name. Visible steps. A defined result.</div></article></div></div></section>
+<section class="voice-banner wrap"><p class="eyebrow">WRITING FOR PEOPLE?</p><h2>Keep the precision.<br><em>Bring back your voice.</em></h2><div><p>Create an editing brief for your website copy, slides, or technical writing.</p><a href="/humanize/" class="button primary">Create an editing brief <span>↗</span></a></div></section>
