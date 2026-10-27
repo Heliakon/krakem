@@ -7,27 +7,24 @@
  body { position: relative; background: radial-gradient(ellipse at 6% 100%, #263d23 0, transparent 46%), radial-gradient(ellipse at 82% 34%, #29451c66, transparent 52%), linear-gradient(115deg, #142019, #0b1118 62%); color: #f4f7fb; font: 18px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
  canvas { position: absolute; inset: 0; }
  .content { position: absolute; left: 76px; top: 64px; width: 760px; }
- .brand { display: flex; align-items: center; gap: 14px; font-size: 40px; font-weight: 650; letter-spacing: -1.6px; line-height: 1; }
- .brand-mark { display: flex; flex-direction: column; gap: 6px; transform: rotate(-18deg); width: 34px; }
- .brand-mark i { height: 5px; border-radius: 3px; background: #82c341; }
- .brand-mark i:first-child { width: 19px; } .brand-mark i:nth-child(2) { width: 26px; }
- .brand-dot { color: #82c341; font-size: 30px; margin-left: -6px; }
+ .brand { display: flex; align-items: center; gap: 16px; font-size: 40px; font-weight: 650; letter-spacing: -1.6px; line-height: 1; }
  .eyebrow { margin-top: 62px; color: #aabaca; font: 500 20px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; display: flex; align-items: center; gap: 14px; }
  .eyebrow i { width: 9px; height: 9px; border-radius: 50%; background: #82c341; box-shadow: 0 0 18px #82c34188; }
  h1 { margin-top: 18px; font-size: 88px; font-weight: 550; line-height: 1.04; letter-spacing: -.05em; }
  h1 em { color: #82c341; font-style: normal; }
  p { margin-top: 26px; color: #c4d0de; font-size: 27px; line-height: 1.45; max-width: 720px; }
- .grass { position: absolute; left: 0; right: 0; bottom: 0; height: 120px; background: url("../assets/grass.svg") left bottom / auto 120px repeat-x; opacity: .95; }
+ .floor { position: absolute; left: -35%; right: -35%; bottom: 0; height: 170px; transform-origin: 50% 100%; transform: perspective(300px) rotateX(62deg); background: radial-gradient(circle, #82c341 0 1.6px, transparent 2.2px) 0 0 / 22px 22px; mask-image: linear-gradient(0deg, #000 15%, transparent 90%); opacity: .85; }
+ body { overflow: hidden; }
 </style></head>
 <body>
 <canvas id="dots" width="1200" height="630" aria-hidden="true"></canvas>
 <div class="content">
- <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>Krakem<span class="brand-dot">✳</span></div>
+ <div class="brand"><!-- brand-mark --><svg width="48" height="48" viewBox="0 0 40 40" aria-hidden="true"><circle class="brand-core" cx="20" cy="20" r="2.7" fill="#d7f0b1"/><circle cx="20" cy="13.4" r="2.15" fill="#82c341"/><circle cx="20" cy="8.4" r="1.8" fill="#82c341"/><circle cx="20" cy="3.6" r="1.45" fill="#82c341"/><circle cx="24.67" cy="15.33" r="2.15" fill="#82c341"/><circle cx="28.2" cy="11.8" r="1.8" fill="#82c341"/><circle cx="31.6" cy="8.4" r="1.45" fill="#82c341"/><circle cx="26.6" cy="20" r="2.15" fill="#82c341"/><circle cx="31.6" cy="20" r="1.8" fill="#82c341"/><circle cx="36.4" cy="20" r="1.45" fill="#82c341"/><circle cx="24.67" cy="24.67" r="2.15" fill="#82c341"/><circle cx="28.2" cy="28.2" r="1.8" fill="#82c341"/><circle cx="31.6" cy="31.6" r="1.45" fill="#82c341"/><circle cx="20" cy="26.6" r="2.15" fill="#82c341"/><circle cx="20" cy="31.6" r="1.8" fill="#82c341"/><circle cx="20" cy="36.4" r="1.45" fill="#82c341"/><circle cx="15.33" cy="24.67" r="2.15" fill="#82c341"/><circle cx="11.8" cy="28.2" r="1.8" fill="#82c341"/><circle cx="8.4" cy="31.6" r="1.45" fill="#82c341"/><circle cx="13.4" cy="20" r="2.15" fill="#82c341"/><circle cx="8.4" cy="20" r="1.8" fill="#82c341"/><circle cx="3.6" cy="20" r="1.45" fill="#82c341"/><circle cx="15.33" cy="15.33" r="2.15" fill="#82c341"/><circle cx="11.8" cy="11.8" r="1.8" fill="#82c341"/><circle cx="8.4" cy="8.4" r="1.45" fill="#82c341"/></svg><!-- /brand-mark -->Krakem</div>
  <div class="eyebrow"><i></i>EXPERIMENTAL PROMPT CREATOR</div>
  <h1>Better prompts.<br><em>Clearer answers.</em></h1>
  <p>Describe your task. Copy a complete prompt into your AI tool.</p>
 </div>
-<div class="grass"></div>
+<div class="floor"></div>
 <script>
 // A cropped, nautilus-like spiral of soft particles, echoing the site's first animated shape.
 const ctx=document.getElementById('dots').getContext('2d');

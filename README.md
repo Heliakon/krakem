@@ -38,6 +38,7 @@ shasum -a 256 krakem.html
 - `scripts/build.mjs`: assembles `dist/`.
 - `scripts/build-offline.mjs`: turns `dist/` into `release/krakem.html`, one file with every page, style, script, and download inline.
 - `scripts/check.mjs` and `scripts/check-html.py`: automated checks.
+- `scripts/brand-mark.mjs`: the particle asterisk mark. The build inlines it in the header and footer; run it directly to regenerate `assets/icon.svg` and the mark in `scripts/social-preview.html`.
 - `scripts/social-preview.html`: source for `assets/social-preview.jpg`.
 - `evaluation/`: saved prompts, answers, and grades from two small evaluations.
 
@@ -77,7 +78,7 @@ sips -s format jpeg -s formatOptions 86 social-preview.png --out assets/social-p
 
 ## Behavior
 
-**Prompt creator.** The creator is the first section below the menu. Prompts include the visitor's task, task-specific guidance, an answer format, and any source material, with no editing placeholders. Source material is included exactly as entered. Comparison mode requires two different subjects, a decision goal, and criteria before copying. Missing-detail links focus the relevant field. Choosing a task sets a suitable answer format until the visitor picks a format explicitly.
+**Prompt creator.** The creator is the first section below the menu. Prompts include the visitor's task, task-specific guidance, an answer format, and any source material, with no editing placeholders. Source material is included exactly as entered. Comparison mode requires two different subjects, a decision goal, and criteria before copying. Missing-detail links focus the relevant field. Summaries and checklists are available alongside the existing task and format options. Choosing a task sets a suitable answer format until the visitor picks a format explicitly.
 
 **Humanize.** Readers and original text are required before copying. The voice sample is optional; when it is empty, its section is left out. The original text is inserted exactly as entered, as the last section of the brief.
 
@@ -93,7 +94,7 @@ sips -s format jpeg -s formatOptions 86 social-preview.png --out assets/social-p
 
 `scripts/check.mjs` covers:
 
-- 70 task/format combinations, comparison validation, and exact source preservation;
+- 88 task/format combinations, comparison validation, and exact source preservation;
 - 27 Humanize combinations, including multi-line, quoted, and HTML-like text;
 - draft restore, reset, and blocked or corrupt storage;
 - versioned module imports, a scan for network calls, social metadata, and the Evidence rows;

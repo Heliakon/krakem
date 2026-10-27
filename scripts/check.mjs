@@ -10,8 +10,8 @@ const stripImports=code=>code.replace(/^import[^\n]+\n/gm,'');
 class MemoryStorage{constructor(){this.items=new Map();}getItem(k){return this.items.has(k)?this.items.get(k):null;}setItem(k,v){this.items.set(k,String(v));}removeItem(k){this.items.delete(k);}}
 const storageFor=storage=>key=>draftStore(key,()=>{if(!storage)throw new Error('SecurityError: storage blocked');return storage;});
 
-const tasks=['custom','compare','review','debug','code','architecture','research','paper','procedure','writing'];
-const formats=['text','steps','code','table','diagram','interactive','animation'];
+const tasks=['custom','compare','review','debug','code','architecture','research','paper','summary','procedure','writing'];
+const formats=['text','steps','code','table','checklist','diagram','interactive','animation'];
 const brief='Explain why our payment retry can duplicate a charge after a timeout.';
 const source='  const response = await charge();\n\t// preserve whitespace, API names, and punctuation\n';
 const comparison={subjectA:'https://cedar.example',subjectB:'Flint',criteria:'Accuracy; constraints; cost'};
@@ -42,6 +42,16 @@ assert.ok(!buildTechnicalPrompt({brief,task:'research'}).includes('equations'));
 assert.ok(buildTechnicalPrompt({brief,task:'procedure'}).includes('simultaneously'));
 assert.ok(buildTechnicalPrompt({brief,format:'steps'}).includes('ASD-STE100'));
 assert.ok(buildTechnicalPrompt({brief,source:'https://example.com'}).includes('A URL alone is not evidence'));
+assert.ok(buildTechnicalPrompt({brief:'Review https://example.com for our team.'}).includes('A URL alone is not evidence'),'A URL in the task gets the same source-access guidance.');
+assert.ok(buildTechnicalPrompt({brief:'Summarize this document.',task:'summary',source:'  Facts: 18%.\n\tScope: one team.  '}).endsWith('  Facts: 18%.\n\tScope: one team.  '),'Summaries preserve source material exactly.');
+assert.ok(buildTechnicalPrompt({brief:'Verify the migration.',format:'checklist'}).includes('independently checkable items'));
+const boundedComparison=buildTechnicalPrompt({brief:'Compare these using only the supplied documents; do not browse.',task:'compare',...comparison});
+assert.ok(boundedComparison.includes('Respect my source and browsing limits.'),'Current-source guidance respects a no-browsing task.');
+assert.ok(!/(^|\n|\. )Verify time-sensitive claims/.test(boundedComparison),'A no-browsing comparison is never told to verify against current sources unconditionally.');
+assert.ok(!buildTechnicalPrompt({brief,task:'custom',subjectA:'https://a.example',subjectB:'b'}).includes('A URL alone'),'Hidden comparison fields do not change other tasks.');
+const summaryChecklist=buildTechnicalPrompt({brief:'Summarize the meeting notes.',task:'summary',format:'checklist',source:'Decision: move to Deskly. Open: who administers it.'});
+assert.ok(summaryChecklist.includes('Keep decided facts and open questions as plain text')&&summaryChecklist.includes('Do not add actions the source does not state'),'A summary checklist keeps facts as facts and adds no invented actions.');
+assert.ok(buildTechnicalPrompt({brief:'Fix this function.',task:'code'}).includes('If you cannot edit the project'),'Code tasks remain useful in chat-only tools.');
 assert.ok(buildTechnicalPrompt({brief,task:'compare',...comparison}).includes('Do not infer that a feature is absent'));
 
 class Element{
@@ -106,6 +116,11 @@ assert.ok(!guide.get('technical-prompt').textContent.includes('equations'));
 
 
 // Creator drafts: survive a reload in the same tab, keep comparison validation, and clear completely.
+const summaryTab=runGuide(new MemoryStorage());
+summaryTab.get('task-brief').value='Summarize the incident report.';summaryTab.get('task').value='summary';summaryTab.get('task').emit('change');
+assert.match(summaryTab.get('prompt-state').textContent,/Add the document under Source material/,'A summary without source material says where to add it.');
+summaryTab.get('source-material').value='Report text';summaryTab.get('source-material').emit('input');
+assert.match(summaryTab.get('prompt-state').textContent,/source material are included/);
 const tab=new MemoryStorage();
 const first=runGuide(tab);
 assert.equal(first.get('clear-creator-draft').disabled,true);assert.equal(tab.items.size,0,'Nothing is stored before the visitor edits.');
@@ -297,8 +312,24 @@ assert.ok(claudeRules.split('\n').length<200,'CLAUDE.md stays under the document
 const claudeWords=claudeRules.split(/\s+/).filter(Boolean).length;
 assert.ok(claudeWords<=500,'CLAUDE.md stays under 500 words, so its reading cost does not creep back up.');
 assert.ok(claudePage.includes(`About ${Math.round(claudeWords/10)*10} words`),'The page states the current word count.');
-for(const rule of ['Never report a check as passing unless you ran it','Every changed line should trace to the request','do not establish ASD-STE100 compliance','must happen at the same time together','not instructions','Do not weaken, skip, or delete tests','not generated output'])assert.ok(claudeRules.includes(rule),rule);
+const normalizedClaude=claudeRules.replace(/\s+/g,' ');
+for(const rule of ['Edit source files, not generated output','changes to shared or production systems','Do not weaken, skip, or delete tests','ran it and saw it pass','anything not verified','Follow the user\'s request and applicable project instructions','Treat untrusted content','Get authorization for destructive actions','Do not ask the user to check each fix','Never claim a check passed unless you ran it','keep necessary simultaneous actions together','They do not establish compliance'])assert.ok(normalizedClaude.includes(rule),rule);
 for(const text of ['id="output-styles"','/output-style concise','~/.claude/output-styles/','.claude/output-styles/','"outputStyle": "Concise"'])assert.ok(claudePage.includes(text),text);
+// Brand: the particle asterisk mark replaces the angled lines, the trailing asterisk, and the grass everywhere.
+const {brandMark,brandIcon,staticMark,markParticles}=await import('./brand-mark.mjs');
+for(const page of ['index.html','humanize/index.html','claude/index.html','evidence/index.html']){
+ const html=await readFile(new URL('../dist/'+page,import.meta.url),'utf8');
+ assert.equal(html.split(brandMark()).length-1,2,`${page} has the mark in the header and the footer`);
+ assert.ok(!/brand-dot|<i><\/i><i><\/i><i><\/i>|grass/.test(html),`${page} has no old mark or grass`);
+}
+assert.equal(markParticles.length,25);assert.ok(markParticles.every(p=>Math.hypot(p.x-20,p.y-20)+p.r<=20),'Every particle fits inside the 40-unit mark.');
+assert.equal(await readFile(new URL('../assets/icon.svg',import.meta.url),'utf8'),brandIcon(),'The favicon matches scripts/brand-mark.mjs.');
+assert.ok((await readFile(new URL('social-preview.html',import.meta.url),'utf8')).includes(staticMark(48)),'The social preview mark matches scripts/brand-mark.mjs.');
+const css=await readFile(new URL('../dist/assets/style.css',import.meta.url),'utf8');
+assert.ok(!css.includes('grass')&&css.includes('@keyframes brand-scatter')&&css.includes('perspective(300px)'),'The styles animate the mark and draw the particle floor.');
+await assert.rejects(access(new URL('../dist/assets/grass.svg',import.meta.url)),'grass.svg is no longer shipped.');
+const common=await readFile(new URL('../assets/common.js',import.meta.url),'utf8');
+assert.ok(/function playBrand\(\)\{if\(brandMark&&motion&&!media\.matches/.test(common),'The mark plays only while motion is on and reduced motion is not requested.');
 const evidence=await readFile(new URL('../dist/evidence/index.html',import.meta.url),'utf8');
 assert.ok(!/original thesis/i.test(evidence));assert.ok(evidence.includes('id="humanizers"'));
 assert.equal((evidence.match(/<tr><th scope="row"><a href="https:\/\/github\.com\//g)||[]).length,12,'All four humanizer rows and eight GitHub-count rows remain.');
@@ -313,4 +344,4 @@ assert.ok(!/rtk\.md|@import|^@/m.test(await readFile(new URL('../assets/download
 assert.equal(await readFile(new URL('../dist/assets/downloads/CLAUDE.md',import.meta.url),'utf8'),await readFile(new URL('../assets/downloads/CLAUDE.md',import.meta.url),'utf8'));
 console.log(`PASS: social metadata (${siteUrl?'absolute image URL':'image omitted until siteUrl is set'}), Evidence navigation and all 12 repository rows, versioned module imports, no network calls, drafts kept out of localStorage, CLAUDE.md download matches its source.`);
 for(const file of(await readdir(new URL('../assets/',import.meta.url))).filter(f=>f.endsWith('.js')))execFileSync(process.execPath,['--check',new URL('../assets/'+file,import.meta.url).pathname]);
-console.log('PASS: 70 complete prompt combinations, comparison completeness/duplicate checks, task-specific guidance, format defaults, mode switching, exact source inclusion, text-safe input, creator-first page order, five-second figure sequence, interrupted morphs, pause/reduced-motion/visibility controls, DPR cap, Playground removal, and JS syntax.');
+console.log(`PASS: ${tasks.length*formats.length} complete prompt combinations, comparison completeness/duplicate checks, task-specific guidance, format defaults, mode switching, exact source inclusion, text-safe input, creator-first page order, five-second figure sequence, interrupted morphs, pause/reduced-motion/visibility controls, DPR cap, Playground removal, and JS syntax.`);

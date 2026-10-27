@@ -75,14 +75,16 @@
   .light-section { background: var(--surface); border-block: 1px solid var(--line); }
   .site-header { padding-block: 20px 8px; background: var(--bg); }
   .nav-wrap { position: relative; isolation: isolate; width: min(1440px, calc(100% - 64px)); min-height: 104px; margin-inline: auto; padding: 12px 16px 12px 24px; display: flex; align-items: center; gap: 32px; border: 1px solid #3a503b; border-radius: 24px; background: radial-gradient(ellipse at 8% 100%, #263d23 0, transparent 45%), linear-gradient(115deg, #142019, #111c28 70%); box-shadow: 0 16px 40px #0003, inset 0 1px #ffffff08; }
-  .site-header .brand { position: relative; isolation: isolate; flex-shrink: 0; min-width: 210px; min-height: 76px; padding: 0 18px 12px 8px; }
-  .site-header .brand::after { content: ""; position: absolute; z-index: -1; pointer-events: none; left: -18px; right: -12px; bottom: -12px; height: 39px; background: url("grass.svg") center bottom / 330px auto no-repeat; mask-image: linear-gradient(90deg, transparent, #000 12%, #000 70%, transparent); opacity: .9; }
-  .brand { min-height: 44px; display: inline-flex; align-items: center; gap: 10px; color: var(--text); font-size: 26px; font-weight: 650; line-height: 1; letter-spacing: -1.2px; text-decoration: none; }
-  .brand-dot { font-size: 20px; color: var(--primary); align-self: center; margin-left: -4px; }
-  .brand-mark { display: flex; flex-direction: column; gap: 4px; transform: rotate(-18deg); width: 23px; margin-right: 1px; }
-  .brand-mark i { height: 3px; background: var(--primary); border-radius: 2px; }
-  .brand-mark i:first-child { width: 13px; }
-  .brand-mark i:nth-child(2) { width: 18px; }
+  .site-header .brand { position: relative; flex-shrink: 0; min-width: 210px; min-height: 76px; padding: 0 18px 0 8px; }
+  .brand { min-height: 44px; display: inline-flex; align-items: center; gap: 12px; color: var(--text); font-size: 26px; font-weight: 650; line-height: 1; letter-spacing: -1.2px; text-decoration: none; }
+  .brand-mark { flex: 0 0 auto; width: 34px; height: 34px; overflow: visible; }
+  .brand-mark circle { fill: var(--primary); transform-box: fill-box; transform-origin: center; }
+  .brand-mark .brand-spin { transform-origin: 20px 20px; }
+  .brand-mark .brand-core { fill: #d7f0b1; }
+  /* The mark plays once on load and on hover: particles scatter and settle while the asterisk turns by one arm, so it ends where it began. */
+  .brand-mark.play circle { animation: brand-scatter 1.6s cubic-bezier(.55, 0, .2, 1) var(--d) both; }
+  .brand-mark.play .brand-spin { animation: brand-turn 1.95s cubic-bezier(.45, 0, .2, 1) both; }
+  .site-footer .brand-mark { width: 28px; height: 28px; }
   .site-header nav { display: grid; grid-template-columns: repeat(4, auto); align-items: stretch; gap: 0 5px; margin-left: auto; padding: 6px; border: 1px solid #344637; border-radius: 17px; background: #09130ee6; }
   .site-header nav > a { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 52px; padding: 12px 16px; border: 1px solid transparent; border-radius: 11px; color: var(--muted); font-size: 16px; font-weight: 550; line-height: 1.3; text-decoration: none; transition: background .18s, border-color .18s, color .18s; }
   .nav-icon { width: 20px; height: 20px; flex: 0 0 auto; color: var(--primary); }
@@ -120,8 +122,9 @@
   .voice-banner > .eyebrow { grid-column: 1/-1; }
   .voice-banner > div { max-width: 440px; align-self: end; justify-self: end; }
   .voice-banner .button { margin-top: 26px; }
-  .site-footer { position: relative; isolation: isolate; background: linear-gradient(180deg, #080e15 30%, #0b190f 100%); border-top: 1px solid var(--line); padding: 56px max(48px, calc((100vw - 1320px) / 2)) 252px; }
-  .site-footer::after { content: ""; position: absolute; z-index: -1; pointer-events: none; inset: auto 0 0; height: 230px; background: url("grass.svg") center bottom / auto 230px repeat-x; }
+  .site-footer { position: relative; isolation: isolate; background: linear-gradient(180deg, #080e15 30%, #0b190f 100%); border-top: 1px solid var(--line); padding: 56px max(48px, calc((100vw - 1320px) / 2)) 200px; overflow: hidden; }
+  /* A floor of particles receding to the horizon; it is wider than the footer so its tilted edges stay out of view. */
+  .site-footer::after { content: ""; position: absolute; z-index: -1; pointer-events: none; left: -35%; right: -35%; bottom: 0; height: 240px; transform-origin: 50% 100%; transform: perspective(300px) rotateX(62deg); background: radial-gradient(circle, var(--primary) 0 1.6px, transparent 2.2px) 0 0 / 22px 22px; mask-image: linear-gradient(0deg, #000 15%, transparent 90%); opacity: .85; }
   .footer-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 48px; padding-bottom: 42px; }
   .footer-top > p { color: var(--text); font-size: clamp(30px, 3vw, 42px); line-height: 1.2; letter-spacing: -.04em; }
   .footer-top em { color: var(--primary); font-style: normal; }
@@ -325,6 +328,8 @@
   .table-scroll + .fine-print { margin-block: 24px 30px; max-width: 92ch; }
   .reveal-ready { animation: enter .55s both; }
   .motion-paused .reveal-ready { animation: none; }
+  @keyframes brand-scatter { 0%, 100% { transform: translate(0, 0); } 45% { transform: translate(var(--dx), var(--dy)); } }
+  @keyframes brand-turn { to { transform: rotate(45deg); } }
   @keyframes enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 }
 
@@ -473,8 +478,9 @@
     .voice-banner { grid-template-columns: 1fr; gap: 24px; padding-block: 56px; }
     .voice-banner h2 { font-size: 36px; }
     .voice-banner > div { max-width: 100%; justify-self: start; }
-    .site-footer { padding: 44px 20px 188px; }
-    .site-footer::after { height: 170px; background-size: auto 170px; }
+    .site-footer { padding: 44px 20px 150px; }
+    .site-footer::after { height: 180px; background-size: 18px 18px; }
+    .site-header .brand-mark { width: 30px; height: 30px; }
     .footer-top { display: block; padding-bottom: 32px; }
     .footer-top > div { margin-top: 28px; }
     .footer-bottom { display: grid; gap: 16px; }

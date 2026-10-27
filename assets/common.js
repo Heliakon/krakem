@@ -13,6 +13,14 @@ function updateMotion(){
 updateMotion();
 motionButton?.addEventListener('click',()=>{motion=!motion;preference=motion?'on':'off';try{localStorage.setItem('clearform-motion',preference);}catch{}updateMotion();});
 media.addEventListener('change',()=>{if(preference===null){motion=!media.matches;updateMotion();}});
+// The header mark plays once after load and again on hover or focus, only while decorative motion is on.
+const brandLink=document.querySelector('.site-header .brand'),brandMark=brandLink?.querySelector('.brand-mark'),brandSpin=brandMark?.querySelector('.brand-spin');
+function playBrand(){if(brandMark&&motion&&!media.matches&&!brandMark.classList.contains('play'))brandMark.classList.add('play');}
+// animationend bubbles up from every particle; only the turn, which ends last, finishes the play.
+brandSpin?.addEventListener('animationend',event=>{if(event.target===brandSpin)brandMark.classList.remove('play');});
+brandLink?.addEventListener('pointerenter',playBrand);
+brandLink?.addEventListener('focus',playBrand);
+setTimeout(playBrand,400);
 let toastTimer;
 function toast(message){const el=document.getElementById('toast');if(!el)return;el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2600);}
 window.addEventListener('krakem-toast',event=>toast(event.detail));

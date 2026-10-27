@@ -29,8 +29,7 @@ const bodies=pages.map(([key,path],i)=>{
  return `<div class="offline-page" id="page-${key}" data-page="${key}" data-title="${title}"${i?' hidden':''}>${localize(main,path)}</div>`;
 }).join('\n');
 
-const grass=(await readFile(new URL('assets/grass.svg',root))).toString('base64');
-const css=(await read('dist/assets/style.css')).replaceAll('url("grass.svg")','var(--grass)')+`\n:root { --grass: url("data:image/svg+xml;base64,${grass}"); }\n`;
+const css=await read('dist/assets/style.css');
 
 // Bundle the ES modules into one classic script; each module keeps its own scope.
 const moduleName=file=>`module_${file.replace(/\.js$/,'').replace(/-/g,'_')}`;

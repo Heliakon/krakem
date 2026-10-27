@@ -26,7 +26,7 @@ function buildPrompt(){
  checklist.hidden=!comparing||!issues.length;
  issueList.replaceChildren(...issues.map(issue=>{const item=document.createElement('li'),link=document.createElement('a');link.href='#'+issue.field;link.textContent=issue.message;link.addEventListener('click',event=>{event.preventDefault();document.getElementById(issue.field).focus();});item.append(link);return item;}));
  checkedFields.forEach(field=>field.setAttribute('aria-invalid',String(Boolean(field.value.trim())&&issues.some(issue=>issue.field===field.id))));
- const message=!prompt?(comparing?`${issues.length} ${issues.length===1?'detail':'details'} to complete before copying.`:'Describe your task to create a complete prompt.'):comparing?'Ready to paste. Both subjects, your goal, and criteria are included.':source.value.trim()?'Ready to paste. Your task and source material are included.':'Ready to paste. Your task and answer format are included.';
+ const message=!prompt?(comparing?`${issues.length} ${issues.length===1?'detail':'details'} to complete before copying.`:'Describe your task to create a complete prompt.'):comparing?'Ready to paste. Both subjects, your goal, and criteria are included.':source.value.trim()?'Ready to paste. Your task and source material are included.':task.value==='summary'?'Ready to paste. Add the document under Source material, or the AI will ask for it.':'Ready to paste. Your task and answer format are included.';
  if(status.textContent!==message)status.textContent=message;
  status.classList.toggle('ready',Boolean(prompt));
 }
