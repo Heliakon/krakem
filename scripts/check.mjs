@@ -330,6 +330,10 @@ assert.ok(!css.includes('grass')&&css.includes('@keyframes brand-scatter')&&css.
 await assert.rejects(access(new URL('../dist/assets/grass.svg',import.meta.url)),'grass.svg is no longer shipped.');
 const common=await readFile(new URL('../assets/common.js',import.meta.url),'utf8');
 assert.ok(/function playBrand\(\)\{if\(brandMark&&motion&&!media\.matches/.test(common),'The mark plays only while motion is on and reduced motion is not requested.');
+// Humanize opens like the creator: a short intro, then the tool, with no jump links or extra call to action.
+const humanizePage=await readFile(new URL('../dist/humanize/index.html',import.meta.url),'utf8');
+assert.match(humanizePage,/<main id="main"[^>]*><section class="wrap creator-section human-prompt-section" id="human-prompt"[^>]*>\s*<div class="creator-intro">[\s\S]*?<\/div>\s*<div class="prompt-studio">/,'Humanize shows its tool directly below the intro.');
+assert.ok(!/page-jumps|Create your brief|BRIEF YOUR EDITOR/.test(humanizePage),'Humanize has no jump links or duplicate heading.');
 const evidence=await readFile(new URL('../dist/evidence/index.html',import.meta.url),'utf8');
 assert.ok(!/original thesis/i.test(evidence));assert.ok(evidence.includes('id="humanizers"'));
 assert.equal((evidence.match(/<tr><th scope="row"><a href="https:\/\/github\.com\//g)||[]).length,12,'All four humanizer rows and eight GitHub-count rows remain.');

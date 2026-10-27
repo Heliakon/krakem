@@ -251,7 +251,7 @@
   .example-reason { font-size: 16px; margin-top: 20px; max-width: 80ch; }
   .editing-flow { margin-top: 56px; }
   .dark-note { margin-top: 44px; }
-  .human-prompt-section { padding-top: 0; padding-bottom: 72px; }
+  .human-prompt-section { padding-bottom: 72px; }
   #editing-examples { padding-top: 40px; border-top: 1px solid var(--line); }
 
   .setup-section { padding-block: 8px 64px; }
@@ -391,7 +391,6 @@
     .setup-callout .button { max-width: none; }
     .file-download { grid-template-columns: 1fr; gap: 28px; }
     .file-actions { max-width: 420px; }
-    .human-prompt-section { padding-top: 0; }
     .voice-banner { gap: 24px 36px; }
     .voice-banner h2 { font-size: 40px; }
     .footer-bottom { flex-wrap: wrap; gap: 20px 28px; }
@@ -462,7 +461,6 @@
     .rewrite-pair .annotation { padding-top: 22px; }
     .editing-flow { gap: 28px; margin-top: 40px; }
     .editing-flow h3 { margin-top: 14px; font-size: 26px; }
-    .human-prompt-section { padding-top: 0; }
     #editing-examples { padding-top: 48px; }
     .setup-section { padding-bottom: 48px; }
     .setup-callout { padding: 24px; }
