@@ -1,10 +1,11 @@
 # Krakem
 
-A static, four-page site for writing better AI prompts:
+A static, five-page site for writing better AI prompts:
 
 - **Prompt creator** (`/`): turns a task description, task type, answer format, and optional source material into a complete prompt.
 - **Humanize** (`/humanize/`): turns readers, original text, and an optional voice sample into an editing brief in English, Polish, or Portuguese.
-- **Claude setup** (`/claude/`): a concise, coding-focused CLAUDE.md to preview, copy, or download, and a short guide to Claude Code output styles. Its section links branch from the menu item in the header.
+- **Claude.md** (`/claude/`): a concise, coding-focused CLAUDE.md to preview, copy, or download.
+- **Claude outputs** (`/claude-outputs/`): a short guide to Claude Code output styles, and when CLAUDE.md fits better.
 - **Evidence** (`/evidence/`): sourced checks of the claims behind the site, plus a dated review of eight skill and plugin repositories.
 
 The site composes prompts in the browser. It does not call an AI model, and no visitor text is sent over the network.
@@ -13,7 +14,7 @@ The site composes prompts in the browser. It does not call an AI model, and no v
 
 - **Online:** https://heliakon.github.io/krakem/
 - **Offline:** [download krakem.html](https://github.com/Heliakon/krakem/releases/latest/download/krakem.html) and open it in your browser. It's the whole site in one file, so there's nothing to install, and the prompt tools work without an internet connection. Links to outside sources still need one.
-- **CLAUDE.md:** [download the coding rules](https://heliakon.github.io/krakem/assets/downloads/CLAUDE.md) or preview them on the [Claude setup page](https://heliakon.github.io/krakem/claude/#claude-md).
+- **CLAUDE.md:** [download the coding rules](https://heliakon.github.io/krakem/assets/downloads/CLAUDE.md) or preview them on the [Claude.md page](https://heliakon.github.io/krakem/claude/#claude-md).
 
 Every release also has a `krakem.html.sha256` file. To check your download, run one of these and compare the result with it:
 
@@ -32,6 +33,7 @@ shasum -a 256 krakem.html
   - `prompt.js` and `humanize-brief.js` compose prompts. `guide.js` and `humanize.js` connect them to the forms.
   - `drafts.js` keeps unfinished form drafts in `sessionStorage` for the current tab.
   - `field.js` and `field-shapes.js` draw the particle field.
+  - `common.js` runs the menu, the Motion toggle, and copy buttons. `screensaver.js` shows the idle screensaver.
 - `site.config.json`: the public site URL, used for canonical URLs and social preview tags.
 - `.github/workflows/pages.yml`: builds, checks, and deploys to GitHub Pages.
 - `.github/workflows/release.yml`: when a release is published, attaches `krakem.html` and its SHA-256 checksum.
@@ -86,9 +88,13 @@ sips -s format jpeg -s formatOptions 86 social-preview.png --out assets/social-p
 
 **Particle field.** A full-width field follows the creator: 780px tall on desktop, 620px on tablets, and 560px on phones. Seven unnamed shapes morph every five seconds, starting with a nautilus and a crab. A close camera crops the forms on purpose. Motion and Chaos controls sit beside the animation, and the numbered buttons work with motion off. Rendering respects reduced-motion preferences. It is capped at DPR 1.5 and pauses when offscreen or in a hidden tab.
 
-**Evidence.** The page keeps its original research and review dates. GitHub star counts are a 23 October 2026 snapshot of popularity, not a quality or security signal. All eight reviewed repositories remain listed as historical research. Humanize and Claude setup do not recommend or install skills.
+**Menu.** The header menu is a dock of five buttons. Each shows an icon, a name, and a short description. With a mouse or trackpad and motion on, buttons grow as the pointer approaches. On phones, the descriptions are hidden and the dock spans the full width.
 
-**CLAUDE.md.** Edit `assets/downloads/CLAUDE.md`. The build inserts that file into the Claude setup preview and copies it to the download path. It has no external imports.
+**Screensaver.** After 12 seconds without input (pointer movement, clicks, keys, scrolling, or touch), a Matrix-style rain fades in over 0.8 seconds. Then the page underneath is hidden so it stops painting, and the particle field pauses. Three small controls, placed as in the original screensaver file, set letter speed (top left), fade-in mode (the checkbox), and color (top right, from the site green through blue, purple, orange, and red to white). Moving the pointer keeps the rain so the controls can be reached. A click outside the controls, a key, Escape, or the scroll wheel brings the page back. The click or key that does this does not act on the page, and keyboard focus returns to where it was. It does not start on touch screens, with reduced motion or Motion off, while a form field has focus, or in a hidden tab. The rain is drawn at one canvas pixel per CSS pixel. The standard mode draws a step every 10 to 120 ms, set by the speed control; fade-in mode redraws at most about 30 times a second.
+
+**Evidence.** The page keeps its original research and review dates. GitHub star counts are a 23 October 2026 snapshot of popularity, not a quality or security signal. All eight reviewed repositories remain listed as historical research. Humanize, Claude.md, and Claude outputs do not recommend or install skills.
+
+**CLAUDE.md.** Edit `assets/downloads/CLAUDE.md`. The build inserts that file into the Claude.md page preview and copies it to the download path. It has no external imports.
 
 ## Verification scope
 
@@ -98,7 +104,8 @@ sips -s format jpeg -s formatOptions 86 social-preview.png --out assets/social-p
 - 27 Humanize combinations, including multi-line, quoted, and HTML-like text;
 - draft restore, reset, and blocked or corrupt storage;
 - versioned module imports, a scan for network calls, social metadata, and the Evidence rows;
-- animation timing and lifecycle.
+- animation timing and lifecycle;
+- the five-item menu on every page, and screensaver timing, wake behavior, and the conditions that keep it off.
 
 These are regression checks. They do not establish full accessibility conformance, real-device performance, or model-output quality. Small model evaluations are recorded in `evaluation/`; they are not benchmarks.
 

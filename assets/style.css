@@ -85,24 +85,18 @@
   .brand-mark.play circle { animation: brand-scatter 1.6s cubic-bezier(.55, 0, .2, 1) var(--d) both; }
   .brand-mark.play .brand-spin { animation: brand-turn 1.95s cubic-bezier(.45, 0, .2, 1) both; }
   .site-footer .brand-mark { width: 28px; height: 28px; }
-  .site-header nav { display: grid; grid-template-columns: repeat(4, auto); align-items: stretch; gap: 0 5px; margin-left: auto; padding: 6px; border: 1px solid #344637; border-radius: 17px; background: #09130ee6; }
-  .site-header nav > a { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 52px; padding: 12px 16px; border: 1px solid transparent; border-radius: 11px; color: var(--muted); font-size: 16px; font-weight: 550; line-height: 1.3; text-decoration: none; transition: background .18s, border-color .18s, color .18s; }
-  .nav-icon { width: 20px; height: 20px; flex: 0 0 auto; color: var(--primary); }
-  .site-header nav > a:hover { background: #20331e; border-color: #557a3b; color: var(--text); }
-  .site-header nav > a[aria-current=page] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); box-shadow: 0 3px 14px #82c3411c; }
-  .site-header nav > a[aria-current=page] .nav-icon { color: currentColor; }
-  /* Section links branch from the current menu item like a small tree diagram. */
-  .subnav { --tree: #557a3b; grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; }
-  .subnav-trunk { grid-column: var(--branch); justify-self: center; width: 2px; height: 16px; background: var(--tree); }
-  .subnav ul { grid-column: 1 / -1; display: flex; margin: 0; padding: 0; list-style: none; }
-  .subnav li { position: relative; flex: 1; display: flex; justify-content: center; padding-top: 16px; }
-  .subnav li::before { content: ""; position: absolute; top: 0; left: 0; right: 0; border-top: 2px solid var(--tree); }
-  .subnav li:first-child::before { left: 50%; }
-  .subnav li:last-child::before { right: 50%; }
-  .subnav li::after { content: ""; position: absolute; top: 0; left: calc(50% - 1px); width: 2px; height: 16px; background: var(--tree); }
-  .subnav a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px; border: 1px solid #344637; border-radius: 10px; background: #142019; color: var(--muted); font-size: 15px; font-weight: 550; line-height: 1.3; text-decoration: none; white-space: nowrap; }
-  .subnav a:hover { background: #20331e; border-color: #557a3b; color: var(--text); }
-  .subnav .section-no { color: var(--primary); font: 13px/1 var(--mono); }
+  /* Main menu: a dock. Items grow as the pointer approaches (common.js sets --m from 0 to 1); each shows its name and a short description. */
+  .dock { display: flex; align-items: flex-end; gap: 6px; margin-left: auto; padding: 8px; border: 1px solid #344637; border-radius: 22px; background: #09130ee6; }
+  .dock-item { --m: 0; display: grid; justify-items: center; align-content: end; gap: 4px; min-width: calc(112px + var(--m) * 22px); height: 100px; padding: 4px 12px 8px; border: 1px solid transparent; border-radius: 16px; color: var(--subtle); text-align: center; text-decoration: none; transform: translateY(calc(var(--m) * -3px)); transition: background .18s, border-color .18s; }
+  .dock-icon { display: grid; place-items: center; width: calc(36px + var(--m) * 12px); height: calc(36px + var(--m) * 12px); border-radius: 50%; background: #1a2a1c; color: var(--primary); }
+  .dock-icon svg { width: calc(19px + var(--m) * 5px); height: calc(19px + var(--m) * 5px); }
+  .dock-label { color: var(--text); font-size: 14px; font-weight: 600; line-height: 1.2; white-space: nowrap; }
+  .dock-note { font-size: 12px; line-height: 1.25; white-space: nowrap; }
+  .dock-item:hover { background: #16251a; border-color: #3f5c34; }
+  .dock-item:hover .dock-icon { background: #253d22; }
+  .dock-item[aria-current=page] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); box-shadow: 0 3px 14px #82c3411c; }
+  .dock-item[aria-current=page] .dock-label { color: var(--on-primary); }
+  .dock-item[aria-current=page] .dock-icon { background: var(--on-primary); color: var(--primary); }
   .page-intro { padding-block: 64px 68px; }
   .page-intro h1 { max-width: 1100px; }
   .intro-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 44px; margin-top: 30px; }
@@ -254,13 +248,11 @@
   .human-prompt-section { padding-bottom: 72px; }
   #editing-examples { padding-top: 40px; border-top: 1px solid var(--line); }
 
-  .setup-section { padding-block: 8px 64px; }
   .setup-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
   .setup-options > div { border-top: 1px solid var(--line); padding-top: 22px; }
   .setup-options dt { color: var(--text); font-size: 25px; line-height: 1.3; margin-bottom: 14px; }
   .setup-options dt a { display: inline-flex; min-height: 44px; align-items: center; margin-top: -6px; color: var(--primary); }
   .setup-options dd { max-width: 54ch; color: var(--muted); font-size: 18px; }
-  .setup-options.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .style-list { margin-bottom: 8px; }
   .subsection-title { margin: 64px 0 18px; }
   #output-styles { border-top: 1px solid var(--line); }
@@ -326,6 +318,17 @@
   .github-counts-table .github-stars { white-space: nowrap; font-variant-numeric: tabular-nums; }
   .repository-alias { display: block; margin-top: 8px; color: var(--subtle); font-size: 14px; font-weight: 400; }
   .table-scroll + .fine-print { margin-block: 24px 30px; max-width: 92ch; }
+  /* Screensaver: covers the page after 12 seconds without input (screensaver.js); the page underneath stops painting. */
+  .screensaver { position: fixed; inset: 0; z-index: 1000; background: #000; opacity: 0; transition: opacity .8s ease; }
+  .screensaver.on { opacity: 1; }
+  .screensaver canvas { display: block; width: 100%; height: 100%; }
+  /* Corner controls, placed as in the original screensaver file. "all: revert" drops the site's form-field styles. */
+  .screensaver input { all: revert; position: absolute; top: 10px; margin: 0; accent-color: var(--c, #82c341); opacity: .2; }
+  .screensaver input[type=range] { width: 70px; height: 12px; }
+  .screensaver .saver-speed { left: 10px; }
+  .screensaver .saver-smooth { top: 9px; left: 86px; width: 12px; height: 12px; }
+  .screensaver .saver-color { right: 10px; }
+  .screensaver-on body > :not(.screensaver) { visibility: hidden; }
   .reveal-ready { animation: enter .55s both; }
   .motion-paused .reveal-ready { animation: none; }
   @keyframes brand-scatter { 0%, 100% { transform: translate(0, 0); } 45% { transform: translate(var(--dx), var(--dy)); } }
@@ -337,10 +340,7 @@
   @media (max-width: 1100px) {
     .wrap, .nav-wrap { width: calc(100% - 64px); }
     .nav-wrap { gap: 16px; padding-inline: 16px; }
-    .site-header .brand { min-width: 175px; padding-left: 0; }
-    .site-header nav { gap: 0 4px; }
-    .site-header nav > a { padding-inline: 11px; gap: 7px; font-size: 15px; }
-    .subnav a { padding-inline: 10px; font-size: 14px; }
+    .site-header .brand { min-width: 0; padding-left: 0; }
     .creator-intro, .figure-heading, .section-heading { gap: 36px; }
     .creator-intro > p { max-width: 330px; font-size: 19px; }
     .prompt-settings, .prompt-result { padding: 28px; }
@@ -355,11 +355,13 @@
     .install-steps { grid-template-columns: 1fr; gap: 26px; }
     .claim-list article { grid-template-columns: 165px minmax(0, 1fr); gap: 32px; }
   }
+  @media (max-width: 980px) {
+    .nav-wrap { flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 12px; }
+    .site-header .brand { min-height: 56px; padding-left: 12px; }
+    .dock { order: 3; width: 100%; margin: 0; }
+    .dock-item { flex: 1 1 0; min-width: 0; }
+  }
   @media (max-width: 850px) {
-    .nav-wrap { flex-wrap: wrap; justify-content: space-between; gap: 16px; padding: 12px; }
-    .site-header .brand { min-height: 64px; min-width: 220px; padding-left: 12px; }
-    .site-header nav { order: 3; width: 100%; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 5px; margin: 0; }
-    .site-header nav > a { padding-inline: 12px; }
     .section-pad { padding-block: 72px; }
     .page-intro { padding-block: 48px 56px; }
     .creator-intro, .figure-heading, .section-heading, .intro-bottom { display: block; }
@@ -408,14 +410,13 @@
     .brand { font-size: 25px; }
     .site-header { padding-block: 12px 4px; }
     .nav-wrap { width: calc(100% - 24px); gap: 14px; padding: 10px; border-radius: 20px; }
-    .site-header nav { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: 1fr 1fr; gap: 6px; padding: 5px; border-radius: 14px; }
-    .site-header nav > a { justify-content: flex-start; min-height: 52px; padding: 10px; font-size: 14px; }
-    .site-header nav > a:not([aria-current=page]) { background: #142019; }
-    .subnav { margin-top: -6px; }
-    .subnav-trunk { grid-column: var(--branch-sm); }
-    .subnav li { padding-inline: 2px; }
-    .subnav a { flex-direction: column; justify-content: center; gap: 3px; width: 100%; padding: 7px 4px; font-size: 13px; text-align: center; white-space: normal; }
-    .nav-icon { width: 18px; height: 18px; }
+    .dock { gap: 4px; padding: 5px; border-radius: 16px; }
+    /* Labels wrap on phones, so icons align to the top instead of the bottom. */
+    .dock-item { min-width: 0; height: 74px; padding: 6px 2px 8px; gap: 4px; border-radius: 12px; align-content: start; }
+    .dock-icon { width: 30px; height: 30px; }
+    .dock-icon svg { width: 17px; height: 17px; }
+    .dock-label { font-size: 11px; line-height: 1.15; white-space: normal; }
+    .dock-note { display: none; }
     .section-pad { padding-block: 56px; }
     .section-heading { margin-bottom: 32px; }
     .section-heading > p, .figure-heading > p { font-size: 18px; }
@@ -462,7 +463,6 @@
     .editing-flow { gap: 28px; margin-top: 40px; }
     .editing-flow h3 { margin-top: 14px; font-size: 26px; }
     #editing-examples { padding-top: 48px; }
-    .setup-section { padding-bottom: 48px; }
     .setup-callout { padding: 24px; }
     .setup-callout h2 { font-size: 26px; }
     #claude-md { padding-top: 48px; }
@@ -500,10 +500,11 @@
     .file-actions .button { padding-inline: 16px; gap: 12px; }
   }
   @media (max-width: 380px) {
-    .nav-wrap { column-gap: 8px; }
+    .nav-wrap { column-gap: 8px; padding: 8px; }
+    .dock { gap: 2px; padding: 4px; }
+    .dock-item { padding-inline: 0; }
+    .dock-label { font-size: 10px; }
     .site-header .brand { font-size: 22px; gap: 8px; }
-    .site-header nav > a { padding-inline: 7px; font-size: 14px; gap: 6px; }
-    .nav-icon { width: 16px; height: 16px; }
     .creator-intro h1 { font-size: clamp(32px, 10vw, 38px); }
     .page-intro h1 { font-size: 34px; }
   }
@@ -513,7 +514,7 @@
   }
   @media (forced-colors: active) {
     .button, .copy-button, .segmented button, .figure-selector button { border: 1px solid ButtonText; }
-    [aria-pressed=true], .site-header nav a[aria-current=page] { outline: 2px solid Highlight; outline-offset: -4px; }
+    [aria-pressed=true], .dock-item[aria-current=page] { outline: 2px solid Highlight; outline-offset: -4px; }
     :focus-visible { outline: 3px solid Highlight; }
   }
 }

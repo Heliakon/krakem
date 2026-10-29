@@ -51,10 +51,10 @@ OFFLINE = ROOT.parent / 'release' / 'krakem.html'
 if OFFLINE.exists():
     page = Page(); page.feed(OFFLINE.read_text())
     offline_pages = OFFLINE.read_text().count('class="offline-page"')
-    assert offline_pages == 4 and page.h1 == 4 and page.titles == 1, ('offline pages', offline_pages, page.h1)
+    assert offline_pages == 5 and page.h1 == 5 and page.titles == 1, ('offline pages', offline_pages, page.h1)
     assert all(target in page.ids for target in page.labels), 'broken offline form label'
     for link in page.links:
         if link.startswith(('https://', 'mailto:', 'data:')): continue
         assert link.startswith('#') and link[1:] in page.ids, ('offline link has no in-file target', link[:80])
     assert '<script src' not in OFFLINE.read_text() and 'rel="stylesheet"' not in OFFLINE.read_text(), 'offline file loads external files'
-    print('PASS: offline krakem.html has four pages, unique IDs, labelled fields, and only in-file, data, or https links.')
+    print('PASS: offline krakem.html has five pages, unique IDs, labelled fields, and only in-file, data, or https links.')

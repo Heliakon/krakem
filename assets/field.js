@@ -7,7 +7,7 @@ if(ctx){
  const progress=document.getElementById('figure-progress'),timing=document.getElementById('figure-timing');
  const chaosButton=document.getElementById('chaos-toggle');
  let chaos=false,chaosMix=0;
- let w=0,h=0,dpr=1,frame=0,last=0,clock=0,cycleTime=0,current=0,transitionStart=-MORPH_MS,inView=true;
+ let w=0,h=0,dpr=1,frame=0,last=0,clock=0,cycleTime=0,current=0,transitionStart=-MORPH_MS,inView=true,covered=false;
  let enabled=window.clearformMotion??!matchMedia('(prefers-reduced-motion: reduce)').matches;
  let from=figures[0].vertices,fromFrame=figures[0].frame;
  const pointer={x:0,y:0,tx:0,ty:0};
@@ -104,7 +104,7 @@ if(ctx){
   progress.style.transform=`scaleX(${cycleTime/CYCLE_MS})`;
  }
  function loop(now){
-  frame=0;if(!enabled||!inView||document.hidden)return;
+  frame=0;if(!enabled||!inView||covered||document.hidden)return;
   if(now-last>=32){
    const delta=now-last;last=now;clock+=delta;
    updateSwarm(delta);
@@ -115,11 +115,13 @@ if(ctx){
   }
   frame=requestAnimationFrame(loop);
  }
- function schedule(){if(enabled&&inView&&!document.hidden&&!frame){last=performance.now();frame=requestAnimationFrame(loop);}}
+ function schedule(){if(enabled&&inView&&!covered&&!document.hidden&&!frame){last=performance.now();frame=requestAnimationFrame(loop);}}
  stage.addEventListener('pointermove',e=>{if(!enabled)return;const r=stage.getBoundingClientRect();pointer.tx=(e.clientX-r.left)/r.width-.5;pointer.ty=(e.clientY-r.top)/r.height-.5;});
  stage.addEventListener('pointerleave',()=>{pointer.tx=pointer.ty=0;});
  chaosButton.addEventListener('click',()=>setChaos(!chaos));
  buttons.forEach(button=>button.addEventListener('click',()=>{chaos=false;if(!enabled)chaosMix=0;changeFigure(Number(button.dataset.figure));schedule();}));
+ // The screensaver covers the page; stop drawing until it is dismissed.
+ window.addEventListener('krakem-screensaver',e=>{covered=e.detail;if(covered){cancelAnimationFrame(frame);frame=0;}else schedule();});
  window.addEventListener('clearform-motion',e=>{enabled=e.detail;if(!enabled){cancelAnimationFrame(frame);frame=0;draw();}labels();schedule();});
  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(frame);frame=0;}else schedule();});
  new ResizeObserver(resize).observe(stage);

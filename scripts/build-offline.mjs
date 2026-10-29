@@ -3,7 +3,7 @@
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 const root=new URL('../',import.meta.url);
 const read=path=>readFile(new URL(path,root),'utf8');
-const pages=[['guide',''],['humanize','humanize/'],['claude','claude/'],['evidence','evidence/']];
+const pages=[['guide',''],['humanize','humanize/'],['claude','claude/'],['outputs','claude-outputs/'],['evidence','evidence/']];
 const routes=Object.fromEntries(pages.map(([key,path])=>[`/${path}`,key]));
 const html=Object.fromEntries(await Promise.all(pages.map(async([key,path])=>[key,await read(`dist/${path}index.html`)])));
 const pick=(source,pattern,label)=>{const match=source.match(pattern);if(!match)throw new Error(`Missing ${label} in the built pages.`);return match[1];};
@@ -21,8 +21,7 @@ function localize(fragment,path){
  });
 }
 
-const [claudeKey,claudePath]=pages[2];
-const header=localize(pick(html[claudeKey],/(<header class="site-header">[\s\S]*?<\/header>)/,'header'),claudePath);
+const header=localize(pick(html.guide,/(<header class="site-header">[\s\S]*?<\/header>)/,'header'),'');
 const footer=localize(pick(html.guide,/(<footer class="site-footer">[\s\S]*?<\/footer>)/,'footer'),'');
 const bodies=pages.map(([key,path],i)=>{
  const title=pick(html[key],/<title>([^<]*)<\/title>/,'title'),main=pick(html[key],/<main id="main" tabindex="-1">([\s\S]*)<\/main>/,'main');
@@ -41,9 +40,9 @@ async function bundle(file){
  return exported.length?`const ${moduleName(file)}=(()=>{\n${code}\nreturn {${exported.join(',')}};\n})();`:`(()=>{\n${code}\n})();`;
 }
 const router=`(()=>{
- // Shows the page that contains the linked element, so in-page anchors work across all four pages.
- const pages=[...document.querySelectorAll('.offline-page')],subnav=document.querySelector('.subnav');
- const menu=[...document.querySelectorAll('.site-header nav > a')].map(link=>[link,document.getElementById(link.hash.slice(1))?.closest('.offline-page')]);
+ // Shows the page that contains the linked element, so in-page anchors work across every page.
+ const pages=[...document.querySelectorAll('.offline-page')];
+ const menu=[...document.querySelectorAll('.dock-item')].map(link=>[link,document.getElementById(link.hash.slice(1))?.closest('.offline-page')]);
  function show(scroll){
   const target=location.hash.length>1?document.getElementById(decodeURIComponent(location.hash.slice(1))):null;
   const page=target?target.closest('.offline-page'):pages[0];
@@ -51,14 +50,13 @@ const router=`(()=>{
    pages.forEach(p=>p.hidden=p!==page);
    document.body.dataset.page=page.dataset.page;document.title=page.dataset.title;
    menu.forEach(([link,linked])=>linked===page?link.setAttribute('aria-current','page'):link.removeAttribute('aria-current'));
-   if(subnav)subnav.hidden=page.dataset.page!=='claude';
   }
   if(scroll)target&&target!==page?target.scrollIntoView():window.scrollTo(0,0);
  }
  addEventListener('hashchange',()=>show(true));
  show(location.hash.length>1);
 })();`;
-const scripts=[router,...await Promise.all(['prompt.js','drafts.js','humanize-brief.js','field-shapes.js','common.js','field.js','guide.js','humanize.js'].map(bundle))].join('\n');
+const scripts=[router,...await Promise.all(['prompt.js','drafts.js','humanize-brief.js','field-shapes.js','common.js','screensaver.js','field.js','guide.js','humanize.js'].map(bundle))].join('\n');
 if(/<\/script/i.test(scripts))throw new Error('A script contains a closing script tag.');
 
 const icon=await read('assets/icon.svg'),description=pick(html.guide,/<meta name="description" content="([^"]*)">/,'description');

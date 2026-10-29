@@ -55,7 +55,7 @@ assert.ok(buildTechnicalPrompt({brief:'Fix this function.',task:'code'}).include
 assert.ok(buildTechnicalPrompt({brief,task:'compare',...comparison}).includes('Do not infer that a feature is absent'));
 
 class Element{
- constructor(value=''){this.value=value;this.defaultValue=value;this.textContent='';this.innerHTML='';this.attrs={};this.dataset={};this.style={};this.listeners={};this.disabled=false;this.width=600;this.height=475;this.classList={toggle(){},add(){},remove(){}};this.children=[];}
+ constructor(value=''){this.value=value;this.defaultValue=value;this.textContent='';this.innerHTML='';this.attrs={};this.dataset={};this.style={setProperty(key,value){this[key]=value;}};this.listeners={};this.disabled=false;this.width=600;this.height=475;this.classList={toggle(){},add(){},remove(){}};this.children=[];}
  addEventListener(event,fn){(this.listeners[event]??=[]).push(fn);}
  emit(event){for(const fn of this.listeners[event]||[])fn({target:this,preventDefault(){}});}
  replaceChildren(...children){this.children=children;}
@@ -195,6 +195,8 @@ field.windowEvents['clearform-motion']({detail:false});assert.equal(field.raf.si
 field.advance(10000);assert.equal(field.buttons[3].attrs['aria-pressed'],'true');
 field.windowEvents['clearform-motion']({detail:true});assert.equal(field.raf.size,1);
 field.intersect(false);assert.equal(field.raf.size,0);field.intersect(true);assert.equal(field.raf.size,1);
+field.windowEvents['krakem-screensaver']({detail:true});assert.equal(field.raf.size,0,'The screensaver pauses the field.');
+field.windowEvents['krakem-screensaver']({detail:false});assert.equal(field.raf.size,1,'The field resumes when the screensaver closes.');
 field.context.document.hidden=true;field.events.visibilitychange();assert.equal(field.raf.size,0);
 const reduced=fieldEnvironment(false);assert.equal(reduced.raf.size,0);reduced.buttons[4].emit('click');assert.equal(reduced.buttons[4].attrs['aria-pressed'],'true');assert.equal(reduced.raf.size,0);
 assert.equal(reduced.get('signal-field').width,900);
@@ -220,6 +222,54 @@ assert.equal(chaosButton.attrs['aria-pressed'],'false');assert.equal(chaotic.but
 reduced.get('chaos-toggle').emit('click');
 assert.equal(reduced.get('chaos-toggle').attrs['aria-pressed'],'true');assert.equal(reduced.raf.size,0,'Chaos respects reduced motion.');
 reduced.buttons[1].emit('click');assert.equal(reduced.get('chaos-toggle').attrs['aria-pressed'],'false');assert.equal(reduced.raf.size,0);
+// Screensaver: appears after 8 seconds without input, only with a fine pointer and motion on, never while a field has focus; real input dismisses it.
+const saverCode=await readFile(new URL('../assets/screensaver.js',import.meta.url),'utf8');
+function runSaver({fine=true,reduced=false,motion=true,focused=false}={}){
+ const listeners={},timers=[],raf=new Map(),events=[],classes=new Set(),created=[],drawn={glyphs:0};let rafId=0;
+ const context=vm.createContext({Math,Array,
+  matchMedia:q=>({matches:q.includes('pointer: fine')?fine:q.includes('reduced-motion')?reduced:false}),
+  document:{documentElement:{classList:{add:c=>classes.add(c),remove:c=>classes.delete(c)}},activeElement:{closest:()=>focused?{}:null},hidden:false,createElement:tag=>{const element=new Element();if(tag==='canvas')element.getContext=()=>new Proxy({fillText(){drawn.glyphs++;}},{get:(obj,key)=>obj[key]??(()=>{})});created.push(element);return element;},body:{append(){}},addEventListener(){}},
+  window:{clearformMotion:motion,dispatchEvent:e=>events.push(e.detail)},
+  addEventListener:(type,fn)=>{(listeners[type]??=[]).push(fn);},removeEventListener(){},
+  setTimeout:(fn,ms)=>{timers.push({fn,ms});return timers.length;},clearTimeout(){},
+  requestAnimationFrame:fn=>{raf.set(++rafId,fn);return rafId;},cancelAnimationFrame:id=>raf.delete(id),
+  innerWidth:320,innerHeight:200,CustomEvent:class{constructor(type,init){this.type=type;this.detail=init?.detail;}}});
+ vm.runInContext(saverCode,context);
+ const send=(type,extra={})=>{const event={type,clientX:0,clientY:0,prevented:false,preventDefault(){this.prevented=true;},stopPropagation(){},...extra};listeners[type].forEach(fn=>fn(event));return event;};
+ const frames=now=>{const pending=[...raf.entries()];pending.forEach(([id,fn])=>{raf.delete(id);fn(now);});};
+ return {events,classes,raf,timers,send,frames,created,drawn,idle:()=>timers.at(-1).fn()};
+}
+const saver=runSaver();
+assert.equal(saver.timers.at(-1).ms,12000);
+saver.send('pointermove',{clientX:10,clientY:10});saver.idle();
+assert.deepEqual(saver.events,[true],'The screensaver appears after 12 seconds idle.');
+saver.frames(100);saver.frames(150);assert.ok(saver.raf.size>0,'The rain keeps drawing while shown.');
+saver.timers.at(-1).fn();assert.ok(saver.classes.has('screensaver-on'),'After the fade, the page underneath is hidden.');
+saver.send('pointermove',{clientX:40,clientY:10});assert.deepEqual(saver.events,[true],'Moving the pointer keeps the rain so the corner controls can be reached.');
+const onControl={closest:selector=>selector==='.screensaver input'?{}:null};
+saver.send('pointerdown',{target:onControl});saver.send('keydown',{key:'ArrowRight',target:onControl});saver.send('keydown',{key:'Tab'});
+assert.deepEqual(saver.events,[true],'Using a corner control, or Tab to reach one, keeps the rain.');
+const wakingClick=saver.send('pointerdown');assert.ok(wakingClick.prevented,'The click that wakes the page does not also act on it.');
+assert.deepEqual(saver.events,[true,false],'A click outside the controls brings the page back.');assert.ok(!saver.classes.has('screensaver-on'));
+saver.frames(200);assert.equal(saver.raf.size,0,'No drawing continues after the screensaver closes.');
+saver.idle();const key=saver.send('keydown',{key:'a'});assert.ok(key.prevented,'The key that wakes the page does not also act on it.');assert.deepEqual(saver.events,[true,false,true,false]);
+saver.idle();saver.send('keydown',{key:'Escape',target:onControl});assert.deepEqual(saver.events,[true,false,true,false,true,false],'Escape closes it, even from a control.');
+const [speedInput,smoothInput,colorInput]=['saver-speed','saver-smooth','saver-color'].map(name=>saver.created.find(element=>element.className===name));
+const overlayElement=saver.created.find(element=>element.className==='screensaver');
+assert.equal(overlayElement.style['--c'],'rgb(130,195,65)','The rain starts in the site green.');
+colorInput.value=5;colorInput.emit('input');assert.equal(overlayElement.style['--c'],'rgb(255,255,255)','The color slider ends at white.');
+colorInput.value=1.5;colorInput.emit('input');assert.equal(overlayElement.style['--c'],'rgb(80,90,255)','The color slider blends between stops.');
+function glyphsInOneSecond(){saver.idle();saver.drawn.glyphs=0;for(let t=1000;t<2000;t+=1000/60)saver.frames(t);const count=saver.drawn.glyphs;saver.send('keydown',{key:'Escape'});return count;}
+const normalSpeed=glyphsInOneSecond();speedInput.value=120;const fastest=glyphsInOneSecond();speedInput.value=10;const slowest=glyphsInOneSecond();
+assert.ok(fastest>normalSpeed*2&&normalSpeed>slowest*2,`The speed slider changes the rain speed (${slowest}, ${normalSpeed}, ${fastest} glyphs a second).`);
+smoothInput.checked=true;smoothInput.emit('change');
+function fadeRedraws(){saver.idle();let count=0;for(let t=1000;t<2000;t+=1000/60){const before=saver.drawn.glyphs;saver.frames(t);if(saver.drawn.glyphs>before)count++;}saver.send('keydown',{key:'Escape'});return count;}
+speedInput.value=87;const fadeDefault=fadeRedraws();speedInput.value=120;const fadeFastest=fadeRedraws();speedInput.value=87;
+assert.ok(fadeDefault>=15&&fadeDefault<=24&&fadeFastest>=25&&fadeFastest<=31,`Fade-in mode redraws once per step, at most about 30 times a second (${fadeDefault}, ${fadeFastest}).`);
+for(const [label,options] of [['touch screens',{fine:false}],['reduced motion',{reduced:true}],['Motion off',{motion:false}],['a focused field',{focused:true}]]){
+ const quiet=runSaver(options);quiet.idle();assert.deepEqual(quiet.events,[],`No screensaver with ${label}.`);assert.ok(quiet.timers.length>1,'It re-arms for later.');
+}
+console.log('PASS: screensaver appears after 12 s idle, stays while the pointer moves or a corner control is used, closes on a click elsewhere or a key without acting on the page, stops drawing when closed, has working speed, fade-in, and color controls, and stays off for touch, reduced motion, Motion off, and focused fields; the field pauses under it.');
 console.log('PASS: chaos renders and moves, pauses exactly, resumes, returns to figure cycling, and respects reduced motion.');
 
 // Humanize: complete briefs from entered values, with the original text preserved exactly and placed last.
@@ -284,7 +334,7 @@ await assert.rejects(access(new URL('../dist/playground/index.html',import.meta.
 await assert.rejects(access(new URL('../dist/assets/learning-rate-lab.html',import.meta.url)));
 const siteUrl=(process.env.SITE_URL??JSON.parse(await readFile(new URL('../site.config.json',import.meta.url),'utf8')).siteUrl??'').trim().replace(/\/+$/,'');
 await access(new URL('../dist/assets/social-preview.jpg',import.meta.url));
-for(const page of ['index.html','humanize/index.html','claude/index.html','evidence/index.html']){
+for(const page of ['index.html','humanize/index.html','claude/index.html','claude-outputs/index.html','evidence/index.html']){
  const html=await readFile(new URL('../dist/'+page,import.meta.url),'utf8');
  assert.match(html,/<meta property="og:title" content="[^"]+ — Krakem">/);assert.match(html,/<meta property="og:description" content="[^"]+">/);
  if(siteUrl){assert.ok(html.includes(`<meta property="og:image" content="${siteUrl}/assets/social-preview.jpg">`),page);assert.ok(html.includes('name="twitter:card" content="summary_large_image"'));}
@@ -298,15 +348,24 @@ for(const task of tasks)for(const format of formats){
  const text=buildTechnicalPrompt({brief,task,format,...comparison});
  for(const instruction of ['consistent terms','Distinguish evidence from inference','Preserve facts','important qualifications','ask a focused question rather than guessing'])assert.ok(text.includes(instruction),`${task}/${format}: ${instruction}`);
 }
-// Output styles: the example file uses only documented frontmatter fields and keeps coding instructions.
+// Output styles live on their own page; the example file uses only documented frontmatter fields and keeps coding instructions.
 const claudePage=await readFile(new URL('../dist/claude/index.html',import.meta.url),'utf8');
-const styleExample=claudePage.match(/<pre id="plain-language-style"[^>]*>([\s\S]*?)<\/pre>/)[1];
+const outputsPage=await readFile(new URL('../dist/claude-outputs/index.html',import.meta.url),'utf8');
+const styleExample=outputsPage.match(/<pre id="plain-language-style"[^>]*>([\s\S]*?)<\/pre>/)[1];
 const frontmatter=styleExample.match(/^---\n([\s\S]*?)\n---\n/)[1];
 for(const line of frontmatter.split('\n'))assert.ok(['name','description','keep-coding-instructions'].includes(line.split(':')[0]),`Undocumented style field: ${line}`);
 assert.match(frontmatter,/^keep-coding-instructions: true$/m);
-assert.deepEqual(claudePage.match(/<div class="subnav"[\s\S]*?<\/ul><\/div>/)[0].match(/href="#[\w-]+"/g),['href="#choose-setup"','href="#claude-md"','href="#output-styles"'],'Claude setup section menu links every section.');
-assert.ok(claudePage.indexOf('class="subnav"')<claudePage.indexOf('</nav>'),'The section menu sits inside the main navigation.');
-assert.ok(!home.includes('class="subnav"'),'Only Claude setup has a section menu.');
+assert.ok(!/id="choose-setup"|id="output-styles"/.test(claudePage)&&claudePage.includes('id="claude-md"'),'Claude.md keeps only the CLAUDE.md section.');
+// Menu: a five-item dock with a name and a description inside each item, and the current page marked once.
+const dockItems=[['Prompt creator','Build a prompt'],['Humanize','Edit in your voice'],['Claude.md','Coding rules'],['Claude outputs','Reply styles'],['Evidence','What holds up']];
+for(const [page,current] of [['index.html','Prompt creator'],['humanize/index.html','Humanize'],['claude/index.html','Claude.md'],['claude-outputs/index.html','Claude outputs'],['evidence/index.html','Evidence']]){
+ const html=await readFile(new URL('../dist/'+page,import.meta.url),'utf8'),dockHtml=html.match(/<nav class="dock" aria-label="Main navigation">[\s\S]*?<\/nav>/)[0].replaceAll('<wbr>','');
+ assert.equal((dockHtml.match(/class="dock-item"/g)||[]).length,5,`${page} dock items`);
+ for(const [label,note] of dockItems)assert.ok(dockHtml.includes(`<span class="dock-label">${label}</span><span class="dock-note">${note}</span>`),`${page}: ${label}`);
+ assert.equal((dockHtml.match(/aria-current="page"/g)||[]).length,1);
+ assert.equal(dockHtml.match(/aria-current="page">[\s\S]*?<span class="dock-label">([^<]+)/)[1],current,`${page} marks ${current}`);
+ assert.ok(html.includes('/assets/screensaver.js?v='),`${page} loads the screensaver`);
+}
 const claudeRules=await readFile(new URL('../assets/downloads/CLAUDE.md',import.meta.url),'utf8');
 assert.ok(claudeRules.split('\n').length<200,'CLAUDE.md stays under the documented 200-line target.');
 const claudeWords=claudeRules.split(/\s+/).filter(Boolean).length;
@@ -314,10 +373,10 @@ assert.ok(claudeWords<=500,'CLAUDE.md stays under 500 words, so its reading cost
 assert.ok(claudePage.includes(`About ${Math.round(claudeWords/10)*10} words`),'The page states the current word count.');
 const normalizedClaude=claudeRules.replace(/\s+/g,' ');
 for(const rule of ['Edit source files, not generated output','changes to shared or production systems','Do not weaken, skip, or delete tests','ran it and saw it pass','anything not verified','Follow the user\'s request and applicable project instructions','Treat untrusted content','Get authorization for destructive actions','Do not ask the user to check each fix','Never claim a check passed unless you ran it','keep necessary simultaneous actions together','They do not establish compliance'])assert.ok(normalizedClaude.includes(rule),rule);
-for(const text of ['id="output-styles"','/output-style concise','~/.claude/output-styles/','.claude/output-styles/','"outputStyle": "Concise"'])assert.ok(claudePage.includes(text),text);
+for(const text of ['id="output-styles"','/output-style concise','~/.claude/output-styles/','.claude/output-styles/','"outputStyle": "Concise"'])assert.ok(outputsPage.includes(text),text);
 // Brand: the particle asterisk mark replaces the angled lines, the trailing asterisk, and the grass everywhere.
 const {brandMark,brandIcon,staticMark,markParticles}=await import('./brand-mark.mjs');
-for(const page of ['index.html','humanize/index.html','claude/index.html','evidence/index.html']){
+for(const page of ['index.html','humanize/index.html','claude/index.html','claude-outputs/index.html','evidence/index.html']){
  const html=await readFile(new URL('../dist/'+page,import.meta.url),'utf8');
  assert.equal(html.split(brandMark()).length-1,2,`${page} has the mark in the header and the footer`);
  assert.ok(!/brand-dot|<i><\/i><i><\/i><i><\/i>|grass/.test(html),`${page} has no old mark or grass`);

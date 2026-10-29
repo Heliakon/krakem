@@ -13,6 +13,25 @@ function updateMotion(){
 updateMotion();
 motionButton?.addEventListener('click',()=>{motion=!motion;preference=motion?'on':'off';try{localStorage.setItem('clearform-motion',preference);}catch{}updateMotion();});
 media.addEventListener('change',()=>{if(preference===null){motion=!media.matches;updateMotion();}});
+// Dock magnification: items grow as the pointer approaches, with a fine pointer and motion on. The loop runs only while sizes change.
+const dock=document.querySelector('.dock');
+if(dock&&matchMedia('(hover: hover) and (pointer: fine)').matches){
+ const dockItems=[...dock.querySelectorAll('.dock-item')],levels=dockItems.map(()=>0);
+ let pointerX=null,dockFrame=0;
+ function magnify(){
+  dockFrame=0;let settling=false;
+  dockItems.forEach((item,i)=>{
+   const box=item.getBoundingClientRect(),target=pointerX===null||!motion||media.matches?0:Math.max(0,1-Math.abs(pointerX-(box.left+box.width/2))/170);
+   levels[i]+=(target-levels[i])*.28;
+   if(Math.abs(target-levels[i])<.004)levels[i]=target;else settling=true;
+   item.style.setProperty('--m',levels[i].toFixed(3));
+  });
+  if(settling)dockFrame=requestAnimationFrame(magnify);
+ }
+ const startMagnify=()=>{if(!dockFrame)dockFrame=requestAnimationFrame(magnify);};
+ dock.addEventListener('pointermove',event=>{pointerX=event.clientX;startMagnify();});
+ dock.addEventListener('pointerleave',()=>{pointerX=null;startMagnify();});
+}
 // The header mark plays once after load and again on hover or focus, only while decorative motion is on.
 const brandLink=document.querySelector('.site-header .brand'),brandMark=brandLink?.querySelector('.brand-mark'),brandSpin=brandMark?.querySelector('.brand-spin');
 function playBrand(){if(brandMark&&motion&&!media.matches&&!brandMark.classList.contains('play'))brandMark.classList.add('play');}
