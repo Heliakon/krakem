@@ -46,15 +46,25 @@ for css in ROOT.rglob('*.css'):
         assert (css.parent/ref.split('?')[0]).resolve().exists(),(css,'missing url() target',ref)
 print('PASS: all page titles, headings, IDs, form labels, relative navigation, internal anchors, script/style assets, CSS images, and download links.')
 
-# The offline copy must work from disk: every link is in-file, a data URL, or an external https page.
+# The offline copy must work from disk: every link is in-file, a ?lang= switch to another language, a data URL, or an external https page.
+# Each language is a separate <template>; only one is placed in the page, so IDs only need to be unique within a language.
 OFFLINE = ROOT.parent / 'release' / 'krakem.html'
 if OFFLINE.exists():
-    page = Page(); page.feed(OFFLINE.read_text())
-    offline_pages = OFFLINE.read_text().count('class="offline-page"')
-    assert offline_pages == 5 and page.h1 == 5 and page.titles == 1, ('offline pages', offline_pages, page.h1)
-    assert all(target in page.ids for target in page.labels), 'broken offline form label'
-    for link in page.links:
-        if link.startswith(('https://', 'mailto:', 'data:')): continue
-        assert link.startswith('#') and link[1:] in page.ids, ('offline link has no in-file target', link[:80])
-    assert '<script src' not in OFFLINE.read_text() and 'rel="stylesheet"' not in OFFLINE.read_text(), 'offline file loads external files'
-    print('PASS: offline krakem.html has five pages, unique IDs, labelled fields, and only in-file, data, or https links.')
+    text = OFFLINE.read_text()
+    head = Page(); head.feed(re.sub(r'<template[\s\S]*?</template>', '', text))
+    assert head.titles == 1, 'offline title missing'
+    templates = dict(re.findall(r'<template id="lang-(\w+)">([\s\S]*?)</template>', text))
+    assert sorted(templates) == ['en', 'pl', 'sv'], ('offline languages', sorted(templates))
+    languages = {}
+    for lang, fragment in templates.items():
+        page = Page(); page.feed(fragment); languages[lang] = page
+        assert fragment.count('class="offline-page"') == 5 and page.h1 == 5, ('offline pages', lang, page.h1)
+        assert all(target in page.ids for target in page.labels), ('broken offline form label', lang)
+    for lang, page in languages.items():
+        for link in page.links:
+            if link.startswith(('https://', 'mailto:', 'data:')): continue
+            switch = re.fullmatch(r'\?lang=(\w+)(#.+)', link)
+            target_lang, anchor = (switch.group(1), switch.group(2)) if switch else (lang, link)
+            assert target_lang in languages and anchor.startswith('#') and anchor[1:] in languages[target_lang].ids, ('offline link has no in-file target', lang, link[:80])
+    assert '<script src' not in text and 'rel="stylesheet"' not in text, 'offline file loads external files'
+    print('PASS: offline krakem.html has five pages in each of English, Polish, and Swedish, unique IDs per language, labelled fields, and only in-file, language-switch, data, or https links.')

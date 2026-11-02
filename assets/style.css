@@ -97,6 +97,13 @@
   .dock-item[aria-current=page] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); box-shadow: 0 3px 14px #82c3411c; }
   .dock-item[aria-current=page] .dock-label { color: var(--on-primary); }
   .dock-item[aria-current=page] .dock-icon { background: var(--on-primary); color: var(--primary); }
+  /* The language switcher sits under the brand on wide screens and beside it on tablets. */
+  .masthead { display: grid; justify-items: start; gap: 6px; flex-shrink: 0; }
+  .site-header .masthead .brand { min-height: 56px; }
+  .lang-switch { display: flex; gap: 2px; margin-left: 8px; padding: 3px; border: 1px solid #344637; border-radius: 999px; background: #09130ee6; }
+  .lang-switch a { display: inline-flex; align-items: center; min-height: 28px; padding: 0 10px; border-radius: 999px; color: var(--subtle); font-size: 12.5px; font-weight: 600; text-decoration: none; }
+  .lang-switch a:hover { background: #16251a; color: var(--text); }
+  .lang-switch a[aria-current=true] { background: var(--primary); color: var(--on-primary); }
   .page-intro { padding-block: 64px 68px; }
   .page-intro h1 { max-width: 1100px; }
   .intro-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 44px; margin-top: 30px; }
@@ -341,6 +348,13 @@
     .wrap, .nav-wrap { width: calc(100% - 64px); }
     .nav-wrap { gap: 16px; padding-inline: 16px; }
     .site-header .brand { min-width: 0; padding-left: 0; }
+    /* The menu gets its own row. Longer Polish and Swedish labels and notes wrap instead of overflowing. */
+    .nav-wrap { flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 12px; }
+    .site-header .brand { min-height: 56px; padding-left: 12px; }
+    .masthead { display: flex; flex: 1 1 auto; align-items: center; justify-content: space-between; gap: 12px; }
+    .dock { order: 3; width: 100%; margin: 0; align-items: stretch; }
+    .dock-item { flex: 1 1 0; min-width: 0; height: auto; min-height: 100px; padding-inline: 6px; align-content: start; }
+    .dock-label, .dock-note { white-space: normal; }
     .creator-intro, .figure-heading, .section-heading { gap: 36px; }
     .creator-intro > p { max-width: 330px; font-size: 19px; }
     .prompt-settings, .prompt-result { padding: 28px; }
@@ -356,10 +370,6 @@
     .claim-list article { grid-template-columns: 165px minmax(0, 1fr); gap: 32px; }
   }
   @media (max-width: 980px) {
-    .nav-wrap { flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 12px; }
-    .site-header .brand { min-height: 56px; padding-left: 12px; }
-    .dock { order: 3; width: 100%; margin: 0; }
-    .dock-item { flex: 1 1 0; min-width: 0; }
   }
   @media (max-width: 850px) {
     .section-pad { padding-block: 72px; }
@@ -410,9 +420,11 @@
     .brand { font-size: 25px; }
     .site-header { padding-block: 12px 4px; }
     .nav-wrap { width: calc(100% - 24px); gap: 14px; padding: 10px; border-radius: 20px; }
+    .masthead { display: grid; gap: 4px; }
+    .lang-switch { margin-left: 12px; }
     .dock { gap: 4px; padding: 5px; border-radius: 16px; }
     /* Labels wrap on phones, so icons align to the top instead of the bottom. */
-    .dock-item { min-width: 0; height: 74px; padding: 6px 2px 8px; gap: 4px; border-radius: 12px; align-content: start; }
+    .dock-item { min-width: 0; min-height: 74px; padding: 6px 2px 8px; gap: 4px; border-radius: 12px; align-content: start; }
     .dock-icon { width: 30px; height: 30px; }
     .dock-icon svg { width: 17px; height: 17px; }
     .dock-label { font-size: 11px; line-height: 1.15; white-space: normal; }
@@ -514,7 +526,7 @@
   }
   @media (forced-colors: active) {
     .button, .copy-button, .segmented button, .figure-selector button { border: 1px solid ButtonText; }
-    [aria-pressed=true], .dock-item[aria-current=page] { outline: 2px solid Highlight; outline-offset: -4px; }
+    [aria-pressed=true], .dock-item[aria-current=page], .lang-switch a[aria-current=true] { outline: 2px solid Highlight; outline-offset: -4px; }
     :focus-visible { outline: 3px solid Highlight; }
   }
 }

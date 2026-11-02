@@ -1,0 +1,29 @@
+{
+ "skipLink": "Przejdź do treści",
+ "homeLabel": "Krakem – strona główna",
+ "mainNav": "Nawigacja główna",
+ "languageNav": "Język",
+ "socialAlt": "Krakem: „Better prompts. Clearer answers.” Ciemna karta z gwiazdką, zieloną spiralą i podłożem ułożonymi z cząsteczek.",
+ "pages": {
+  "guide": {"title": "Kreator promptów", "description": "Opisz zadanie i skopiuj gotowy prompt. Poprosi AI o spójne terminy, oddzielenie dowodów od wniosków i pytania zamiast zgadywania."},
+  "humanize": {"title": "Pisz po swojemu", "description": "Utwórz wytyczne redakcyjne dla jasnego, naturalnego tekstu po angielsku, polsku, portugalsku lub szwedzku bez utraty faktów."},
+  "claude": {"title": "CLAUDE.md dla Claude Code", "description": "Pobierz zwięzły plik CLAUDE.md z zasadami programowania dla Claude Code: zmiany ograniczone do zadania, testy i jasny język."},
+  "outputs": {"title": "Odpowiedzi Claude", "description": "Zmień sposób, w jaki Claude Code odpowiada przez całą sesję: wbudowane style odpowiedzi, własny plik stylu i sytuacje, w których lepiej sprawdzi się CLAUDE.md."},
+  "evidence": {"title": "Rejestr dowodów", "description": "Co się potwierdza, co wymaga kontekstu, a czego nie udało się sprawdzić."}
+ },
+ "nav": {
+  "guide": {"label": "Kreator promptów", "note": "Ułóż prompt"},
+  "humanize": {"label": "Humanize", "note": "Redaguj po swojemu"},
+  "claude": {"label": "Claude<wbr>.md", "note": "Zasady kodowania"},
+  "outputs": {"label": "Odpo&shy;wiedzi Claude", "note": "Style odpowiedzi"},
+  "evidence": {"label": "Dowody", "note": "Co się potwierdza"}
+ },
+ "footer": {
+  "tagline": "Odpowiedź, którą<br><em>warto zrozumieć.</em>",
+  "guide": "Ułóż lepszy prompt ↗",
+  "humanize": "Znajdź swój sposób pisania ↗",
+  "evidence": "Sprawdź dowody ↗",
+  "about": "Niezależny przewodnik · październik 2026",
+  "motto": "Jasność to decyzja projektowa."
+ }
+}

@@ -1,0 +1,41 @@
+<section class="wrap creator-section" aria-labelledby="outputs-heading">
+  <div class="creator-intro">
+    <div><p class="eyebrow"><span class="live-dot"></span>Svarsstilar i Claude Code</p><h1 id="outputs-heading">Forma varje svar.<br><em>Bestäm tonen en gång.</em></h1></div>
+    <p>En svarsstil (output style) talar om för Claude Code hur den ska svara under en hel session: längd, ton och format. Den ändrar Claudes instruktioner, inte vad Claude vet om ditt projekt.</p>
+  </div>
+</section>
+<section class="wrap section-pad" id="output-styles">
+  <dl class="setup-options style-list">
+    <div><dt>Concise</dt><dd>Börjar med resultatet och hoppar över inledningar, löpande kommentarer och sammanfattningar. Fel, varningar och allt du ber den utveckla visas i sin helhet.</dd></div>
+    <div><dt>Explanatory</dt><dd>Lägger till korta <em>Insight</em>-anteckningar om varför Claude gjorde varje val.</dd></div>
+    <div><dt>Learning</dt><dd>Förklarar sina val och lämnar små kodbitar åt dig att skriva.</dd></div>
+    <div><dt>Proactive</dt><dd>Börjar arbeta direkt och gör rimliga antaganden i stället för att ställa rutinfrågor.</dd></div>
+  </dl>
+  <p class="setup-note">Alla fyra behåller Claude Codes vanliga kodningsinstruktioner. <strong>Default</strong> betyder ingen stil.</p>
+  <ol class="install-steps compact-install">
+    <li><span aria-hidden="true">1</span><div><h3>Byt</h3><p>I terminalen kör du <code>/output-style concise</code>. Kör kommandot utan namn för att lista stilarna. Du kan också köra <code>/config</code> och välja <strong>Output style</strong>. Kommandot kräver Claude Code v2.1.269 eller senare.</p></div></li>
+    <li><span aria-hidden="true">2</span><div><h3>Skrivbordsappen</h3><p>Lägg till <code>"outputStyle": "Concise"</code> i <code>.claude/settings.local.json</code>, eller i <code>~/.claude/settings.json</code> för alla projekt. Där är namnet skiftlägeskänsligt.</p></div></li>
+    <li><span aria-hidden="true">3</span><div><h3>Använd den</h3><p>Stilen gäller från ditt nästa meddelande. Välj <code>default</code> för att gå tillbaka.</p></div></li>
+  </ol>
+  <h3 class="subsection-title">Skapa en egen</h3>
+  <p class="setup-note">Spara en Markdown-fil i <code>~/.claude/output-styles/</code> för alla dina projekt, eller i <code>.claude/output-styles/</code> för ett enskilt projekt. Filnamnet blir stilens namn. Du kan be Claude Code skriva filen; granska den innan du använder den. Starta om Claude Code när du har skapat eller ändrat en stil.</p>
+  <details class="setup-details" id="style-example"><summary>Exempel: en klarspråksstil</summary><div><div class="snippet"><div class="prompt-toolbar"><span class="eyebrow">plain-language.md</span><button class="copy-button" type="button" data-copy="plain-language-style">Kopiera stilen ⧉</button></div><pre id="plain-language-style" tabindex="0" aria-label="Exempelfil för en svarsstil">---
+description: Korta svar med vardagliga ord och förklarade tekniska termer
+keep-coding-instructions: true
+---
+
+Skriv för en klok läsare som inte är specialist.
+
+- Börja med svaret i en eller två meningar.
+- Använd vardagliga ord. Förklara en teknisk term första gången du använder den.
+- Skriv korta meningar. Använd en term för varje sak.
+- Använd numrerade steg när jag behöver göra något.
+- Återge kod, kommandon, filnamn, siffror och varningar exakt.
+- Ge fler detaljer när jag ber om det.</pre></div><p>Spara den som <code>~/.claude/output-styles/plain-language.md</code>, starta om Claude Code och kör sedan <code>/output-style plain-language</code>. Behåll <code>keep-coding-instructions: true</code> om Claude fortfarande skriver kod åt dig. Utan den inställningen utelämnar en egen stil Claude Codes inbyggda instruktioner för mjukvaruutveckling i den fullständiga systemprompten. Den kortare systemprompten innehåller inte de instruktionerna, så där har inställningen ingen effekt.</p></div></details>
+  <h3 class="subsection-title">CLAUDE.md eller en svarsstil?</h3>
+  <dl class="setup-options">
+    <div><dt>CLAUDE.md</dt><dd>Hur Claude ska arbeta med din kod: avgränsning, enkelhet, tester och tydligt språk. Filen är laddad oavsett vilken stil du väljer, och en projektfil kan delas med teamet.</dd></div>
+    <div><dt>Svarsstil</dt><dd>Hur varje svar låter: längd, ton, format eller en annan roll, till exempel skrivassistent. Du byter stil med ett enda kommando.</dd></div>
+  </dl>
+  <p class="setup-note">Använd dem tillsammans. Låt <a href="/claude/#claude-md">CLAUDE.md</a> innehålla arbetsreglerna. Om svaren är för långa, prova den inbyggda stilen Concise innan du skriver en egen. Båda är instruktioner som Claude följer, inte garantier. <a href="https://code.claude.com/docs/en/output-styles" target="_blank" rel="noopener noreferrer">Dokumentation om svarsstilar ↗</a></p>
+</section>

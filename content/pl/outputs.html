@@ -1,0 +1,41 @@
+<section class="wrap creator-section" aria-labelledby="outputs-heading">
+  <div class="creator-intro">
+    <div><p class="eyebrow"><span class="live-dot"></span>Style odpowiedzi w Claude Code</p><h1 id="outputs-heading">Kształtuj każdą odpowiedź.<br><em>Ton ustaw raz.</em></h1></div>
+    <p>Styl odpowiedzi określa, jak Claude Code odpowiada przez całą sesję: długość, ton i format. Zmienia instrukcje, które dostaje Claude, a nie to, co Claude wie o Twoim projekcie.</p>
+  </div>
+</section>
+<section class="wrap section-pad" id="output-styles">
+  <dl class="setup-options style-list">
+    <div><dt>Concise</dt><dd>Zaczyna od wyniku i pomija wstępy, komentowanie bieżących działań i podsumowania. Błędy, ostrzeżenia i wszystko, co każesz rozwinąć, podaje w całości.</dd></div>
+    <div><dt>Explanatory</dt><dd>Dodaje krótkie notatki <em>Insight</em> z uzasadnieniem każdego wyboru.</dd></div>
+    <div><dt>Learning</dt><dd>Wyjaśnia swoje wybory i zostawia Ci do napisania małe fragmenty kodu.</dd></div>
+    <div><dt>Proactive</dt><dd>Od razu zaczyna pracę i zamiast zadawać rutynowe pytania, przyjmuje rozsądne założenia.</dd></div>
+  </dl>
+  <p class="setup-note">Wszystkie cztery zachowują standardowe instrukcje programistyczne Claude Code. <strong>Default</strong> oznacza brak stylu.</p>
+  <ol class="install-steps compact-install">
+    <li><span aria-hidden="true">1</span><div><h3>Przełącz</h3><p>W terminalu uruchom <code>/output-style concise</code>. Bez nazwy polecenie wyświetli listę stylów. Możesz też uruchomić <code>/config</code> i wybrać <strong>Output style</strong>. Polecenie wymaga Claude Code v2.1.269 lub nowszego.</p></div></li>
+    <li><span aria-hidden="true">2</span><div><h3>Aplikacja desktopowa</h3><p>Dodaj <code>"outputStyle": "Concise"</code> do <code>.claude/settings.local.json</code> lub, dla wszystkich projektów, do <code>~/.claude/settings.json</code>. W tych plikach wielkość liter w nazwie ma znaczenie.</p></div></li>
+    <li><span aria-hidden="true">3</span><div><h3>Używaj</h3><p>Styl zacznie działać od następnej wiadomości. Aby wrócić, wybierz <code>default</code>.</p></div></li>
+  </ol>
+  <h3 class="subsection-title">Własny styl</h3>
+  <p class="setup-note">Zapisz plik Markdown w <code>~/.claude/output-styles/</code>, aby działał we wszystkich projektach, albo w <code>.claude/output-styles/</code> dla jednego projektu. Nazwa pliku staje się nazwą stylu. Plik może napisać za Ciebie Claude Code – przejrzyj go przed użyciem. Po utworzeniu lub edycji stylu uruchom Claude Code ponownie.</p>
+  <details class="setup-details" id="style-example"><summary>Przykład: styl w prostym języku</summary><div><div class="snippet"><div class="prompt-toolbar"><span class="eyebrow">plain-language.md</span><button class="copy-button" type="button" data-copy="plain-language-style">Skopiuj styl ⧉</button></div><pre id="plain-language-style" tabindex="0" aria-label="Przykładowy plik stylu odpowiedzi">---
+description: Krótkie odpowiedzi codziennym językiem, z objaśnieniem terminów technicznych
+keep-coding-instructions: true
+---
+
+Pisz dla bystrego czytelnika, który nie jest specjalistą.
+
+- Zaczynaj od odpowiedzi w jednym lub dwóch zdaniach.
+- Używaj codziennych słów. Objaśnij termin techniczny, gdy używasz go po raz pierwszy.
+- Pisz krótkie zdania. Każdą rzecz nazywaj jednym terminem.
+- Gdy mam coś zrobić, podawaj ponumerowane kroki.
+- Nie zmieniaj kodu, poleceń, nazw plików, liczb ani ostrzeżeń.
+- Gdy o to poproszę, podawaj więcej szczegółów.</pre></div><p>Zapisz go jako <code>~/.claude/output-styles/plain-language.md</code>, uruchom ponownie Claude Code, a potem wpisz <code>/output-style plain-language</code>. Jeśli Claude nadal pisze dla Ciebie kod, zostaw <code>keep-coding-instructions: true</code>. Bez tego ustawienia własny styl pomija wbudowane instrukcje inżynierii oprogramowania Claude Code w pełnym prompcie systemowym. Krótszy prompt systemowy ich nie zawiera, więc tam to ustawienie nic nie zmienia.</p></div></details>
+  <h3 class="subsection-title">CLAUDE.md czy styl odpowiedzi?</h3>
+  <dl class="setup-options">
+    <div><dt>CLAUDE.md</dt><dd>Jak Claude ma pracować z Twoim kodem: zakres, prostota, testy i jasny język. Jest wczytywany bez względu na wybrany styl, a plik projektu możesz udostępnić zespołowi.</dd></div>
+    <div><dt>Styl odpowiedzi</dt><dd>Jak brzmi każda odpowiedź: długość, ton, format albo inna rola, na przykład asystenta pisania. Zmieniasz go jednym poleceniem.</dd></div>
+  </dl>
+  <p class="setup-note">Używaj ich razem. W <a href="/claude/#claude-md">CLAUDE.md</a> trzymaj zasady pracy. Jeśli odpowiedzi są za długie, zanim napiszesz własny styl, wypróbuj wbudowany styl Concise. Jedno i drugie to instrukcje, którymi Claude się kieruje, a nie gwarancje. <a href="https://code.claude.com/docs/en/output-styles" target="_blank" rel="noopener noreferrer">Dokumentacja stylów odpowiedzi ↗</a></p>
+</section>

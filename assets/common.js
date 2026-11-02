@@ -1,4 +1,6 @@
-const media=window.matchMedia('(prefers-reduced-motion: reduce)');
+import {text} from './i18n.js';
+import {rememberLanguage} from './language.js';
+const media=window.matchMedia('(prefers-reduced-motion: reduce)'),t=text.common;
 let preference=null;
 try{preference=localStorage.getItem('clearform-motion');}catch{}
 let motion=preference===null?!media.matches:preference==='on';
@@ -6,13 +8,15 @@ const motionButton=document.querySelector('.motion-toggle');
 function updateMotion(){
  document.documentElement.classList.toggle('motion-paused',!motion);
  motionButton?.setAttribute('aria-pressed',String(!motion));
- if(motionButton){motionButton.querySelector('.motion-label').textContent=motion?'Motion on':'Motion off';motionButton.querySelector('.motion-icon').textContent=motion?'Ⅱ':'▷';motionButton.title=motion?'Pause decorative animation':'Enable decorative animation';}
+ if(motionButton){motionButton.querySelector('.motion-label').textContent=motion?t.motionOn:t.motionOff;motionButton.querySelector('.motion-icon').textContent=motion?'Ⅱ':'▷';motionButton.title=motion?t.pauseTitle:t.enableTitle;}
  window.clearformMotion=motion;
  window.dispatchEvent(new CustomEvent('clearform-motion',{detail:motion}));
 }
 updateMotion();
 motionButton?.addEventListener('click',()=>{motion=!motion;preference=motion?'on':'off';try{localStorage.setItem('clearform-motion',preference);}catch{}updateMotion();});
 media.addEventListener('change',()=>{if(preference===null){motion=!media.matches;updateMotion();}});
+// A language picked in the switcher is saved for later visits; a language detected from the browser is not.
+document.querySelectorAll('.lang-switch [data-language]').forEach(link=>link.addEventListener('click',()=>rememberLanguage(link.dataset.language)));
 // Dock magnification: items grow as the pointer approaches, with a fine pointer and motion on. The loop runs only while sizes change.
 const dock=document.querySelector('.dock');
 if(dock&&matchMedia('(hover: hover) and (pointer: fine)').matches){
@@ -46,10 +50,10 @@ window.addEventListener('krakem-toast',event=>toast(event.detail));
 document.querySelectorAll('[data-copy]').forEach(button=>button.addEventListener('click',async()=>{
  if(button.disabled)return;
  const target=document.getElementById(button.dataset.copy);const text=target?.textContent||'';
- try{await navigator.clipboard.writeText(text);toast('Text copied. Ready to paste.');}
+ try{await navigator.clipboard.writeText(text);toast(t.copied);}
  catch{
   const temp=document.createElement('textarea');temp.value=text;temp.style.cssText='position:fixed;left:-9999px;top:0';document.body.append(temp);temp.focus();temp.select();let success=false;try{success=document.execCommand('copy');}catch{}temp.remove();button.focus();
-  if(success)toast('Text copied.');else{const range=document.createRange();range.selectNodeContents(target);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);toast('Text selected. Press Ctrl+C or ⌘C to copy.');}
+  if(success)toast(t.copiedFallback);else{const range=document.createRange();range.selectNodeContents(target);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);toast(t.selected);}
  }
 }));
 if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting){if(motion)entry.target.classList.add('reveal-ready');observer.unobserve(entry.target);}}},{threshold:.12});document.querySelectorAll('.section-heading,.lab-teaser,.voice-banner').forEach(el=>observer.observe(el));}

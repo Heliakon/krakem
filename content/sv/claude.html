@@ -1,0 +1,26 @@
+<section class="wrap page-intro setup-intro">
+  <p class="eyebrow">CLAUDE.MD FÖR CLAUDE CODE</p>
+  <h1>Skriv reglerna en gång.<br><em>Kom direkt till saken.</em></h1>
+</section>
+
+<section class="wrap section-pad" id="claude-md">
+  <div class="section-heading"><div><h2>Instruktioner för en bra start.</h2></div><p>Ladda ned filen, eller kopiera och klistra in den i Claude Code.</p></div>
+  <div class="file-download">
+    <div class="file-summary"><h3>CLAUDE.md</h3><p>Kodningsregler för Claude Code.</p><p class="file-meta">Avgränsning, enkelhet, tester, tydligt språk. Cirka <!-- CLAUDE_MD_WORDS --> ord på engelska, inga importer.</p></div>
+    <div class="file-actions"><a class="button primary" href="/assets/downloads/CLAUDE.md" download="CLAUDE.md">Ladda ned CLAUDE.md <span aria-hidden="true">↓</span></a><button class="button" type="button" data-copy="claude-md-preview">Kopiera hela filen <span aria-hidden="true">⧉</span></button></div>
+  </div>
+  <details class="setup-details file-preview"><summary>Förhandsgranska filen</summary><div><div class="snippet"><pre id="claude-md-preview" lang="en" tabindex="0" aria-label="Hela CLAUDE.md för nedladdning"><!-- CLAUDE_MD_PREVIEW --></pre></div></div></details>
+  <ol class="install-steps compact-install">
+    <li><span aria-hidden="true">1</span><div><h3>Spara</h3><p>Ett projekt: <code>CLAUDE.md</code> i projektets rotmapp.<br>Alla dina projekt: <code>~/.claude/CLAUDE.md</code>.</p></div></li>
+    <li><span aria-hidden="true">2</span><div><h3>Slå ihop</h3><p>Har projektet ingen fil än? Kör <code>/init</code> först; kommandot lägger till dina bygg- och testkommandon. Lägg sedan till de här reglerna och lös eventuella konflikter. Hitta konflikter med <code>/doctor prompt-audit</code> (Claude Code v2.1.283 eller senare).</p></div></li>
+    <li><span aria-hidden="true">3</span><div><h3>Kontrollera</h3><p>Starta en session i Claude Code. Kör <code>/context</code> och titta under <strong>Memory files</strong>.</p></div></li>
+  </ol>
+  <p class="setup-note">Använder du chatten i Claude? Klistra in skrivreglerna nedan i <a href="https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects" target="_blank" rel="noopener noreferrer">projektinstruktionerna</a>. <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener noreferrer">Dokumentation: konfigurera Claude Code ↗</a></p>
+  <details class="setup-details" id="standing-rules"><summary>Kopiera bara skrivreglerna</summary><div><div class="snippet standing-rules"><div class="prompt-toolbar"><span class="eyebrow">SKRIVREGLER</span><button class="copy-button" type="button" data-copy="clarity-rules">Kopiera reglerna ⧉</button></div><pre id="clarity-rules">Börja med svaret. Använd konkreta verb, välkända ord och en och samma term för varje begrepp.
+
+I procedurer: sikta på högst 20 ord per mening. Skriv villkor och varningar före åtgärderna. Dela upp åtgärder som sker efter varandra; håll ihop åtgärder som måste ske samtidigt.
+
+Behåll fakta, definitioner, ekvationer, enheter, kod, citat, förbehåll och osäkerhet. Jämför ändringarna med källan så att inget har fallit bort eller fått ändrad betydelse.
+
+Använd samma språk som min uppgift. Behåll författarens röst. Fråga när information som saknas påverkar korrektheten. Se detta som STE-inspirerade råd, inte som efterlevnad av ASD-STE100.</pre></div></div></details>
+</section>

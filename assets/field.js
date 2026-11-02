@@ -1,4 +1,6 @@
 import {CYCLE_MS,MORPH_MS,PARTICLE_COUNT,createFigures} from './field-shapes.js';
+import {text} from './i18n.js';
+const labelText=text.field;
 
 const canvas=document.getElementById('signal-field');
 const ctx=canvas.getContext('2d',{alpha:true});
@@ -33,9 +35,9 @@ if(ctx){
   return{zoom:a.zoom+(b.zoom-a.zoom)*ease,x:a.x+(b.x-a.x)*ease,y:a.y+(b.y-a.y)*ease};
  }
  function labels(){
-  timing.textContent=chaos?(enabled?'CHAOS IN MOTION':'CHAOS PAUSED'):(enabled?'SLOWLY EVOLVING':'MOTION PAUSED');
+  timing.textContent=chaos?(enabled?labelText.chaosMoving:labelText.chaosPaused):(enabled?labelText.evolving:labelText.paused);
   chaosButton.setAttribute('aria-pressed',String(chaos));
-  chaosButton.title=chaos?'Restore structured motion':'Scatter the particles';
+  chaosButton.title=chaos?labelText.restore:labelText.scatter;
   stage.setAttribute('data-chaos',chaos?'on':'off');
   buttons.forEach(b=>b.setAttribute('aria-pressed',String(!chaos&&Number(b.dataset.figure)===current)));
  }

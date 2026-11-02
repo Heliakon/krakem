@@ -1,3 +1,4 @@
+import {text} from './i18n.js';
 // After 12 seconds without input, a Matrix-style rain covers the page and the page underneath stops drawing.
 // Corner controls, as in the original screensaver file, set letter speed, fade-in, and color. Moving the pointer keeps the rain
 // so the controls can be reached; a click elsewhere, a key, or the wheel brings the page back.
@@ -19,7 +20,7 @@ function build(){
  speed=Object.assign(document.createElement('input'),{type:'range',className:'saver-speed',min:10,max:120,step:1,value:87});
  smooth=Object.assign(document.createElement('input'),{type:'checkbox',className:'saver-smooth'});
  tint=Object.assign(document.createElement('input'),{type:'range',className:'saver-color',min:0,max:5,step:'any',value:0});
- speed.setAttribute('aria-label','Letter speed');smooth.setAttribute('aria-label','Fade letters in');tint.setAttribute('aria-label','Letter color');
+ speed.setAttribute('aria-label',text.screensaver.speed);smooth.setAttribute('aria-label',text.screensaver.fade);tint.setAttribute('aria-label',text.screensaver.color);
  overlay.append(canvas,speed,smooth,tint);document.body.append(overlay);
  ctx=canvas.getContext('2d',{alpha:false});
  tint.addEventListener('input',updateColor);updateColor();

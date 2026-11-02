@@ -1,0 +1,29 @@
+{
+ "skipLink": "Skip to content",
+ "homeLabel": "Krakem home",
+ "mainNav": "Main navigation",
+ "languageNav": "Language",
+ "socialAlt": "Krakem: Better prompts. Clearer answers. A dark card with the particle asterisk mark, a green particle spiral, and a particle floor.",
+ "pages": {
+  "guide": {"title": "Prompt creator", "description": "Describe your task and copy a complete prompt that asks the AI for consistent terms, evidence kept apart from inference, and questions instead of guesses."},
+  "humanize": {"title": "Write like yourself", "description": "Create an editing brief for clear, natural English, Polish, Portuguese, or Swedish writing while preserving the facts."},
+  "claude": {"title": "CLAUDE.md for Claude Code", "description": "Download a concise CLAUDE.md with coding rules for Claude Code: scoped changes, tests, and clear writing."},
+  "outputs": {"title": "Claude outputs", "description": "Change how Claude Code answers for a whole session: built-in output styles, your own style file, and when CLAUDE.md fits better."},
+  "evidence": {"title": "The evidence ledger", "description": "What holds up, what needs context, and what we could not verify."}
+ },
+ "nav": {
+  "guide": {"label": "Prompt creator", "note": "Build a prompt"},
+  "humanize": {"label": "Humanize", "note": "Edit in your voice"},
+  "claude": {"label": "Claude<wbr>.md", "note": "Coding rules"},
+  "outputs": {"label": "Claude outputs", "note": "Reply styles"},
+  "evidence": {"label": "Evidence", "note": "What holds up"}
+ },
+ "footer": {
+  "tagline": "Make the answer<br><em>worth understanding.</em>",
+  "guide": "Build a better prompt ↗",
+  "humanize": "Find your writing approach ↗",
+  "evidence": "Check the evidence ↗",
+  "about": "An independent field guide · October 2026",
+  "motto": "Clarity is a design decision."
+ }
+}

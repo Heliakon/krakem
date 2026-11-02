@@ -1,0 +1,58 @@
+<section class="wrap creator-section" id="prompt-studio" aria-labelledby="creator-heading">
+  <div class="creator-intro">
+    <div><p class="eyebrow"><span class="live-dot"></span>Wersja eksperymentalna</p><h1 id="creator-heading">Lepsze prompty.<br>Pełniejsze odpowiedzi.</h1></div>
+    <p>Opisz zadanie. Wybierz formę odpowiedzi. Skopiuj gotowy prompt do ulubionego narzędzia AI.</p>
+  </div>
+  <div class="prompt-studio main-creator">
+    <div class="prompt-settings">
+      <label for="task-brief" id="task-label">NAD CZYM PRACUJESZ?</label>
+      <textarea id="task-brief" rows="4" required aria-describedby="task-help" placeholder="Na przykład: porównaj dwa narzędzia do pisania promptów dla naszego zespołu. Skup się na dokładności i łatwości obsługi."></textarea>
+      <p id="task-help" class="field-help">Opisz zadanie, oczekiwany wynik i ważne ograniczenia.</p>
+      <div class="creator-options">
+        <div><label for="task">RODZAJ ZADANIA</label><select id="task"><option value="custom">Dowolne zadanie</option><option value="compare">Porównanie stron lub produktów</option><option value="review">Przegląd kodu</option><option value="debug">Diagnoza problemu</option><option value="code">Pisanie lub zmiana kodu</option><option value="architecture">Ocena architektury</option><option value="research">Badanie tematu</option><option value="paper">Zrozumienie artykułu naukowego</option><option value="summary">Streszczenie dokumentu</option><option value="procedure">Wykonanie procedury</option><option value="writing">Tekst na stronę lub slajdy</option></select></div>
+        <div><label for="format">FORMA ODPOWIEDZI</label><select id="format"><option value="text">Jasne wyjaśnienie</option><option value="steps">Instrukcja krok po kroku</option><option value="code">Kod z wyjaśnieniem</option><option value="table">Tabela</option><option value="checklist">Lista kontrolna</option><option value="diagram">Diagram systemu</option><option value="interactive">Interaktywne narzędzie HTML</option><option value="animation">Animacja z podziałem na kroki</option></select></div>
+      </div>
+      <div class="task-suggestion" id="task-suggestion" hidden><span>Porównujesz strony lub produkty?</span><button type="button" id="use-comparison">Włącz tryb porównania ↗</button></div>
+      <fieldset class="comparison-fields" id="comparison-fields" hidden>
+        <legend>Doprecyzuj porównanie.</legend>
+        <div class="comparison-pair">
+          <div><label for="compare-a">PIERWSZA STRONA LUB PRODUKT</label><input id="compare-a" type="text" autocomplete="off" aria-describedby="comparison-help" placeholder="Nazwa lub pełny adres URL"></div>
+          <div><label for="compare-b">DRUGA STRONA LUB PRODUKT</label><input id="compare-b" type="text" autocomplete="off" aria-describedby="comparison-help" placeholder="Nazwa lub pełny adres URL"></div>
+        </div>
+        <p id="comparison-help" class="field-help">Uzupełnij oba pola. Jeśli nazwa może być niejednoznaczna, dodaj adres URL lub numer wersji.</p>
+        <label for="compare-criteria">CO JEST DLA CIEBIE WAŻNE?</label>
+        <textarea id="compare-criteria" rows="3" aria-describedby="criteria-help">Możliwości; łatwość obsługi; ograniczenia; koszt</textarea>
+        <p id="criteria-help" class="field-help">Dopasuj kryteria do swojej decyzji. Nazwij każde z nich wprost, na przykład „Potrafi pobierać strony internetowe” zamiast „Dostęp do źródeł”. AI oceni obie pozycje według tej samej listy.</p>
+      </fieldset>
+      <label for="source-material">MATERIAŁY ŹRÓDŁOWE <span>(OPCJONALNIE)</span></label>
+      <textarea id="source-material" rows="4" aria-describedby="source-help" placeholder="Wklej potrzebny kod, notatki, wymagania, szkic lub adresy URL źródeł."></textarea>
+      <p id="source-help" class="field-help">Trafiają do promptu bez zmian. Jeśli Twoje narzędzie AI nie otwiera linków, wklej tu potrzebny tekst.</p>
+      <div class="draft-row"><p class="fine-print" id="creator-draft-note">Wszystko powstaje w Twojej przeglądarce i nigdzie nie jest wysyłane.</p><button type="button" class="text-button" id="clear-creator-draft" disabled>Wyczyść szkic</button></div>
+    </div>
+    <div class="prompt-result">
+      <div class="prompt-toolbar"><span class="eyebrow">TWÓJ GOTOWY PROMPT</span><button class="copy-button primary-copy" id="copy-technical-prompt" data-copy="technical-prompt" type="button" disabled>Skopiuj prompt <span>⧉</span></button></div>
+      <p class="prompt-state" id="prompt-state" role="status">Zacznij od opisu zadania.</p>
+      <div class="prompt-checklist" id="prompt-checklist" hidden><p>Uzupełnij, aby skopiować:</p><ul id="prompt-issues"></ul></div>
+      <pre id="technical-prompt" class="empty-prompt" tabindex="0" aria-label="Wygenerowany prompt">Prompt pojawi się tutaj w trakcie pisania. Opisz zadanie i wybierz formę odpowiedzi.</pre>
+      <div class="prompt-result-foot"><span>01 OPISZ</span><span>02 WYBIERZ</span><span>03 SKOPIUJ I WKLEJ</span></div>
+    </div>
+  </div>
+  <noscript><p class="source-note">Włącz JavaScript, aby utworzyć i skopiować prompt. Poradnik pisania poniżej działa bez niego.</p></noscript>
+</section>
+<div class="ticker result-ribbon"><div><span>SPÓJNE TERMINY</span><i aria-hidden="true">✳</i><span>DOWODY A WNIOSKI</span><i aria-hidden="true">✳</i><span>ZACHOWANE ZASTRZEŻENIA</span><i aria-hidden="true">✳</i><span>PYTAJ, NIE ZGADUJ</span></div></div>
+<aside class="wrap setup-callout creator-followup"><div><p class="eyebrow">CZĘSTO KORZYSTASZ Z CLAUDE?</p><h2>Ustal zasady raz. Nie powtarzaj się.</h2><p>Zapisz stałe zasady pisania w pliku CLAUDE.md w swoich projektach Claude Code.</p></div><a class="button" href="/claude/">Skonfiguruj Claude raz <span>↗</span></a></aside>
+<section class="wrap figure-section" aria-labelledby="figure-heading">
+  <div class="figure-heading"><div><p class="eyebrow">WYBIERZ FORMĘ ODPOWIEDZI</p><h2 id="figure-heading">Trochę struktury.<br>Klarowniejszy wynik.</h2></div><p>Wyjaśnienie, kroki, tabela, diagram czy małe narzędzie: wybierz formę w kreatorze powyżej. Naciśnij Chaos, aby zobaczyć te same punkty bez struktury.</p></div>
+  <div class="signal-stage expanded-field" aria-label="Abstrakcyjna trójwymiarowa animacja cząsteczek">
+    <canvas id="signal-field" aria-hidden="true"></canvas>
+    <div class="field-controls" role="group" aria-label="Sterowanie animacją">
+      <button class="motion-toggle" type="button" aria-pressed="false" title="Wstrzymaj animację dekoracyjną"><span class="motion-icon" aria-hidden="true">Ⅱ</span><span class="motion-label">Ruch włączony</span></button>
+      <button class="chaos-toggle" id="chaos-toggle" type="button" aria-pressed="false" aria-controls="signal-field" title="Rozprosz cząsteczki"><span aria-hidden="true">✳</span> Chaos</button>
+    </div>
+    <div class="stage-bottom"><span id="figure-timing">POWOLNA EWOLUCJA</span><div class="figure-selector" role="group" aria-label="Wybierz abstrakcyjny wariant"><button type="button" data-figure="0" aria-pressed="true" aria-label="Pokaż wariant 1">01</button><button type="button" data-figure="1" aria-pressed="false" aria-label="Pokaż wariant 2">02</button><button type="button" data-figure="2" aria-pressed="false" aria-label="Pokaż wariant 3">03</button><button type="button" data-figure="3" aria-pressed="false" aria-label="Pokaż wariant 4">04</button><button type="button" data-figure="4" aria-pressed="false" aria-label="Pokaż wariant 5">05</button><button type="button" data-figure="5" aria-pressed="false" aria-label="Pokaż wariant 6">06</button><button type="button" data-figure="6" aria-pressed="false" aria-label="Pokaż wariant 7">07</button></div></div>
+    <div class="figure-progress" aria-hidden="true"><i id="figure-progress"></i></div>
+  </div>
+</section>
+<section class="light-section" id="principles"><div class="wrap section-pad"><div class="section-heading"><div><p class="eyebrow">O CO PROSI PROMPT</p><h2>Dobry tekst techniczny<br>zostawia mniej pola do domysłów.</h2></div><p>Płynny tekst to jeszcze nie jasny tekst. Proś o stałe nazwy, proste zdania i wyraźną granicę między dowodami a wnioskami.</p></div><div class="rule-grid"><article><span class="rule-no">01</span><h3>Jedna rzecz,<br> jedna nazwa.</h3><p>Jeśli komponent nazywa się „worker”, nazywaj go tak do końca. Nowy synonim może wyglądać jak inny komponent.</p></article><article><span class="rule-no">02</span><h3>Jeden krok,<br> jedna czynność.</h3><p>Podziel procedurę na czynności, które da się wykonać i sprawdzić. Warunki umieszczaj przed czynnościami, których dotyczą.</p></article><article><span class="rule-no">03</span><h3>Każde twierdzenie<br> z jasnym statusem.</h3><p>Oddziel to, co mówi źródło, od tego, co wnioskuje model. Nie ukrywaj niepewności. Zapytaj, jak sprawdzić odpowiedź.</p></article></div><aside class="source-note"><span class="pill">INSPIRACJA: ASD-STE100</span><p>Projekt języka dokumentacji lotniczej ruszył w 1979 roku, a pierwszy przewodnik ukazał się w 1986. Obecna norma dopuszcza <strong>najwyżej 20 słów</strong> w zdaniu procedury. Te prompty czerpią z jej ducha, ale nie poświadczają zgodności. <a href="/evidence/#ste">Zobacz dokładne zasady ↗</a></p></aside>
+<div class="example-header"><h3>Ta sama intencja. Mniej interpretacji.</h3><div class="segmented light" aria-label="Wybierz przykład techniczny"><button data-example="deploy" aria-pressed="true">Wdrożenie</button><button data-example="review" aria-pressed="false">Przegląd kodu</button><button data-example="research" aria-pressed="false">Badania</button></div></div><div class="rewrite-pair"><article class="before"><span class="eyebrow">PRZED / PRZYKŁAD POGLĄDOWY</span><p id="example-before">Po zapisaniu konfiguracji warto byłoby zrestartować usługę i sprawdzić, czy endpoint stanu workera zwraca HTTP 200, a jeśli proces nie przejdzie tej kontroli, przywrócić poprzednią konfigurację.</p><div class="annotation">Przeładowane zdanie. Niespójne nazwy.</div></article><article class="after"><span class="eyebrow">PO / PRECYZYJNIEJSZE POLECENIE</span><div id="example-after"><ol><li>Zapisz konfigurację.</li><li>Uruchom ponownie workera.</li><li>Sprawdź endpoint stanu workera.</li></ol><p>Oczekiwany wynik: HTTP 200. Jeśli kontrola się nie powiedzie, przywróć poprzednią konfigurację.</p></div><div class="annotation">Jedna nazwa. Widoczne kroki. Określony wynik.</div></article></div></div></section>
+<section class="voice-banner wrap"><p class="eyebrow">PISZESZ DLA LUDZI?</p><h2>Zachowaj precyzję.<br><em>Odzyskaj własny styl.</em></h2><div><p>Utwórz wytyczne redakcyjne do tekstów na stronę, slajdów lub dokumentacji technicznej.</p><a href="/humanize/" class="button primary">Utwórz wytyczne redakcyjne <span>↗</span></a></div></section>

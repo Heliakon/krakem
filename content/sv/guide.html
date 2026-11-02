@@ -1,0 +1,58 @@
+<section class="wrap creator-section" id="prompt-studio" aria-labelledby="creator-heading">
+  <div class="creator-intro">
+    <div><p class="eyebrow"><span class="live-dot"></span>Experimentell</p><h1 id="creator-heading">Bättre promptar.<br>Tydligare svar.</h1></div>
+    <p>Beskriv uppgiften. Välj svarets form. Kopiera en färdig prompt till det AI-verktyg du föredrar.</p>
+  </div>
+  <div class="prompt-studio main-creator">
+    <div class="prompt-settings">
+      <label for="task-brief" id="task-label">VAD ARBETAR DU MED?</label>
+      <textarea id="task-brief" rows="4" required aria-describedby="task-help" placeholder="Till exempel: Jämför två promptverktyg för vårt team. Fokusera på träffsäkerhet och användarvänlighet."></textarea>
+      <p id="task-help" class="field-help">Beskriv uppgiften, resultatet du behöver och eventuella viktiga begränsningar.</p>
+      <div class="creator-options">
+        <div><label for="task">TYP AV UPPGIFT</label><select id="task"><option value="custom">Allmän uppgift</option><option value="compare">Jämför webbplatser eller produkter</option><option value="review">Granska kod</option><option value="debug">Felsök ett problem</option><option value="code">Skriv eller ändra kod</option><option value="architecture">Bedöm en arkitektur</option><option value="research">Undersök ett ämne</option><option value="paper">Förstå en forskningsartikel</option><option value="summary">Sammanfatta ett dokument</option><option value="procedure">Följ en procedur</option><option value="writing">Text för webb eller presentation</option></select></div>
+        <div><label for="format">SVARETS FORM</label><select id="format"><option value="text">En tydlig förklaring</option><option value="steps">Steg-för-steg-instruktioner</option><option value="code">Kod med förklaring</option><option value="table">En tabell</option><option value="checklist">En checklista</option><option value="diagram">Ett systemdiagram</option><option value="interactive">Ett interaktivt HTML-verktyg</option><option value="animation">En stegvis animering</option></select></div>
+      </div>
+      <div class="task-suggestion" id="task-suggestion" hidden><span>Jämför du webbplatser eller produkter?</span><button type="button" id="use-comparison">Använd jämförelseläget ↗</button></div>
+      <fieldset class="comparison-fields" id="comparison-fields" hidden>
+        <legend>Gör jämförelsen konkret.</legend>
+        <div class="comparison-pair">
+          <div><label for="compare-a">FÖRSTA WEBBPLATSEN ELLER PRODUKTEN</label><input id="compare-a" type="text" autocomplete="off" aria-describedby="comparison-help" placeholder="Namn eller fullständig URL"></div>
+          <div><label for="compare-b">ANDRA WEBBPLATSEN ELLER PRODUKTEN</label><input id="compare-b" type="text" autocomplete="off" aria-describedby="comparison-help" placeholder="Namn eller fullständig URL"></div>
+        </div>
+        <p id="comparison-help" class="field-help">Fyll i båda alternativen. Lägg till en URL eller ett versionsnummer om namnet kan vara tvetydigt.</p>
+        <label for="compare-criteria">VAD ÄR VIKTIGT FÖR DIG?</label>
+        <textarea id="compare-criteria" rows="3" aria-describedby="criteria-help">Funktioner; användarvänlighet; begränsningar; kostnad</textarea>
+        <p id="criteria-help" class="field-help">Anpassa kriterierna efter ditt beslut. Formulera vart och ett enkelt, till exempel ”Kan hämta webbsidor” i stället för ”Källåtkomst”. AI:n jämför båda alternativen mot samma lista.</p>
+      </fieldset>
+      <label for="source-material">KÄLLMATERIAL <span>(VALFRITT)</span></label>
+      <textarea id="source-material" rows="4" aria-describedby="source-help" placeholder="Klistra in relevant kod, anteckningar, krav, ett utkast eller käll-URL:er."></textarea>
+      <p id="source-help" class="field-help">Tas med ordagrant. Om ditt AI-verktyg inte kan öppna länkar klistrar du in den relevanta texten här.</p>
+      <div class="draft-row"><p class="fine-print" id="creator-draft-note">Skapas i din webbläsare och skickas aldrig någonstans.</p><button type="button" class="text-button" id="clear-creator-draft" disabled>Rensa utkastet</button></div>
+    </div>
+    <div class="prompt-result">
+      <div class="prompt-toolbar"><span class="eyebrow">DIN FÄRDIGA PROMPT</span><button class="copy-button primary-copy" id="copy-technical-prompt" data-copy="technical-prompt" type="button" disabled>Kopiera prompten <span>⧉</span></button></div>
+      <p class="prompt-state" id="prompt-state" role="status">Börja med din uppgift.</p>
+      <div class="prompt-checklist" id="prompt-checklist" hidden><p>Fyll i följande innan du kopierar:</p><ul id="prompt-issues"></ul></div>
+      <pre id="technical-prompt" class="empty-prompt" tabindex="0" aria-label="Genererad prompt">Din prompt visas här medan du skriver. Beskriv uppgiften och välj vilket svar du vill ha.</pre>
+      <div class="prompt-result-foot"><span>01 BESKRIV</span><span>02 VÄLJ</span><span>03 KOPIERA OCH KLISTRA IN</span></div>
+    </div>
+  </div>
+  <noscript><p class="source-note">Aktivera JavaScript för att skapa och kopiera en prompt. Skrivråden nedan går att läsa ändå.</p></noscript>
+</section>
+<div class="ticker result-ribbon"><div><span>ENHETLIGA TERMER</span><i aria-hidden="true">✳</i><span>BELÄGG KONTRA SLUTSATSER</span><i aria-hidden="true">✳</i><span>FÖRBEHÅLLEN KVAR</span><i aria-hidden="true">✳</i><span>FRÅGA, GISSA INTE</span></div></div>
+<aside class="wrap setup-callout creator-followup"><div><p class="eyebrow">ANVÄNDER DU CLAUDE OFTA?</p><h2>Behåll reglerna. Slipp upprepa dig.</h2><p>Spara återkommande skrivregler i CLAUDE.md för dina projekt i Claude Code.</p></div><a class="button" href="/claude/">Ställ in Claude en gång <span>↗</span></a></aside>
+<section class="wrap figure-section" aria-labelledby="figure-heading">
+  <div class="figure-heading"><div><p class="eyebrow">VÄLJ SVARETS FORM</p><h2 id="figure-heading">Lite struktur.<br>Ett tydligare resultat.</h2></div><p>En förklaring, steg, en tabell, ett diagram eller ett litet verktyg: välj form i promptskaparen ovan. Tryck på Kaos för att se samma punkter utan struktur.</p></div>
+  <div class="signal-stage expanded-field" aria-label="Abstrakt tredimensionell partikelanimering">
+    <canvas id="signal-field" aria-hidden="true"></canvas>
+    <div class="field-controls" role="group" aria-label="Animeringskontroller">
+      <button class="motion-toggle" type="button" aria-pressed="false" title="Pausa den dekorativa animeringen"><span class="motion-icon" aria-hidden="true">Ⅱ</span><span class="motion-label">Rörelse på</span></button>
+      <button class="chaos-toggle" id="chaos-toggle" type="button" aria-pressed="false" aria-controls="signal-field" title="Sprid ut partiklarna"><span aria-hidden="true">✳</span> Kaos</button>
+    </div>
+    <div class="stage-bottom"><span id="figure-timing">FÖRÄNDRAS LÅNGSAMT</span><div class="figure-selector" role="group" aria-label="Välj en abstrakt variant"><button type="button" data-figure="0" aria-pressed="true" aria-label="Visa variant 1">01</button><button type="button" data-figure="1" aria-pressed="false" aria-label="Visa variant 2">02</button><button type="button" data-figure="2" aria-pressed="false" aria-label="Visa variant 3">03</button><button type="button" data-figure="3" aria-pressed="false" aria-label="Visa variant 4">04</button><button type="button" data-figure="4" aria-pressed="false" aria-label="Visa variant 5">05</button><button type="button" data-figure="5" aria-pressed="false" aria-label="Visa variant 6">06</button><button type="button" data-figure="6" aria-pressed="false" aria-label="Visa variant 7">07</button></div></div>
+    <div class="figure-progress" aria-hidden="true"><i id="figure-progress"></i></div>
+  </div>
+</section>
+<section class="light-section" id="principles"><div class="wrap section-pad"><div class="section-heading"><div><p class="eyebrow">VAD PROMPTEN BER OM</p><h2>Bra teknisk text<br>lämnar mindre åt gissningar.</h2></div><p>Flytande är inte samma sak som tydligt. Be om fasta namn, raka meningar och en tydlig gräns mellan belägg och slutsatser.</p></div><div class="rule-grid"><article><span class="rule-no">01</span><h3>Ge varje sak<br> ett namn.</h3><p>Om komponenten heter ”worker”, kalla den worker hela vägen. En ny synonym kan se ut som en annan komponent.</p></article><article><span class="rule-no">02</span><h3>Ge varje steg<br> en åtgärd.</h3><p>Dela upp en procedur i åtgärder som går att utföra och kontrollera. Skriv villkor före de åtgärder de styr.</p></article><article><span class="rule-no">03</span><h3>Ge varje påstående<br> en tydlig status.</h3><p>Skilj mellan vad källan säger och vilka slutsatser modellen drar. Låt osäkerheten synas. Fråga hur svaret kan kontrolleras.</p></article></div><aside class="source-note"><span class="pill">INSPIRERAT AV ASD-STE100</span><p>Flygindustrins skrivprojekt startade 1979, och den första guiden kom 1986. Dagens standard tillåter <strong>högst 20 ord</strong> per mening i procedurer. Promptarna lånar dess anda men intygar inte att texten följer standarden. <a href="/evidence/#ste">Läs de exakta reglerna ↗</a></p></aside>
+<div class="example-header"><h3>Samma avsikt. Mindre tolkning.</h3><div class="segmented light" aria-label="Välj ett tekniskt exempel"><button data-example="deploy" aria-pressed="true">Driftsättning</button><button data-example="review" aria-pressed="false">Kodgranskning</button><button data-example="research" aria-pressed="false">Forskning</button></div></div><div class="rewrite-pair"><article class="before"><span class="eyebrow">FÖRE / ILLUSTRERANDE EXEMPEL</span><p id="example-before">När du har sparat konfigurationen kan det vara bra att starta om tjänsten och kontrollera att workerns hälsokontroll returnerar HTTP 200, samt att återställa den tidigare konfigurationen om processen inte klarar kontrollen.</p><div class="annotation">En överlastad mening. Olika namn på samma sak.</div></article><article class="after"><span class="eyebrow">EFTER / EN MER PRECIS INSTRUKTION</span><div id="example-after"><ol><li>Spara konfigurationen.</li><li>Starta om workern.</li><li>Kör workerns hälsokontroll.</li></ol><p>Förväntat resultat: HTTP 200. Om kontrollen misslyckas, återställ den tidigare konfigurationen.</p></div><div class="annotation">Ett namn. Synliga steg. Ett definierat resultat.</div></article></div></div></section>
+<section class="voice-banner wrap"><p class="eyebrow">SKRIVER DU FÖR MÄNNISKOR?</p><h2>Behåll precisionen.<br><em>Få tillbaka din röst.</em></h2><div><p>Skapa ett redigeringsuppdrag för webbtexter, presentationer eller tekniska texter.</p><a href="/humanize/" class="button primary">Skapa ett redigeringsuppdrag <span>↗</span></a></div></section>
