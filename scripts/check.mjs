@@ -226,13 +226,13 @@ assert.equal(chaosButton.attrs['aria-pressed'],'false');assert.equal(chaotic.but
 reduced.get('chaos-toggle').emit('click');
 assert.equal(reduced.get('chaos-toggle').attrs['aria-pressed'],'true');assert.equal(reduced.raf.size,0,'Chaos respects reduced motion.');
 reduced.buttons[1].emit('click');assert.equal(reduced.get('chaos-toggle').attrs['aria-pressed'],'false');assert.equal(reduced.raf.size,0);
-// Screensaver: appears after 8 seconds without input, only with a fine pointer and motion on, never while a field has focus; real input dismisses it.
+// Screensaver: appears after 12 seconds without input, only with a fine pointer and motion on, never while a field has focus or after it is switched off; real input dismisses it.
 const saverCode=stripImports(await readFile(new URL('../assets/screensaver.js',import.meta.url),'utf8'));
-function runSaver({fine=true,reduced=false,motion=true,focused=false}={}){
- const listeners={},timers=[],raf=new Map(),events=[],classes=new Set(),created=[],drawn={glyphs:0};let rafId=0;
- const context=vm.createContext({Math,Array,text:en,
+function runSaver({fine=true,reduced=false,motion=true,focused=false,storage=new MemoryStorage()}={}){
+ const listeners={},timers=[],raf=new Map(),events=[],classes=new Set(),created=[],drawn={glyphs:0},toggle=new Element();let rafId=0;
+ const context=vm.createContext({Math,Array,text:en,get localStorage(){if(!storage)throw new Error('SecurityError: storage blocked');return storage;},
   matchMedia:q=>({matches:q.includes('pointer: fine')?fine:q.includes('reduced-motion')?reduced:false}),
-  document:{documentElement:{classList:{add:c=>classes.add(c),remove:c=>classes.delete(c)}},activeElement:{closest:()=>focused?{}:null},hidden:false,createElement:tag=>{const element=new Element();if(tag==='canvas')element.getContext=()=>new Proxy({fillText(){drawn.glyphs++;}},{get:(obj,key)=>obj[key]??(()=>{})});created.push(element);return element;},body:{append(){}},addEventListener(){}},
+  document:{querySelector:selector=>selector==='.saver-toggle'?toggle:null,documentElement:{classList:{add:c=>classes.add(c),remove:c=>classes.delete(c)}},activeElement:{closest:()=>focused?{}:null},hidden:false,createElement:tag=>{const element=new Element();if(tag==='canvas')element.getContext=()=>new Proxy({fillText(){drawn.glyphs++;}},{get:(obj,key)=>obj[key]??(()=>{})});created.push(element);return element;},body:{append(){}},addEventListener(){}},
   window:{clearformMotion:motion,dispatchEvent:e=>events.push(e.detail)},
   addEventListener:(type,fn)=>{(listeners[type]??=[]).push(fn);},removeEventListener(){},
   setTimeout:(fn,ms)=>{timers.push({fn,ms});return timers.length;},clearTimeout(){},
@@ -241,7 +241,7 @@ function runSaver({fine=true,reduced=false,motion=true,focused=false}={}){
  vm.runInContext(saverCode,context);
  const send=(type,extra={})=>{const event={type,clientX:0,clientY:0,prevented:false,preventDefault(){this.prevented=true;},stopPropagation(){},...extra};listeners[type].forEach(fn=>fn(event));return event;};
  const frames=now=>{const pending=[...raf.entries()];pending.forEach(([id,fn])=>{raf.delete(id);fn(now);});};
- return {events,classes,raf,timers,send,frames,created,drawn,idle:()=>timers.at(-1).fn()};
+ return {events,classes,raf,timers,send,frames,created,drawn,toggle,storage,idle:()=>timers.at(-1).fn()};
 }
 const saver=runSaver();
 assert.equal(saver.timers.at(-1).ms,12000);
@@ -273,6 +273,32 @@ assert.ok(fadeDefault>=15&&fadeDefault<=24&&fadeFastest>=25&&fadeFastest<=31,`Fa
 for(const [label,options] of [['touch screens',{fine:false}],['reduced motion',{reduced:true}],['Motion off',{motion:false}],['a focused field',{focused:true}]]){
  const quiet=runSaver(options);quiet.idle();assert.deepEqual(quiet.events,[],`No screensaver with ${label}.`);assert.ok(quiet.timers.length>1,'It re-arms for later.');
 }
+// Switching it off: the button on the rain and the footer switch share one saved setting.
+const switched=runSaver();
+assert.equal(switched.toggle.textContent,'Screensaver on');assert.equal(switched.toggle.hidden,false,'The footer switch shows with a mouse or trackpad.');
+switched.idle();assert.deepEqual(switched.events,[true]);
+const offButton=switched.created.find(element=>element.className==='saver-off');
+assert.equal(offButton.type,'button');assert.equal(offButton.value,'Turn off screensaver');
+switched.send('pointerdown',{target:onControl});assert.deepEqual(switched.events,[true],'Pressing the button does not count as a click outside the controls.');
+offButton.emit('click');
+assert.deepEqual(switched.events,[true,false],'The button on the rain stops the screensaver.');
+assert.equal(switched.storage.getItem('krakem-screensaver'),'off');assert.equal(switched.toggle.textContent,'Screensaver off');
+switched.frames(100);assert.equal(switched.raf.size,0,'The rain stops drawing when it is switched off.');
+switched.send('pointermove',{clientX:90,clientY:90});switched.idle();assert.deepEqual(switched.events,[true,false],'It does not come back while switched off.');
+switched.toggle.emit('click');
+assert.equal(switched.storage.getItem('krakem-screensaver'),null,'Only "off" is stored.');assert.equal(switched.toggle.textContent,'Screensaver on');
+switched.idle();assert.deepEqual(switched.events,[true,false,true],'The footer switch turns it back on.');
+const savedOff=new MemoryStorage();savedOff.setItem('krakem-screensaver','off');
+const returning=runSaver({storage:savedOff});returning.idle();
+assert.deepEqual(returning.events,[],'A saved "off" keeps it off on the next page.');assert.equal(returning.toggle.textContent,'Screensaver off');assert.ok(returning.timers.length>1,'It re-arms for later.');
+const noStorage=runSaver({storage:null});assert.equal(noStorage.toggle.textContent,'Screensaver on');
+noStorage.toggle.emit('click');noStorage.idle();assert.deepEqual(noStorage.events,[],'Without storage, the switch still works on the current page.');assert.equal(noStorage.toggle.textContent,'Screensaver off');
+assert.equal(runSaver({fine:false}).toggle.hidden,true,'The footer switch is hidden on touch screens.');
+for(const [lang,table] of Object.entries(tables))for(const page of ['','humanize/','claude/','claude-outputs/','evidence/']){
+ const html=await readFile(new URL(`../dist/${lang==='en'?'':lang+'/'}${page}index.html`,import.meta.url),'utf8');
+ assert.ok(html.includes(`<button class="saver-toggle text-button" type="button" hidden>${table.screensaver.on}</button>`),`${lang}/${page} has the screensaver switch in its footer`);
+}
+console.log('PASS: the screensaver switches off from the button on the rain or the footer switch on all 15 pages, stays off on later pages, switches back on, works without storage, and hides its switch on touch screens.');
 console.log('PASS: screensaver appears after 12 s idle, stays while the pointer moves or a corner control is used, closes on a click elsewhere or a key without acting on the page, stops drawing when closed, has working speed, fade-in, and color controls, and stays off for touch, reduced motion, Motion off, and focused fields; the field pauses under it.');
 console.log('PASS: chaos renders and moves, pauses exactly, resumes, returns to figure cycling, and respects reduced motion.');
 
@@ -405,8 +431,8 @@ for(const file of ['guide.js','humanize.js','field.js'])assert.match(await readF
 for(const file of(await readdir(new URL('../assets/',import.meta.url))).filter(f=>f.endsWith('.js'))){
  const code=await readFile(new URL('../assets/'+file,import.meta.url),'utf8');
  assert.ok(!/\b(fetch|XMLHttpRequest|sendBeacon|WebSocket|EventSource)\b/.test(code),`${file} makes no network requests`);
- // localStorage holds only the Motion setting (common.js) and a language picked in the switcher (language.js).
- if(!['common.js','language.js'].includes(file))assert.ok(!/localStorage/.test(code),`${file} keeps drafts out of localStorage`);
+ // localStorage holds only the Motion setting (common.js), the screensaver switch (screensaver.js), and a language picked in the switcher (language.js).
+ if(!['common.js','language.js','screensaver.js'].includes(file))assert.ok(!/localStorage/.test(code),`${file} keeps drafts out of localStorage`);
 }
 assert.ok(!/rtk\.md|@import|^@/m.test(await readFile(new URL('../assets/downloads/CLAUDE.md',import.meta.url),'utf8')),'CLAUDE.md has no imports.');
 assert.equal(await readFile(new URL('../dist/assets/downloads/CLAUDE.md',import.meta.url),'utf8'),await readFile(new URL('../assets/downloads/CLAUDE.md',import.meta.url),'utf8'));

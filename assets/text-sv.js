@@ -102,6 +102,9 @@ export const sv={
  screensaver:{
   speed:'Bokstävernas hastighet',
   fade:'Tona in bokstäverna',
-  color:'Bokstävernas färg'
+  color:'Bokstävernas färg',
+  on:'Skärmsläckare på',
+  off:'Skärmsläckare av',
+  turnOff:'Stäng av skärmsläckaren'
  }
 };

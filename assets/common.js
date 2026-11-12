@@ -56,4 +56,4 @@ document.querySelectorAll('[data-copy]').forEach(button=>button.addEventListener
   if(success)toast(t.copiedFallback);else{const range=document.createRange();range.selectNodeContents(target);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);toast(t.selected);}
  }
 }));
-if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting){if(motion)entry.target.classList.add('reveal-ready');observer.unobserve(entry.target);}}},{threshold:.12});document.querySelectorAll('.section-heading,.lab-teaser,.voice-banner').forEach(el=>observer.observe(el));}
+if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting){if(motion)entry.target.classList.add('reveal-ready');observer.unobserve(entry.target);}}},{threshold:.12});document.querySelectorAll('.section-heading,.voice-banner').forEach(el=>observer.observe(el));}

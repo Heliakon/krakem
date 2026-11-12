@@ -102,6 +102,9 @@ export const pl={
  screensaver:{
   speed:'Prędkość liter',
   fade:'Płynne pojawianie się liter',
-  color:'Kolor liter'
+  color:'Kolor liter',
+  on:'Wygaszacz włączony',
+  off:'Wygaszacz wyłączony',
+  turnOff:'Wyłącz wygaszacz'
  }
 };

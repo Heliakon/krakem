@@ -3,16 +3,27 @@ import {text} from './i18n.js';
 // Corner controls, as in the original screensaver file, set letter speed, fade-in, and color. Moving the pointer keeps the rain
 // so the controls can be reached; a click elsewhere, a key, or the wheel brings the page back.
 // It runs only with a mouse or trackpad, with motion on, and never while a form field has focus.
+// The footer switch and the button on the rain turn it off; that choice is saved for later visits.
 const IDLE_MS=12000,SIZE=16,FADE_IN=30,FADE_OUT=40,GLYPHS='アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 // Color slider stops: the site green, then blue, purple, orange, red, and white.
 const STOPS=[[130,195,65],[0,120,255],[160,60,255],[255,140,0],[255,30,30],[255,255,255]];
 const finePointer=matchMedia('(hover: hover) and (pointer: fine)'),reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
-const root=document.documentElement;
+const root=document.documentElement,toggle=document.querySelector('.saver-toggle'),STORAGE_KEY='krakem-screensaver';
+let enabled=true;
+try{enabled=localStorage.getItem(STORAGE_KEY)!=='off';}catch{}
 let idleTimer=0,coverTimer=0,frame=0,last=0,progress=0,active=false,overlay=null,canvas=null,ctx=null,speed=null,smooth=null,tint=null,color='',drops=[],cells=[],pointer=null,returnFocus=null;
 
+const label=()=>{if(toggle)toggle.textContent=enabled?text.screensaver.on:text.screensaver.off;};
+function setEnabled(value){
+ enabled=value;
+ // Only "off" is stored; without storage the choice still holds until the page is left.
+ try{if(value)localStorage.removeItem(STORAGE_KEY);else localStorage.setItem(STORAGE_KEY,'off');}catch{}
+ label();
+ if(!value&&active)hide();
+}
 function canShow(){
  const field=document.activeElement?.closest?.('input, textarea, select, [contenteditable="true"]');
- return finePointer.matches&&!reducedMotion.matches&&window.clearformMotion!==false&&!document.hidden&&!field;
+ return enabled&&finePointer.matches&&!reducedMotion.matches&&window.clearformMotion!==false&&!document.hidden&&!field;
 }
 function build(){
  overlay=document.createElement('div');overlay.className='screensaver';overlay.hidden=true;
@@ -21,7 +32,9 @@ function build(){
  smooth=Object.assign(document.createElement('input'),{type:'checkbox',className:'saver-smooth'});
  tint=Object.assign(document.createElement('input'),{type:'range',className:'saver-color',min:0,max:5,step:'any',value:0});
  speed.setAttribute('aria-label',text.screensaver.speed);smooth.setAttribute('aria-label',text.screensaver.fade);tint.setAttribute('aria-label',text.screensaver.color);
- overlay.append(canvas,speed,smooth,tint);document.body.append(overlay);
+ const off=Object.assign(document.createElement('input'),{type:'button',className:'saver-off',value:text.screensaver.turnOff});
+ off.addEventListener('click',()=>setEnabled(false));
+ overlay.append(canvas,speed,smooth,tint,off);document.body.append(overlay);
  ctx=canvas.getContext('2d',{alpha:false});
  tint.addEventListener('input',updateColor);updateColor();
  smooth.addEventListener('change',clear);
@@ -112,4 +125,6 @@ function wake(event){
 for(const type of ['pointermove','pointerdown','keydown','wheel','touchstart','scroll','focusin'])addEventListener(type,wake,{capture:true,passive:type!=='keydown'&&type!=='pointerdown'});
 addEventListener('resize',()=>{if(active)resize();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&active)hide();});
+// The switch is in every footer. It stays hidden on touch screens, where the screensaver never starts.
+if(toggle){toggle.hidden=!finePointer.matches;label();toggle.addEventListener('click',()=>setEnabled(!enabled));}
 arm();

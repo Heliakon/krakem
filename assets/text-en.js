@@ -104,6 +104,9 @@ export const en={
  screensaver:{
   speed:'Letter speed',
   fade:'Fade letters in',
-  color:'Letter color'
+  color:'Letter color',
+  on:'Screensaver on',
+  off:'Screensaver off',
+  turnOff:'Turn off screensaver'
  }
 };
