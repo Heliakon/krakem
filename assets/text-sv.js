@@ -102,6 +102,9 @@ export const sv={
   scatter:'Sprid ut partiklarna'
  },
  screensaver:{
+  speed:'Bokstävernas hastighet',
+  fade:'Tona in bokstäverna',
+  color:'Bokstävernas färg',
   turnOff:'Stäng av skärmsläckaren'
  }
 };

@@ -102,6 +102,9 @@ export const pl={
   scatter:'Rozprosz cząsteczki'
  },
  screensaver:{
+  speed:'Prędkość liter',
+  fade:'Płynne pojawianie się liter',
+  color:'Kolor liter',
   turnOff:'Wyłącz wygaszacz'
  }
 };

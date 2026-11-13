@@ -1,14 +1,17 @@
 import {text} from './i18n.js';
 // After 12 seconds without input, a Matrix-style rain covers the page and the page underneath stops drawing.
-// Moving the pointer keeps the rain so its button can be reached; a click elsewhere, a key, or the wheel brings the page back.
+// Corner controls, as in the original screensaver file, set letter speed, fade-in, and color. Moving the pointer keeps the rain
+// so the controls can be reached; a click elsewhere, a key, or the wheel brings the page back.
 // It runs only with a mouse or trackpad, with motion on, and never while a form field has focus.
 // The Screensaver checkbox in the header and the button on the rain turn it off; that choice is saved for later visits.
-const IDLE_MS=12000,STEP_MS=43,SIZE=16,COLOR='#82c341',GLYPHS='アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const IDLE_MS=12000,SIZE=16,FADE_IN=30,FADE_OUT=40,GLYPHS='アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+// Color slider stops: the site green, then blue, purple, orange, red, and white.
+const STOPS=[[130,195,65],[0,120,255],[160,60,255],[255,140,0],[255,30,30],[255,255,255]];
 const finePointer=matchMedia('(hover: hover) and (pointer: fine)'),reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
 const root=document.documentElement,toggle=document.querySelector('.saver-toggle input'),STORAGE_KEY='krakem-screensaver';
 let enabled=true;
 try{enabled=localStorage.getItem(STORAGE_KEY)!=='off';}catch{}
-let idleTimer=0,coverTimer=0,frame=0,last=0,active=false,overlay=null,canvas=null,ctx=null,drops=[],pointer=null,returnFocus=null;
+let idleTimer=0,coverTimer=0,frame=0,last=0,progress=0,active=false,overlay=null,canvas=null,ctx=null,speed=null,smooth=null,tint=null,color='',drops=[],cells=[],pointer=null,returnFocus=null;
 
 function setEnabled(value){
  enabled=value;
@@ -24,14 +27,29 @@ function canShow(){
 function build(){
  overlay=document.createElement('div');overlay.className='screensaver';overlay.hidden=true;
  canvas=document.createElement('canvas');
+ speed=Object.assign(document.createElement('input'),{type:'range',className:'saver-speed',min:10,max:120,step:1,value:87});
+ smooth=Object.assign(document.createElement('input'),{type:'checkbox',className:'saver-smooth'});
+ tint=Object.assign(document.createElement('input'),{type:'range',className:'saver-color',min:0,max:5,step:'any',value:0});
+ speed.setAttribute('aria-label',text.screensaver.speed);smooth.setAttribute('aria-label',text.screensaver.fade);tint.setAttribute('aria-label',text.screensaver.color);
  const off=Object.assign(document.createElement('input'),{type:'button',className:'saver-off',value:text.screensaver.turnOff});
  off.addEventListener('click',()=>setEnabled(false));
- overlay.append(canvas,off);document.body.append(overlay);
+ overlay.append(canvas,speed,smooth,tint,off);document.body.append(overlay);
  ctx=canvas.getContext('2d',{alpha:false});
+ tint.addEventListener('input',updateColor);updateColor();
+ smooth.addEventListener('change',clear);
+}
+function updateColor(){
+ const value=+tint.value,i=Math.min(Math.floor(value),STOPS.length-2),t=value-i;
+ const [r,g,b]=STOPS[i].map((from,k)=>Math.round(from+(STOPS[i+1][k]-from)*t));
+ color=`rgb(${r},${g},${b})`;overlay.style.setProperty('--c',color);
+}
+function clear(){
+ cells=[];progress=0;
+ ctx.globalAlpha=1;ctx.fillStyle='#000';ctx.fillRect(0,0,canvas.width,canvas.height);
 }
 function resize(){
  // One canvas pixel per CSS pixel: sharp enough for falling glyphs, and a fraction of the cost of a high-DPI canvas.
- canvas.width=innerWidth;canvas.height=innerHeight;ctx.fillStyle='#000';ctx.fillRect(0,0,canvas.width,canvas.height);
+ canvas.width=innerWidth;canvas.height=innerHeight;clear();
  ctx.font=`${SIZE}px ui-monospace, monospace`;
  drops=Array.from({length:Math.ceil(canvas.width/SIZE)},()=>Math.random()*-50);
 }
@@ -39,11 +57,26 @@ const glyph=()=>GLYPHS[Math.floor(Math.random()*GLYPHS.length)];
 function fall(){for(let i=0;i<drops.length;i++)drops[i]=drops[i]*SIZE>canvas.height&&Math.random()>.975?0:drops[i]+1;}
 function draw(now){
  frame=requestAnimationFrame(draw);
- if(now-last<STEP_MS)return;
+ // The speed slider sets the time between steps, from 120 ms down to 10 ms.
+ const delay=130-speed.value;
+ if(smooth.checked){
+  // Fade-in mode redraws every visible letter. Brightness changes once per step, so it redraws once per step, at most about 30 times a second.
+  if(now-last<Math.max(30,delay))return;
+  const dt=Math.min(now-last,250)/delay;
+  last=now;progress+=dt;
+  while(progress>=1){progress--;for(let i=0;i<drops.length;i++)cells.push({x:i*SIZE,y:drops[i]*SIZE,ch:glyph(),age:0});fall();}
+  ctx.globalAlpha=1;ctx.fillStyle='#000';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle=color;
+  // A letter brightens over FADE_IN steps, then dims over FADE_OUT steps.
+  cells=cells.filter(cell=>(cell.age+=dt)<FADE_IN+FADE_OUT);
+  for(const cell of cells){ctx.globalAlpha=cell.age<FADE_IN?cell.age/FADE_IN:1-(cell.age-FADE_IN)/FADE_OUT;ctx.fillText(cell.ch,cell.x,cell.y);}
+  ctx.globalAlpha=1;
+  return;
+ }
+ if(now-last<delay)return;
  last=now;
  // A translucent black wash leaves fading trails behind each column's newest glyph.
  ctx.fillStyle='rgba(0,0,0,0.05)';ctx.fillRect(0,0,canvas.width,canvas.height);
- ctx.fillStyle=COLOR;
+ ctx.fillStyle=color;
  for(let i=0;i<drops.length;i++)ctx.fillText(glyph(),i*SIZE,drops[i]*SIZE);
  fall();
 }
@@ -77,7 +110,7 @@ function wake(event){
   if(!moved)return;
  }
  if(active){
-  // Moving the pointer, Tab, and using the button keep the rain. Escape always brings the page back.
+  // Moving the pointer, Tab, and using a corner control keep the rain. Escape always brings the page back.
   if(event.type==='pointermove'||event.key==='Tab'||event.key!=='Escape'&&event.target?.closest?.('.screensaver input'))return;
   hide();
   // The press or key that wakes the page should not also act on it.

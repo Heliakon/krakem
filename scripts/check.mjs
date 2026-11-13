@@ -249,18 +249,27 @@ saver.send('pointermove',{clientX:10,clientY:10});saver.idle();
 assert.deepEqual(saver.events,[true],'The screensaver appears after 12 seconds idle.');
 saver.frames(100);saver.frames(150);assert.ok(saver.raf.size>0,'The rain keeps drawing while shown.');
 saver.timers.at(-1).fn();assert.ok(saver.classes.has('screensaver-on'),'After the fade, the page underneath is hidden.');
-saver.send('pointermove',{clientX:40,clientY:10});assert.deepEqual(saver.events,[true],'Moving the pointer keeps the rain so its button can be reached.');
+saver.send('pointermove',{clientX:40,clientY:10});assert.deepEqual(saver.events,[true],'Moving the pointer keeps the rain so the corner controls can be reached.');
 const onControl={closest:selector=>selector==='.screensaver input'?{}:null};
 saver.send('pointerdown',{target:onControl});saver.send('keydown',{key:'ArrowRight',target:onControl});saver.send('keydown',{key:'Tab'});
-assert.deepEqual(saver.events,[true],'Using the button, or Tab to reach it, keeps the rain.');
+assert.deepEqual(saver.events,[true],'Using a corner control, or Tab to reach one, keeps the rain.');
 const wakingClick=saver.send('pointerdown');assert.ok(wakingClick.prevented,'The click that wakes the page does not also act on it.');
 assert.deepEqual(saver.events,[true,false],'A click outside the button brings the page back.');assert.ok(!saver.classes.has('screensaver-on'));
 saver.frames(200);assert.equal(saver.raf.size,0,'No drawing continues after the screensaver closes.');
 saver.idle();const key=saver.send('keydown',{key:'a'});assert.ok(key.prevented,'The key that wakes the page does not also act on it.');assert.deepEqual(saver.events,[true,false,true,false]);
 saver.idle();saver.send('keydown',{key:'Escape',target:onControl});assert.deepEqual(saver.events,[true,false,true,false,true,false],'Escape closes it, even from the button.');
-assert.deepEqual(saver.created.map(element=>element.className).filter(name=>name?.startsWith('saver-')),['saver-off'],'The rain has one control: the button that turns it off.');
-function stepsInOneSecond(){saver.idle();const columns=Math.ceil(320/16);saver.drawn.glyphs=0;for(let t=1000;t<2000;t+=1000/60)saver.frames(t);const count=saver.drawn.glyphs/columns;saver.send('keydown',{key:'Escape'});return count;}
-const steps=stepsInOneSecond();assert.ok(steps>=18&&steps<=24,`The rain falls at a fixed speed (${steps} steps a second).`);
+const [speedInput,smoothInput,colorInput]=['saver-speed','saver-smooth','saver-color'].map(name=>saver.created.find(element=>element.className===name));
+const overlayElement=saver.created.find(element=>element.className==='screensaver');
+assert.equal(overlayElement.style['--c'],'rgb(130,195,65)','The rain starts in the site green.');
+colorInput.value=5;colorInput.emit('input');assert.equal(overlayElement.style['--c'],'rgb(255,255,255)','The color slider ends at white.');
+colorInput.value=1.5;colorInput.emit('input');assert.equal(overlayElement.style['--c'],'rgb(80,90,255)','The color slider blends between stops.');
+function glyphsInOneSecond(){saver.idle();saver.drawn.glyphs=0;for(let t=1000;t<2000;t+=1000/60)saver.frames(t);const count=saver.drawn.glyphs;saver.send('keydown',{key:'Escape'});return count;}
+const normalSpeed=glyphsInOneSecond();speedInput.value=120;const fastest=glyphsInOneSecond();speedInput.value=10;const slowest=glyphsInOneSecond();
+assert.ok(fastest>normalSpeed*2&&normalSpeed>slowest*2,`The speed slider changes the rain speed (${slowest}, ${normalSpeed}, ${fastest} glyphs a second).`);
+smoothInput.checked=true;smoothInput.emit('change');
+function fadeRedraws(){saver.idle();let count=0;for(let t=1000;t<2000;t+=1000/60){const before=saver.drawn.glyphs;saver.frames(t);if(saver.drawn.glyphs>before)count++;}saver.send('keydown',{key:'Escape'});return count;}
+speedInput.value=87;const fadeDefault=fadeRedraws();speedInput.value=120;const fadeFastest=fadeRedraws();speedInput.value=87;
+assert.ok(fadeDefault>=15&&fadeDefault<=24&&fadeFastest>=25&&fadeFastest<=31,`Fade-in mode redraws once per step, at most about 30 times a second (${fadeDefault}, ${fadeFastest}).`);
 for(const [label,options] of [['touch screens',{fine:false}],['reduced motion',{reduced:true}],['Motion off',{motion:false}],['a focused field',{focused:true}]]){
  const quiet=runSaver(options);quiet.idle();assert.deepEqual(quiet.events,[],`No screensaver with ${label}.`);assert.ok(quiet.timers.length>1,'It re-arms for later.');
 }
@@ -318,7 +327,7 @@ owned.get('code-ownership').value='own';owned.get('code-ownership').emit('change
 assert.ok(owned.get('technical-prompt').textContent.includes(en.prompt.ownership.own),'Choosing "mine" adds the ownership line.');
 owned.get('clear-creator-draft').emit('click');assert.equal(owned.get('code-ownership').value,'','Clear draft resets the ownership choice.');
 console.log('PASS: code ownership lines (mine, someone else, not stated) only on code tasks, design encouragement only on visual formats, in three languages, with source material last and draft reset.');
-console.log('PASS: screensaver appears after 12 s idle, stays while the pointer moves or its button is used, closes on a click elsewhere or a key without acting on the page, stops drawing when closed, falls at a fixed speed with one control, and stays off for touch, reduced motion, Motion off, and focused fields; the field pauses under it.');
+console.log('PASS: screensaver appears after 12 s idle, stays while the pointer moves or a corner control is used, closes on a click elsewhere or a key without acting on the page, stops drawing when closed, has working speed, fade-in, and color controls, and stays off for touch, reduced motion, Motion off, and focused fields; the field pauses under it.');
 console.log('PASS: chaos renders and moves, pauses exactly, resumes, returns to figure cycling, and respects reduced motion.');
 
 // Humanize: complete briefs from entered values, with the original text preserved exactly and placed last.
