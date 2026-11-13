@@ -105,6 +105,7 @@ export const pl={
   speed:'Prędkość liter',
   fade:'Płynne pojawianie się liter',
   color:'Kolor liter',
+  cycle:'Powolna zmiana koloru',
   turnOff:'Wyłącz wygaszacz'
  }
 };

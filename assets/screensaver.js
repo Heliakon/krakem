@@ -4,6 +4,8 @@ import {text} from './i18n.js';
 // so the controls can be reached; a click elsewhere, a key, or the wheel brings the page back.
 // It runs only with a mouse or trackpad, with motion on, and never while a form field has focus.
 // The Screensaver checkbox in the header and the button on the rain turn it off; that choice is saved for later visits.
+// With the checkbox beside the color slider ticked, the slider drifts from one end to the other in CYCLE_MS, then back.
+const CYCLE_MS=90000;
 const IDLE_MS=12000,SIZE=16,FADE_IN=30,FADE_OUT=40,GLYPHS='アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 // Color slider stops: the site green, then blue, purple, orange, red, and white.
 const STOPS=[[130,195,65],[0,120,255],[160,60,255],[255,140,0],[255,30,30],[255,255,255]];
@@ -11,7 +13,7 @@ const finePointer=matchMedia('(hover: hover) and (pointer: fine)'),reducedMotion
 const root=document.documentElement,toggle=document.querySelector('.saver-toggle input'),STORAGE_KEY='krakem-screensaver';
 let enabled=true;
 try{enabled=localStorage.getItem(STORAGE_KEY)!=='off';}catch{}
-let idleTimer=0,coverTimer=0,frame=0,last=0,progress=0,active=false,overlay=null,canvas=null,ctx=null,speed=null,smooth=null,tint=null,color='',drops=[],cells=[],pointer=null,returnFocus=null;
+let idleTimer=0,coverTimer=0,frame=0,last=0,progress=0,active=false,overlay=null,canvas=null,ctx=null,speed=null,smooth=null,tint=null,cycle=null,cycleLast=0,cycleDirection=1,color='',drops=[],cells=[],pointer=null,returnFocus=null;
 
 function setEnabled(value){
  enabled=value;
@@ -30,10 +32,11 @@ function build(){
  speed=Object.assign(document.createElement('input'),{type:'range',className:'saver-speed',min:10,max:120,step:1,value:87});
  smooth=Object.assign(document.createElement('input'),{type:'checkbox',className:'saver-smooth'});
  tint=Object.assign(document.createElement('input'),{type:'range',className:'saver-color',min:0,max:5,step:'any',value:0});
+ cycle=Object.assign(document.createElement('input'),{type:'checkbox',className:'saver-cycle'});cycle.setAttribute('aria-label',text.screensaver.cycle);
  speed.setAttribute('aria-label',text.screensaver.speed);smooth.setAttribute('aria-label',text.screensaver.fade);tint.setAttribute('aria-label',text.screensaver.color);
  const off=Object.assign(document.createElement('input'),{type:'button',className:'saver-off',value:text.screensaver.turnOff});
  off.addEventListener('click',()=>setEnabled(false));
- overlay.append(canvas,speed,smooth,tint,off);document.body.append(overlay);
+ overlay.append(canvas,speed,smooth,cycle,tint,off);document.body.append(overlay);
  ctx=canvas.getContext('2d',{alpha:false});
  tint.addEventListener('input',updateColor);updateColor();
  smooth.addEventListener('change',clear);
@@ -55,8 +58,18 @@ function resize(){
 }
 const glyph=()=>GLYPHS[Math.floor(Math.random()*GLYPHS.length)];
 function fall(){for(let i=0;i<drops.length;i++)drops[i]=drops[i]*SIZE>canvas.height&&Math.random()>.975?0:drops[i]+1;}
+function drift(now){
+ if(!cycle.checked){cycleLast=0;return;}
+ // Capped, so the color does not jump after the tab was in the background.
+ const elapsed=cycleLast?Math.min(now-cycleLast,250):0,max=STOPS.length-1;
+ cycleLast=now;
+ let value=+tint.value+cycleDirection*elapsed*max/CYCLE_MS;
+ if(value>=max){value=max;cycleDirection=-1;}else if(value<=0){value=0;cycleDirection=1;}
+ tint.value=value;updateColor();
+}
 function draw(now){
  frame=requestAnimationFrame(draw);
+ drift(now);
  // The speed slider sets the time between steps, from 120 ms down to 10 ms.
  const delay=130-speed.value;
  if(smooth.checked){
@@ -94,7 +107,7 @@ function show(){
  last=0;frame=requestAnimationFrame(draw);
 }
 function hide(){
- active=false;cancelAnimationFrame(frame);frame=0;clearTimeout(coverTimer);
+ active=false;cancelAnimationFrame(frame);frame=0;cycleLast=0;clearTimeout(coverTimer);
  root.classList.remove('screensaver-on');overlay.classList.remove('on');overlay.hidden=true;
  if(returnFocus?.isConnected&&document.activeElement!==returnFocus)returnFocus.focus({preventScroll:true});
  returnFocus=null;

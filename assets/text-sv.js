@@ -105,6 +105,7 @@ export const sv={
   speed:'Bokstävernas hastighet',
   fade:'Tona in bokstäverna',
   color:'Bokstävernas färg',
+  cycle:'Ändra färg långsamt',
   turnOff:'Stäng av skärmsläckaren'
  }
 };

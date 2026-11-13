@@ -270,6 +270,20 @@ smoothInput.checked=true;smoothInput.emit('change');
 function fadeRedraws(){saver.idle();let count=0;for(let t=1000;t<2000;t+=1000/60){const before=saver.drawn.glyphs;saver.frames(t);if(saver.drawn.glyphs>before)count++;}saver.send('keydown',{key:'Escape'});return count;}
 speedInput.value=87;const fadeDefault=fadeRedraws();speedInput.value=120;const fadeFastest=fadeRedraws();speedInput.value=87;
 assert.ok(fadeDefault>=15&&fadeDefault<=24&&fadeFastest>=25&&fadeFastest<=31,`Fade-in mode redraws once per step, at most about 30 times a second (${fadeDefault}, ${fadeFastest}).`);
+// The checkbox beside the color slider moves that slider slowly from end to end and back.
+const cycleInput=saver.created.find(element=>element.className==='saver-cycle');
+assert.equal(cycleInput.type,'checkbox');assert.equal(cycleInput.attrs['aria-label'],'Change color slowly');
+colorInput.value=0;colorInput.emit('input');
+const runFor=(from,ms)=>{for(let t=from;t<=from+ms;t+=100)saver.frames(t);return from+ms;};
+saver.idle();let clock=runFor(10000,5000);
+assert.equal(+colorInput.value,0,'The color stays put while the checkbox is clear.');
+cycleInput.checked=true;clock=runFor(clock+100,45000);
+assert.ok(Math.abs(colorInput.value-2.5)<.02,`The color is halfway after half a sweep (${colorInput.value}).`);assert.notEqual(overlayElement.style['--c'],'rgb(130,195,65)');
+clock=runFor(clock+100,45100);assert.ok(colorInput.value>4.98,`The slow sweep reaches the far end (${colorInput.value}).`);
+clock=runFor(clock+100,45000);assert.ok(Math.abs(colorInput.value-2.5)<.02,`Then it comes back (${colorInput.value}).`);
+clock=runFor(clock+100,45100);assert.ok(colorInput.value<.02,`And returns to the start (${colorInput.value}).`);
+cycleInput.checked=false;const held=+colorInput.value;runFor(clock+100,5000);assert.equal(+colorInput.value,held,'Clearing the checkbox stops the sweep.');
+saver.send('keydown',{key:'Escape'});
 for(const [label,options] of [['touch screens',{fine:false}],['reduced motion',{reduced:true}],['Motion off',{motion:false}],['a focused field',{focused:true}]]){
  const quiet=runSaver(options);quiet.idle();assert.deepEqual(quiet.events,[],`No screensaver with ${label}.`);assert.ok(quiet.timers.length>1,'It re-arms for later.');
 }
@@ -327,7 +341,7 @@ owned.get('code-ownership').value='own';owned.get('code-ownership').emit('change
 assert.ok(owned.get('technical-prompt').textContent.includes(en.prompt.ownership.own),'Choosing "mine" adds the ownership line.');
 owned.get('clear-creator-draft').emit('click');assert.equal(owned.get('code-ownership').value,'','Clear draft resets the ownership choice.');
 console.log('PASS: code ownership lines (mine, someone else, not stated) only on code tasks, design encouragement only on visual formats, in three languages, with source material last and draft reset.');
-console.log('PASS: screensaver appears after 12 s idle, stays while the pointer moves or a corner control is used, closes on a click elsewhere or a key without acting on the page, stops drawing when closed, has working speed, fade-in, and color controls, and stays off for touch, reduced motion, Motion off, and focused fields; the field pauses under it.');
+console.log('PASS: screensaver appears after 12 s idle, stays while the pointer moves or a corner control is used, closes on a click elsewhere or a key without acting on the page, stops drawing when closed, has working speed, fade-in, color, and slow color-change controls, and stays off for touch, reduced motion, Motion off, and focused fields; the field pauses under it.');
 console.log('PASS: chaos renders and moves, pauses exactly, resumes, returns to figure cycling, and respects reduced motion.');
 
 // Humanize: complete briefs from entered values, with the original text preserved exactly and placed last.
