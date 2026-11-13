@@ -5,17 +5,19 @@ const t=text.creator,examples=t.examples;
 document.querySelectorAll('[data-example]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-example]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));const ex=examples[button.dataset.example];document.getElementById('example-before').textContent=ex.before;document.getElementById('example-after').innerHTML=ex.after;document.querySelector('.after .annotation').textContent=ex.note;}));
 const task=document.getElementById('task'),format=document.getElementById('format'),brief=document.getElementById('task-brief'),source=document.getElementById('source-material'),output=document.getElementById('technical-prompt'),copy=document.getElementById('copy-technical-prompt'),status=document.getElementById('prompt-state');
 const subjectA=document.getElementById('compare-a'),subjectB=document.getElementById('compare-b'),criteria=document.getElementById('compare-criteria'),comparison=document.getElementById('comparison-fields'),suggestion=document.getElementById('task-suggestion'),checklist=document.getElementById('prompt-checklist'),issueList=document.getElementById('prompt-issues');
+const ownership=document.getElementById('code-ownership'),ownershipField=document.getElementById('ownership-field');
 const checkedFields=[brief,subjectA,subjectB,criteria],clearDraft=document.getElementById('clear-creator-draft'),draftNote=document.getElementById('creator-draft-note');
-const draft=draftStore('krakem-creator-draft'),draftFields={task,format,brief,source,subjectA,subjectB,criteria};
-const defaults={task:'custom',format:'text',brief:'',source:'',subjectA:'',subjectB:'',criteria:criteria.defaultValue??''};
+const draft=draftStore('krakem-creator-draft'),draftFields={task,format,brief,source,subjectA,subjectB,criteria,ownership};
+const defaults={task:'custom',format:'text',brief:'',source:'',subjectA:'',subjectB:'',criteria:criteria.defaultValue??'',ownership:''};
 let formatChosen=false;
 function buildPrompt(){
  const comparing=task.value==='compare';
  comparison.hidden=!comparing;
+ ownershipField.hidden=task.value!=='code';
  [subjectA,subjectB,criteria].forEach(field=>field.required=comparing);
  document.getElementById('task-help').textContent=comparing?t.helpCompare:t.help;
  suggestion.hidden=!(['custom','research','paper'].includes(task.value)&&/\b(compar(?:e|ing|ison)|versus|vs\.?|porówn\w*|jämför\w*|comparar)\b/i.test(brief.value));
- const values={brief:brief.value,task:task.value,format:format.value,source:source.value,subjectA:subjectA.value,subjectB:subjectB.value,criteria:criteria.value,lang:language};
+ const values={brief:brief.value,task:task.value,format:format.value,source:source.value,subjectA:subjectA.value,subjectB:subjectB.value,criteria:criteria.value,ownership:ownership.value,lang:language};
  const issues=validatePrompt(values),prompt=buildTechnicalPrompt(values);
  copy.disabled=!prompt;
  output.textContent=prompt||(comparing?t.emptyCompare:t.empty);
@@ -45,6 +47,7 @@ function update(){buildPrompt();saveDraft();}
 function changeTask(){if(!formatChosen)format.value=defaultFormats[task.value]??'text';update();}
 task.addEventListener('change',changeTask);
 format.addEventListener('change',()=>{formatChosen=true;update();});
+ownership.addEventListener('change',update);
 [brief,source,subjectA,subjectB,criteria].forEach(el=>el.addEventListener('input',update));
 document.getElementById('use-comparison').addEventListener('click',()=>{task.value='compare';changeTask();subjectA.focus();});
 clearDraft.addEventListener('click',()=>{

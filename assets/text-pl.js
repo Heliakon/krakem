@@ -29,6 +29,8 @@ export const pl={
   procedure:'W procedurach kieruj się duchem ASD-STE100: staraj się, by zdanie miało najwyżej 20 słów. Rozdzielaj kolejne czynności. Czynności, które muszą odbywać się jednocześnie, zostaw razem. Traktuj to jako wskazówki dotyczące pisania, a nie deklarację zgodności ze STE.',
   sources:'Przestrzegaj moich ograniczeń dotyczących źródeł i przeglądania sieci. Jeśli przeglądanie sieci jest dozwolone i dostępne, sprawdzaj twierdzenia zależne od czasu w aktualnych źródłach. Sam adres URL nie dowodzi, że treść strony została przeczytana. Jeśli nie masz dostępu do potrzebnego źródła, powiedz o tym i poproś o odpowiedni materiał. Nie wymyślaj cytowań i nie traktuj niezweryfikowanych twierdzeń jak ustalonych faktów.',
   missing:'Jeśli brakuje informacji niezbędnych do poprawnej odpowiedzi, zadaj konkretne pytanie zamiast zgadywać. Odpowiadaj w języku mojego zadania, chyba że poproszę o inny.',
+  ownership:{own:'Ten kod jest twój: decydujesz, do czego służy i jak jest zbudowany, i będziesz go dalej rozwijać. W trakcie pracy scalaj powtarzający się kod i wprowadzaj powiązane poprawki. Wymień zmiany, które wykraczają poza moją prośbę.',other:'Ten kod należy do kogoś innego. Trzymaj się jego obecnej struktury i wprowadź tylko zmianę, o którą proszę. Zgłaszaj pobliskie problemy, zamiast je naprawiać.'},
+  design:'Potraktuj to jako pokaz swoich najlepszych umiejętności projektowych. Wyjdź poza podstawy: wybierz wyrazisty styl wizualny i dopracuj typografię, kolory, odstępy i ruch. Unikaj szablonowych układów i domyślnych fontów.',
   answerFormat:'Forma odpowiedzi:',
   compareTable:'Użyj tabeli porównawczej z jednym wierszem na każde kryterium i osobną kolumną dla każdej pozycji. Pod tabelą zwięźle wyjaśnij kompromisy i ograniczenia dowodów.',
   sourceMaterial:'Materiały źródłowe do tego zadania:',
@@ -47,7 +49,7 @@ export const pl={
    review:{before:'Mechanizm ponowień może potencjalnie wysłać tę samą płatność dwukrotnie po przekroczeniu limitu czasu, dlatego korzystne byłoby zweryfikowanie, czy API płatności akceptuje klucz idempotencji, a jeśli tak, doprowadzenie do tego, by procesor ponowień używał go przy wszystkich próbach tej płatności.',after:'<p>Worker ponowień może wysłać tę samą płatność dwa razy po przekroczeniu limitu czasu. Sprawdź, czy API płatności przyjmuje klucz idempotencji.</p><p>Jeśli tak, używaj tego samego klucza przy każdej próbie tej płatności.</p>',note:'Przykładowa diagnoza. Konkretne pytanie. Warunkowa poprawka.'},
    research:{before:'Proszę o przedstawienie wyczerpującego omówienia zastosowanej w artykule metryki skuteczności, jej punktu odniesienia, zbioru danych i niepewności, wraz z naświetleniem, jakie warunki zostały przetestowane, oraz wyjaśnieniem, że skuteczność poza nimi nie została zweryfikowana.',after:'<p>Podaj metrykę z artykułu, punkt odniesienia, zbiór danych i niepewność.</p><p>Napisz, jakie warunki przetestowano. Skuteczność poza tymi warunkami traktuj jako niezweryfikowaną.</p>',note:'Prośba o analizę, która wymaga dowodów zamiast pochwał.'}
   },
-  help:'Opisz zadanie, oczekiwany wynik i ważne ograniczenia.',
+  help:'Opisz zadanie, oczekiwany wynik, powód, dla którego jest ważny, i ważne ograniczenia.',
   helpCompare:'Opisz decyzję, w której ma pomóc porównanie, odbiorców i ewentualne ograniczenia.',
   empty:'Prompt pojawi się tutaj w trakcie pisania. Opisz zadanie i wybierz formę odpowiedzi.',
   emptyCompare:'Uzupełnij szczegóły porównania. Gotowy prompt obejmie obie pozycje, Twój cel i te same kryteria dla każdej z nich.',
@@ -100,8 +102,6 @@ export const pl={
   scatter:'Rozprosz cząsteczki'
  },
  screensaver:{
-  on:'Wygaszacz włączony',
-  off:'Wygaszacz wyłączony',
   turnOff:'Wyłącz wygaszacz'
  }
 };

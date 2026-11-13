@@ -27,10 +27,12 @@ export function validatePrompt({brief='',task='custom',subjectA='',subjectB='',c
  return issues;
 }
 
-export function buildTechnicalPrompt({brief='',task='custom',format='text',source='',subjectA='',subjectB='',criteria='',lang='en'}={}){
+export function buildTechnicalPrompt({brief='',task='custom',format='text',source='',subjectA='',subjectB='',criteria='',ownership='',lang='en'}={}){
  if(validatePrompt({brief,task,subjectA,subjectB,criteria}).length)return '';
  const text=textFor(lang);
  const sections=[`${text.myTask}\n${brief.trim()}`,text.task[task]??text.task.custom];
+ // Models act on stated code ownership: they restructure code called their own and only add to code that is not.
+ if(task==='code'&&Object.hasOwn(text.ownership,ownership))sections.push(text.ownership[ownership]);
  if(task==='compare')sections.push(text.comparison(subjectA.trim(),subjectB.trim(),criteria.trim()));
  sections.push(text.readable);
  if(task==='procedure'||format==='steps')sections.push(text.procedure);
@@ -38,6 +40,8 @@ export function buildTechnicalPrompt({brief='',task='custom',format='text',sourc
  if(['compare','research','paper'].includes(task)||hasUrl)sections.push(text.sources);
  sections.push(text.missing);
  sections.push(`${text.answerFormat}\n${task==='compare'&&format==='table'?text.compareTable:text.answer[format]??text.answer.text}`);
+ // Visual formats get explicit encouragement; without it, models tend toward safe, generic designs.
+ if(['interactive','animation'].includes(format))sections.push(text.design);
  if(source.trim())sections.push(`${text.sourceMaterial}\n${source}`);
  return sections.join('\n\n');
 }

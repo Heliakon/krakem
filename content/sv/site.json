@@ -3,6 +3,7 @@
  "homeLabel": "Krakem – startsida",
  "mainNav": "Huvudnavigering",
  "languageNav": "Språk",
+ "screensaver": "Skärmsläckare",
  "socialAlt": "Krakem: ”Better prompts. Clearer answers.” Ett mörkt kort med en asterisk av partiklar, en grön partikelspiral och ett golv av partiklar.",
  "pages": {
   "guide": {"title": "Promptskapare", "description": "Beskriv uppgiften och kopiera en färdig prompt som ber AI:n om enhetliga termer, att hålla isär belägg och slutsatser och att fråga i stället för att gissa."},
@@ -21,7 +22,6 @@
  "footer": {
   "tagline": "Gör svaret<br><em>värt att förstå.</em>",
   "about": "En oberoende fältguide · oktober 2026",
-  "screensaver": "Skärmsläckare på",
   "motto": "Tydlighet är ett designbeslut."
  }
 }

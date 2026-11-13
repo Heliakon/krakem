@@ -3,6 +3,7 @@
  "homeLabel": "Krakem home",
  "mainNav": "Main navigation",
  "languageNav": "Language",
+ "screensaver": "Screensaver",
  "socialAlt": "Krakem: Better prompts. Clearer answers. A dark card with the particle asterisk mark, a green particle spiral, and a particle floor.",
  "pages": {
   "guide": {"title": "Prompt creator", "description": "Describe your task and copy a complete prompt that asks the AI for consistent terms, evidence kept apart from inference, and questions instead of guesses."},
@@ -21,7 +22,6 @@
  "footer": {
   "tagline": "Make the answer<br><em>worth understanding.</em>",
   "about": "An independent field guide · October 2026",
-  "screensaver": "Screensaver on",
   "motto": "Clarity is a design decision."
  }
 }

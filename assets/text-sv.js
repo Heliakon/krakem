@@ -29,6 +29,8 @@ export const sv={
   procedure:'Följ andan i ASD-STE100 när du beskriver procedurer: sikta på högst 20 ord per mening. Dela upp åtgärder som sker efter varandra. Håll ihop åtgärder som måste ske samtidigt. Se detta som skrivråd, inte som ett påstående om att texten följer STE.',
   sources:'Respektera mina begränsningar för källor och webbsökning. När webbsökning är tillåten och tillgänglig, kontrollera tidskänsliga påståenden mot aktuella källor. En URL i sig är inget belägg för att du har läst innehållet. Om du inte kommer åt en källa som behövs, säg det och be om det relevanta materialet. Hitta inte på källhänvisningar och behandla inte overifierade påståenden som fastställda fakta.',
   missing:'Om information som behövs för ett korrekt svar saknas, ställ en riktad fråga i stället för att gissa. Svara på samma språk som min uppgift, om jag inte ber om ett annat språk.',
+  ownership:{own:'Den här kodbasen är din: du bestämmer vad den är till för och hur den är byggd, och du kommer att bygga vidare på den. Slå ihop upprepad kod och gör närliggande rättningar medan du arbetar. Lista det du ändrade utöver det jag bad om.',other:'Den här kodbasen tillhör någon annan. Följ dess befintliga struktur och gör bara den ändring jag ber om. Rapportera närliggande problem i stället för att rätta dem.'},
+  design:'Se det här som ett tillfälle att visa ditt bästa designarbete. Gå längre än grunderna: välj en tydlig visuell stil och finslipa typografi, färg, luft och rörelse. Undvik generiska layouter och standardtypsnitt.',
   answerFormat:'Svarsformat:',
   compareTable:'Använd en jämförelsetabell med en rad per kriterium och en kolumn för varje alternativ. Följ upp med en kort förklaring av avvägningarna och beläggens begränsningar.',
   sourceMaterial:'Källmaterial för uppgiften:',
@@ -47,7 +49,7 @@ export const sv={
    review:{before:'Retry-motorn kan potentiellt komma att skicka samma betalning två gånger efter en timeout, varför det vore fördelaktigt att verifiera huruvida betalnings-API:et accepterar en idempotensnyckel och i så fall låta retry-processorn återanvända den vid samtliga försök för den aktuella betalningen.',after:'<p>Retry-workern kan skicka samma betalning två gånger efter en timeout. Kontrollera om betalnings-API:et accepterar en idempotensnyckel.</p><p>Om det gör det, använd samma nyckel för varje försök med den betalningen.</p>',note:'Illustrerande diagnos. En konkret fråga. En villkorad åtgärd.'},
    research:{before:'Vänligen tillhandahåll en heltäckande översikt av artikelns prestandamått, dess baslinje, dataset och osäkerhet, samtidigt som du belyser vilka förhållanden som testades och förtydligar att prestanda utanför dessa inte har verifierats.',after:'<p>Redovisa artikelns mått, baslinje, dataset och osäkerhet.</p><p>Ange vilka förhållanden som testades. Behandla prestanda utanför de förhållandena som overifierad.</p>',note:'En läsinstruktion som ber om belägg i stället för beröm.'}
   },
-  help:'Beskriv uppgiften, resultatet du behöver och eventuella viktiga begränsningar.',
+  help:'Beskriv uppgiften, resultatet du behöver, varför det är viktigt och eventuella viktiga begränsningar.',
   helpCompare:'Beskriv beslutet som jämförelsen ska ge underlag för, vilka som ska läsa den och eventuella begränsningar.',
   empty:'Din prompt visas här medan du skriver. Beskriv uppgiften och välj vilket svar du vill ha.',
   emptyCompare:'Fyll i uppgifterna för jämförelsen. Den färdiga prompten innehåller båda alternativen, ditt mål och samma kriterier för båda.',
@@ -100,8 +102,6 @@ export const sv={
   scatter:'Sprid ut partiklarna'
  },
  screensaver:{
-  on:'Skärmsläckare på',
-  off:'Skärmsläckare av',
   turnOff:'Stäng av skärmsläckaren'
  }
 };

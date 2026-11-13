@@ -7,11 +7,12 @@
     <div class="prompt-settings">
       <label for="task-brief" id="task-label">VAD ARBETAR DU MED?</label>
       <textarea id="task-brief" rows="4" required aria-describedby="task-help" placeholder="Till exempel: Jämför två promptverktyg för vårt team. Fokusera på träffsäkerhet och användarvänlighet."></textarea>
-      <p id="task-help" class="field-help">Beskriv uppgiften, resultatet du behöver och eventuella viktiga begränsningar.</p>
+      <p id="task-help" class="field-help">Beskriv uppgiften, resultatet du behöver, varför det är viktigt och eventuella viktiga begränsningar.</p>
       <div class="creator-options">
         <div><label for="task">TYP AV UPPGIFT</label><select id="task"><option value="custom">Allmän uppgift</option><option value="compare">Jämför webbplatser eller produkter</option><option value="review">Granska kod</option><option value="debug">Felsök ett problem</option><option value="code">Skriv eller ändra kod</option><option value="architecture">Bedöm en arkitektur</option><option value="research">Undersök ett ämne</option><option value="paper">Förstå en forskningsartikel</option><option value="summary">Sammanfatta ett dokument</option><option value="procedure">Följ en procedur</option><option value="writing">Text för webb eller presentation</option></select></div>
         <div><label for="format">SVARETS FORM</label><select id="format"><option value="text">En tydlig förklaring</option><option value="steps">Steg-för-steg-instruktioner</option><option value="code">Kod med förklaring</option><option value="table">En tabell</option><option value="checklist">En checklista</option><option value="diagram">Ett systemdiagram</option><option value="interactive">Ett interaktivt HTML-verktyg</option><option value="animation">En stegvis animering</option></select></div>
       </div>
+      <div class="ownership-field" id="ownership-field" hidden><label for="code-ownership">VEMS KOD ÄR DET?</label><select id="code-ownership" aria-describedby="ownership-help"><option value="">Inte angivet</option><option value="own">Min: förbättra strukturen under arbetet</option><option value="other">Någon annans: håll ändringarna små</option></select><p id="ownership-help" class="field-help">AI-modeller följer detta noga. I kod som kallas deras egen slår de ihop upprepad kod och rättar närliggande problem. Annars bygger de vidare på det som finns.</p></div>
       <div class="task-suggestion" id="task-suggestion" hidden><span>Jämför du webbplatser eller produkter?</span><button type="button" id="use-comparison">Använd jämförelseläget ↗</button></div>
       <fieldset class="comparison-fields" id="comparison-fields" hidden>
         <legend>Gör jämförelsen konkret.</legend>

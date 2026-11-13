@@ -7,11 +7,12 @@
     <div class="prompt-settings">
       <label for="task-brief" id="task-label">NAD CZYM PRACUJESZ?</label>
       <textarea id="task-brief" rows="4" required aria-describedby="task-help" placeholder="Na przykład: porównaj dwa narzędzia do pisania promptów dla naszego zespołu. Skup się na dokładności i łatwości obsługi."></textarea>
-      <p id="task-help" class="field-help">Opisz zadanie, oczekiwany wynik i ważne ograniczenia.</p>
+      <p id="task-help" class="field-help">Opisz zadanie, oczekiwany wynik, powód, dla którego jest ważny, i ważne ograniczenia.</p>
       <div class="creator-options">
         <div><label for="task">RODZAJ ZADANIA</label><select id="task"><option value="custom">Dowolne zadanie</option><option value="compare">Porównanie stron lub produktów</option><option value="review">Przegląd kodu</option><option value="debug">Diagnoza problemu</option><option value="code">Pisanie lub zmiana kodu</option><option value="architecture">Ocena architektury</option><option value="research">Badanie tematu</option><option value="paper">Zrozumienie artykułu naukowego</option><option value="summary">Streszczenie dokumentu</option><option value="procedure">Wykonanie procedury</option><option value="writing">Tekst na stronę lub slajdy</option></select></div>
         <div><label for="format">FORMA ODPOWIEDZI</label><select id="format"><option value="text">Jasne wyjaśnienie</option><option value="steps">Instrukcja krok po kroku</option><option value="code">Kod z wyjaśnieniem</option><option value="table">Tabela</option><option value="checklist">Lista kontrolna</option><option value="diagram">Diagram systemu</option><option value="interactive">Interaktywne narzędzie HTML</option><option value="animation">Animacja z podziałem na kroki</option></select></div>
       </div>
+      <div class="ownership-field" id="ownership-field" hidden><label for="code-ownership">CZYJ TO KOD?</label><select id="code-ownership" aria-describedby="ownership-help"><option value="">Nie podano</option><option value="own">Mój: poprawiaj strukturę w trakcie pracy</option><option value="other">Cudzy: ogranicz zmiany do minimum</option></select><p id="ownership-help" class="field-help">Modele AI ściśle się tym kierują. W kodzie nazwanym ich własnym scalają powtórzenia i naprawiają powiązane problemy. W innym przypadku dopisują do tego, co już jest.</p></div>
       <div class="task-suggestion" id="task-suggestion" hidden><span>Porównujesz strony lub produkty?</span><button type="button" id="use-comparison">Włącz tryb porównania ↗</button></div>
       <fieldset class="comparison-fields" id="comparison-fields" hidden>
         <legend>Doprecyzuj porównanie.</legend>

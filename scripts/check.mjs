@@ -229,10 +229,10 @@ reduced.buttons[1].emit('click');assert.equal(reduced.get('chaos-toggle').attrs[
 // Screensaver: appears after 12 seconds without input, only with a fine pointer and motion on, never while a field has focus or after it is switched off; real input dismisses it.
 const saverCode=stripImports(await readFile(new URL('../assets/screensaver.js',import.meta.url),'utf8'));
 function runSaver({fine=true,reduced=false,motion=true,focused=false,storage=new MemoryStorage()}={}){
- const listeners={},timers=[],raf=new Map(),events=[],classes=new Set(),created=[],drawn={glyphs:0},toggle=new Element();let rafId=0;
+ const listeners={},timers=[],raf=new Map(),events=[],classes=new Set(),created=[],drawn={glyphs:0},toggle=new Element(),toggleLabel=new Element();let rafId=0;toggle.flip=()=>{toggle.checked=!toggle.checked;toggle.emit('change');};
  const context=vm.createContext({Math,Array,text:en,get localStorage(){if(!storage)throw new Error('SecurityError: storage blocked');return storage;},
   matchMedia:q=>({matches:q.includes('pointer: fine')?fine:q.includes('reduced-motion')?reduced:false}),
-  document:{querySelector:selector=>selector==='.saver-toggle'?toggle:null,documentElement:{classList:{add:c=>classes.add(c),remove:c=>classes.delete(c)}},activeElement:{closest:()=>focused?{}:null},hidden:false,createElement:tag=>{const element=new Element();if(tag==='canvas')element.getContext=()=>new Proxy({fillText(){drawn.glyphs++;}},{get:(obj,key)=>obj[key]??(()=>{})});created.push(element);return element;},body:{append(){}},addEventListener(){}},
+  document:{querySelector:selector=>({'.saver-toggle input':toggle,'.saver-toggle':toggleLabel})[selector]??null,documentElement:{classList:{add:c=>classes.add(c),remove:c=>classes.delete(c)}},activeElement:{closest:()=>focused?{}:null},hidden:false,createElement:tag=>{const element=new Element();if(tag==='canvas')element.getContext=()=>new Proxy({fillText(){drawn.glyphs++;}},{get:(obj,key)=>obj[key]??(()=>{})});created.push(element);return element;},body:{append(){}},addEventListener(){}},
   window:{clearformMotion:motion,dispatchEvent:e=>events.push(e.detail)},
   addEventListener:(type,fn)=>{(listeners[type]??=[]).push(fn);},removeEventListener(){},
   setTimeout:(fn,ms)=>{timers.push({fn,ms});return timers.length;},clearTimeout(){},
@@ -241,7 +241,7 @@ function runSaver({fine=true,reduced=false,motion=true,focused=false,storage=new
  vm.runInContext(saverCode,context);
  const send=(type,extra={})=>{const event={type,clientX:0,clientY:0,prevented:false,preventDefault(){this.prevented=true;},stopPropagation(){},...extra};listeners[type].forEach(fn=>fn(event));return event;};
  const frames=now=>{const pending=[...raf.entries()];pending.forEach(([id,fn])=>{raf.delete(id);fn(now);});};
- return {events,classes,raf,timers,send,frames,created,drawn,toggle,storage,idle:()=>timers.at(-1).fn()};
+ return {events,classes,raf,timers,send,frames,created,drawn,toggle,toggleLabel,storage,idle:()=>timers.at(-1).fn()};
 }
 const saver=runSaver();
 assert.equal(saver.timers.at(-1).ms,12000);
@@ -264,32 +264,60 @@ const steps=stepsInOneSecond();assert.ok(steps>=18&&steps<=24,`The rain falls at
 for(const [label,options] of [['touch screens',{fine:false}],['reduced motion',{reduced:true}],['Motion off',{motion:false}],['a focused field',{focused:true}]]){
  const quiet=runSaver(options);quiet.idle();assert.deepEqual(quiet.events,[],`No screensaver with ${label}.`);assert.ok(quiet.timers.length>1,'It re-arms for later.');
 }
-// Switching it off: the button on the rain and the footer switch share one saved setting.
+// Switching it off: the button on the rain and the Screensaver checkbox in the header share one saved setting.
 const switched=runSaver();
-assert.equal(switched.toggle.textContent,'Screensaver on');assert.equal(switched.toggle.hidden,false,'The footer switch shows with a mouse or trackpad.');
+assert.equal(switched.toggle.checked,true);assert.equal(switched.toggleLabel.hidden,false,'The header checkbox shows with a mouse or trackpad.');
 switched.idle();assert.deepEqual(switched.events,[true]);
 const offButton=switched.created.find(element=>element.className==='saver-off');
 assert.equal(offButton.type,'button');assert.equal(offButton.value,'Turn off screensaver');
 switched.send('pointerdown',{target:onControl});assert.deepEqual(switched.events,[true],'Pressing the button does not count as a click outside it.');
 offButton.emit('click');
 assert.deepEqual(switched.events,[true,false],'The button on the rain stops the screensaver.');
-assert.equal(switched.storage.getItem('krakem-screensaver'),'off');assert.equal(switched.toggle.textContent,'Screensaver off');
+assert.equal(switched.storage.getItem('krakem-screensaver'),'off');assert.equal(switched.toggle.checked,false,'The header checkbox follows the button on the rain.');
 switched.frames(100);assert.equal(switched.raf.size,0,'The rain stops drawing when it is switched off.');
 switched.send('pointermove',{clientX:90,clientY:90});switched.idle();assert.deepEqual(switched.events,[true,false],'It does not come back while switched off.');
-switched.toggle.emit('click');
-assert.equal(switched.storage.getItem('krakem-screensaver'),null,'Only "off" is stored.');assert.equal(switched.toggle.textContent,'Screensaver on');
-switched.idle();assert.deepEqual(switched.events,[true,false,true],'The footer switch turns it back on.');
+switched.toggle.flip();
+assert.equal(switched.storage.getItem('krakem-screensaver'),null,'Only "off" is stored.');assert.equal(switched.toggle.checked,true);
+switched.idle();assert.deepEqual(switched.events,[true,false,true],'Ticking the header checkbox turns it back on.');
 const savedOff=new MemoryStorage();savedOff.setItem('krakem-screensaver','off');
 const returning=runSaver({storage:savedOff});returning.idle();
-assert.deepEqual(returning.events,[],'A saved "off" keeps it off on the next page.');assert.equal(returning.toggle.textContent,'Screensaver off');assert.ok(returning.timers.length>1,'It re-arms for later.');
-const noStorage=runSaver({storage:null});assert.equal(noStorage.toggle.textContent,'Screensaver on');
-noStorage.toggle.emit('click');noStorage.idle();assert.deepEqual(noStorage.events,[],'Without storage, the switch still works on the current page.');assert.equal(noStorage.toggle.textContent,'Screensaver off');
-assert.equal(runSaver({fine:false}).toggle.hidden,true,'The footer switch is hidden on touch screens.');
-for(const [lang,table] of Object.entries(tables))for(const page of ['','humanize/','claude/','claude-outputs/','evidence/']){
- const html=await readFile(new URL(`../dist/${lang==='en'?'':lang+'/'}${page}index.html`,import.meta.url),'utf8');
- assert.ok(html.includes(`<button class="saver-toggle text-button" type="button" hidden>${table.screensaver.on}</button>`),`${lang}/${page} has the screensaver switch in its footer`);
+assert.deepEqual(returning.events,[],'A saved "off" keeps it off on the next page.');assert.equal(returning.toggle.checked,false);assert.ok(returning.timers.length>1,'It re-arms for later.');
+const noStorage=runSaver({storage:null});assert.equal(noStorage.toggle.checked,true);
+noStorage.toggle.flip();noStorage.idle();assert.deepEqual(noStorage.events,[],'Without storage, the checkbox still works on the current page.');
+assert.equal(runSaver({fine:false}).toggleLabel.hidden,true,'The header checkbox is hidden on touch screens.');
+assert.ok(saverCode.includes("input:not([type=checkbox])"),'A focused checkbox does not hold the screensaver back the way a text field does.');
+const saverNames={en:'Screensaver',pl:'Wygaszacz',sv:'Skärmsläckare'};
+for(const lang of Object.keys(tables))for(const page of ['','humanize/','claude/','claude-outputs/','evidence/']){
+ const html=await readFile(new URL(`../dist/${lang==='en'?'':lang+'/'}${page}index.html`,import.meta.url),'utf8'),header=html.match(/<header class="site-header">[\s\S]*?<\/header>/)[0];
+ assert.ok(header.includes(`</nav><label class="saver-toggle" hidden><input type="checkbox" checked>${saverNames[lang]}</label></div>`),`${lang}/${page} has the Screensaver checkbox beside the language switcher`);
+ assert.equal(html.split('saver-toggle').length-1,1,`${lang}/${page} has one screensaver switch`);
 }
-console.log('PASS: the screensaver switches off from the button on the rain or the footer switch on all 15 pages, stays off on later pages, switches back on, works without storage, and hides its switch on touch screens.');
+console.log('PASS: the screensaver switches off from the button on the rain or the header checkbox on all 15 pages, stays off on later pages, switches back on, works without storage, and hides its checkbox on touch screens.');
+// Code ownership and design encouragement: optional lines that appear only where they apply.
+for(const [lang,table] of Object.entries(tables)){
+ const base={brief,task:'code',format:'code',lang},plain=buildTechnicalPrompt(base);
+ for(const choice of ['own','other']){
+  const prompt=buildTechnicalPrompt({...base,ownership:choice});
+  assert.ok(prompt.includes(`\n\n${table.prompt.ownership[choice]}\n\n`),`${lang}: the ${choice} ownership line is its own paragraph`);
+  assert.equal(prompt.replace(`${table.prompt.ownership[choice]}\n\n`,''),plain,`${lang}: ownership adds one paragraph and changes nothing else`);
+  assert.equal(buildTechnicalPrompt({...base,task:'review',format:'text',ownership:choice}),buildTechnicalPrompt({...base,task:'review',format:'text'}),'Ownership applies only to writing or changing code.');
+ }
+ for(const unknown of ['','mine','constructor','__proto__'])assert.equal(buildTechnicalPrompt({...base,ownership:unknown}),plain,`An unknown ownership value (${unknown}) adds nothing.`);
+ for(const format of formats){
+  const prompt=buildTechnicalPrompt({brief,task:'custom',format,source,lang});
+  assert.equal(prompt.includes(table.prompt.design),['interactive','animation'].includes(format),`${lang}/${format}: design encouragement only for visual formats`);
+  assert.ok(prompt.endsWith(source),'Source material stays last.');
+ }
+}
+assert.match(en.prompt.ownership.own,/^This codebase is yours: /);assert.match(en.prompt.design,/Go beyond the basics/);
+const owned=runGuide(new MemoryStorage());
+assert.equal(owned.get('ownership-field').hidden,true,'The ownership question is hidden until the task is code.');
+owned.get('task-brief').value=brief;owned.get('task').value='code';owned.get('task').emit('change');
+assert.equal(owned.get('ownership-field').hidden,false);assert.ok(!owned.get('technical-prompt').textContent.includes(en.prompt.ownership.own));
+owned.get('code-ownership').value='own';owned.get('code-ownership').emit('change');
+assert.ok(owned.get('technical-prompt').textContent.includes(en.prompt.ownership.own),'Choosing "mine" adds the ownership line.');
+owned.get('clear-creator-draft').emit('click');assert.equal(owned.get('code-ownership').value,'','Clear draft resets the ownership choice.');
+console.log('PASS: code ownership lines (mine, someone else, not stated) only on code tasks, design encouragement only on visual formats, in three languages, with source material last and draft reset.');
 console.log('PASS: screensaver appears after 12 s idle, stays while the pointer moves or its button is used, closes on a click elsewhere or a key without acting on the page, stops drawing when closed, falls at a fixed speed with one control, and stays off for touch, reduced motion, Motion off, and focused fields; the field pauses under it.');
 console.log('PASS: chaos renders and moves, pauses exactly, resumes, returns to figure cycling, and respects reduced motion.');
 

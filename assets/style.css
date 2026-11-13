@@ -100,7 +100,11 @@
   /* The language switcher sits under the brand on wide screens and beside it on tablets. */
   .masthead { display: grid; justify-items: start; gap: 6px; flex-shrink: 0; }
   .site-header .masthead .brand { min-height: 56px; }
-  .lang-switch { display: flex; gap: 2px; margin-left: 8px; padding: 3px; border: 1px solid #344637; border-radius: 999px; background: #09130ee6; }
+  .masthead-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-left: 8px; }
+  .saver-toggle { display: inline-flex; align-items: center; gap: 7px; min-height: 28px; color: var(--subtle); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+  .saver-toggle:hover { color: var(--text); }
+  .saver-toggle input { width: 15px; height: 15px; min-height: 0; margin: 0; padding: 0; accent-color: var(--primary); cursor: pointer; }
+  .lang-switch { display: flex; gap: 2px; padding: 3px; border: 1px solid #344637; border-radius: 999px; background: #09130ee6; }
   .lang-switch a { display: inline-flex; align-items: center; min-height: 28px; padding: 0 10px; border-radius: 999px; color: var(--subtle); font-size: 12.5px; font-weight: 600; text-decoration: none; }
   .lang-switch a:hover { background: #16251a; color: var(--text); }
   .lang-switch a[aria-current=true] { background: var(--primary); color: var(--on-primary); }
@@ -128,7 +132,6 @@
   .footer-bottom { display: flex; align-items: center; gap: 30px; border-top: 1px solid var(--line); padding-top: 24px; }
   .footer-bottom > span { font-size: 14px; color: var(--subtle); }
   .footer-bottom > span:last-child { margin-left: auto; }
-  .footer-bottom .saver-toggle { font-size: 14px; }
 }
 
 @layer components {
@@ -164,6 +167,7 @@
   .text-button:hover { text-decoration-thickness: 2px; }
   .text-button:disabled { color: var(--subtle); text-decoration: none; }
   .prompt-settings .field-help { margin-top: 10px; }
+  .ownership-field select { margin-bottom: 0; }
   .prompt-result { display: flex; flex-direction: column; background: var(--bg); border-radius: 0 var(--radius) var(--radius) 0; }
   .prompt-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 22px; }
   .prompt-toolbar .eyebrow { color: var(--text); }
@@ -390,7 +394,7 @@
     .site-header { padding-block: 12px 4px; }
     .nav-wrap { width: calc(100% - 24px); gap: 14px; padding: 10px; border-radius: 20px; }
     .masthead { display: grid; gap: 4px; }
-    .lang-switch { margin-left: 12px; }
+    .masthead-tools { margin-left: 12px; }
     .dock { gap: 4px; padding: 5px; border-radius: 16px; }
     /* Labels wrap on phones, so icons align to the top instead of the bottom. */
     .dock-item { min-width: 0; min-height: 74px; padding: 6px 2px 8px; gap: 4px; border-radius: 12px; align-content: start; }

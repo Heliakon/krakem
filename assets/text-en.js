@@ -31,6 +31,8 @@ export const en={
   procedure:'For procedures, use the spirit of ASD-STE100: aim for 20 words or fewer per sentence. Separate sequential actions. Keep actions together when they must happen simultaneously. Treat this as writing guidance, not a claim of STE compliance.',
   sources:'Respect my source and browsing limits. When browsing is permitted and available, verify time-sensitive claims against current sources. A URL alone is not evidence that you read its contents. If you cannot access a needed source, say so and ask for the relevant material. Do not invent citations or treat unverified claims as established facts.',
   missing:'If information essential to a correct answer is missing, ask a focused question rather than guessing. Write in the same language as my task unless I request another language.',
+  ownership:{own:'This codebase is yours: what it is for and how it is built are your call, and you will keep building on it. Merge repeated code and make related fixes as you work. List what you changed beyond the request.',other:'This codebase belongs to someone else. Follow its existing structure and make only the requested change. Report nearby problems instead of fixing them.'},
+  design:'Treat this as a showcase of your best design work. Go beyond the basics: choose a distinctive visual style and refine the typography, color, spacing, and motion. Avoid generic layouts and default fonts.',
   answerFormat:'Answer format:',
   compareTable:'Use a comparison table with one row per criterion and a column for each subject. Follow it with a concise explanation of the trade-offs and the limits of the evidence.',
   sourceMaterial:'Source material for this task:',
@@ -49,7 +51,7 @@ export const en={
    review:{before:'The retry engine can potentially submit the same payment twice after a timeout, so it would be beneficial to verify whether the payment API accepts an idempotency key and, if so, have the retry processor reuse it for all attempts at that payment.',after:'<p>The retry worker can submit the same payment twice after a timeout. Verify whether the payment API accepts an idempotency key.</p><p>If it does, reuse the same key for every attempt at that payment.</p>',note:'Illustrative diagnosis. A specific question. A conditional fix.'},
    research:{before:'Please provide a comprehensive overview of the paper’s performance metric, its baseline, dataset and uncertainty, while illuminating which conditions were tested and clarifying that performance outside them has not been verified.',after:'<p>Report the paper’s metric, baseline, dataset, and uncertainty.</p><p>State which conditions were tested. Treat performance outside those conditions as unverified.</p>',note:'A reading brief that asks for evidence instead of praise.'}
   },
-  help:'Describe your task, the result you need, and any important constraints.',
+  help:'Describe your task, the result you need, why it matters, and any important constraints.',
   helpCompare:'Describe the decision this comparison should support, your audience, and any constraints.',
   empty:'Your prompt will appear here as you type. Add your task and choose the answer you want.',
   emptyCompare:'Add your comparison details. Your complete prompt will include both subjects, your goal, and the same criteria for each.',
@@ -102,8 +104,6 @@ export const en={
   scatter:'Scatter the particles'
  },
  screensaver:{
-  on:'Screensaver on',
-  off:'Screensaver off',
   turnOff:'Turn off screensaver'
  }
 };
