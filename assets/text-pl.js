@@ -11,6 +11,7 @@ export const pl={
    paper:'Wyjaśnij pytanie badawcze artykułu, metodę, wyniki i ograniczenia. Zachowaj definicje, równania, niepewność i zakres dowodów. Oddziel ustalenia autorów od własnej interpretacji. Nie uogólniaj poza badane warunki.',
    summary:'Streść dostarczony materiał pod kątem mojego celu. Zachowaj główne tezy, ważne zastrzeżenia i istotne liczby. Oddziel twierdzenia źródła od własnej interpretacji. Jeśli brakuje niezbędnego materiału, poproś o niego.',
    procedure:'Wyjaśnij, jak wykonać zadanie. Uwzględnij potrzebne warunki wstępne, czynności w odpowiedniej kolejności i oczekiwane wyniki. Jeśli podane informacje na to pozwalają, opisz też, co zrobić w razie niepowodzenia.',
+   motion:'Zaprojektuj i zbuduj animację, którą opisuję. Zanim zaczniesz, podaj koncepcję w jednym zdaniu, paletę od czterech do sześciu kolorów, wybór kroju pisma i czas trwania każdej sceny. Styl wizualny wyprowadź z tematu, a nie z szablonu. Jeśli nie proszę o inny styl, postaw na nowoczesny, czysty wygląd z dużą ilością wolnej przestrzeni. Ruch ma być płynny i przemyślany: łagodnie rozpędzaj i wyhamowuj elementy, trzymaj spójne tempo i wprowadzaj powiązane elementy kolejno. Zbuduj całość wokół jednego zapamiętywalnego momentu, a resztę utrzymaj w spokojnym tonie. Na koniec oceń wynik i popraw to, co wygląda szablonowo lub porusza się gwałtownie.',
    writing:'Napisz lub zredaguj tekst na stronę internetową lub do prezentacji z myślą o jego docelowych odbiorcach. Zachowaj fakty, zastrzeżenia i terminy techniczne. Usuń watę słowną, ogólnikowe pochwały i obietnice bez pokrycia. Jeśli dołączono próbkę stylu, dopasuj się do niej, ale nie wymyślaj osobistych doświadczeń.'
   },
   answer:{
@@ -32,6 +33,7 @@ export const pl={
   ownership:{own:'Ten kod jest twój: decydujesz, do czego służy i jak jest zbudowany, i będziesz go dalej rozwijać. W trakcie pracy scalaj powtarzający się kod i wprowadzaj powiązane poprawki. Wymień zmiany, które wykraczają poza moją prośbę.',other:'Ten kod należy do kogoś innego. Trzymaj się jego obecnej struktury i wprowadź tylko zmianę, o którą proszę. Zgłaszaj pobliskie problemy, zamiast je naprawiać.'},
   design:'Potraktuj to jako pokaz swoich najlepszych umiejętności projektowych. Wyjdź poza podstawy: wybierz wyrazisty styl wizualny i dopracuj typografię, kolory, odstępy i ruch. Unikaj szablonowych układów i domyślnych fontów.',
   answerFormat:'Forma odpowiedzi:',
+  motionAnimation:'Utwórz samodzielną animację HTML z osadzonym CSS i JavaScriptem. Nie używaj zewnętrznych zależności ani żądań sieciowych. Dodaj przyciski odtwarzania, pauzy i ponownego uruchomienia. Gdy użytkownik prosi o ograniczenie ruchu, pokaż wersję statyczną. Pod animacją wypisz sceny i czas ich trwania.',
   compareTable:'Użyj tabeli porównawczej z jednym wierszem na każde kryterium i osobną kolumną dla każdej pozycji. Pod tabelą zwięźle wyjaśnij kompromisy i ograniczenia dowodów.',
   sourceMaterial:'Materiały źródłowe do tego zadania:',
   issues:{

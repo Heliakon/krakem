@@ -13,6 +13,7 @@ export const en={
    paper:'Explain the paper’s research question, method, results, and limitations. Preserve definitions, equations, uncertainty, and the scope of the evidence. Separate the authors’ findings from your interpretation. Do not generalize beyond the conditions studied.',
    summary:'Summarize the supplied material for my stated purpose. Preserve its main points, important qualifications, and relevant numbers. Separate the source’s claims from your interpretation. If essential material is missing, ask for it.',
    procedure:'Explain how to complete the task. Include relevant prerequisites, ordered actions, expected results, and a recovery path when the supplied information supports one.',
+   motion:'Design and build the motion piece I describe. Before you build, state the concept in one sentence, a palette of four to six colors, the typeface choice, and the timing of each scene. Take the visual style from the subject, not from a template. Unless I ask for another style, aim for a modern, clean look with generous spacing. Make the motion smooth and deliberate: ease in and out, keep the timing consistent, and stagger related elements. Build toward one memorable moment and keep everything else quiet. Then review your result and fix what looks generic or moves abruptly.',
    writing:'Write or edit the requested website or presentation text for its intended reader. Preserve facts, qualifications, and technical terms. Remove filler, vague praise, and unsupported promises. Match any supplied voice sample without inventing personal experience.'
   },
   answer:{
@@ -34,6 +35,7 @@ export const en={
   ownership:{own:'This codebase is yours: what it is for and how it is built are your call, and you will keep building on it. Merge repeated code and make related fixes as you work. List what you changed beyond the request.',other:'This codebase belongs to someone else. Follow its existing structure and make only the requested change. Report nearby problems instead of fixing them.'},
   design:'Treat this as a showcase of your best design work. Go beyond the basics: choose a distinctive visual style and refine the typography, color, spacing, and motion. Avoid generic layouts and default fonts.',
   answerFormat:'Answer format:',
+  motionAnimation:'Create a self-contained HTML animation with embedded CSS and JavaScript. Use no external dependencies or network requests. Include play, pause, and restart controls. Show a static version when reduced motion is requested. List the scenes and their timing below the animation.',
   compareTable:'Use a comparison table with one row per criterion and a column for each subject. Follow it with a concise explanation of the trade-offs and the limits of the evidence.',
   sourceMaterial:'Source material for this task:',
   issues:{

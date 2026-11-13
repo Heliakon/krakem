@@ -4,7 +4,7 @@ import {sv} from './text-sv.js';
 // Prompts are written in the page's language; unknown languages fall back to English.
 const promptText={en:en.prompt,pl:pl.prompt,sv:sv.prompt};
 const textFor=lang=>promptText[lang]??promptText.en;
-export const defaultFormats={custom:'text',compare:'table',review:'text',debug:'steps',code:'code',architecture:'diagram',research:'text',paper:'text',summary:'text',procedure:'steps',writing:'text'};
+export const defaultFormats={custom:'text',compare:'table',review:'text',debug:'steps',code:'code',architecture:'diagram',research:'text',paper:'text',summary:'text',procedure:'steps',writing:'text',motion:'animation'};
 
 function subjectKey(value){
  const text=value.trim();
@@ -39,9 +39,9 @@ export function buildTechnicalPrompt({brief='',task='custom',format='text',sourc
  const hasUrl=[brief,source].some(value=>/https?:\/\/\S+/i.test(value));
  if(['compare','research','paper'].includes(task)||hasUrl)sections.push(text.sources);
  sections.push(text.missing);
- sections.push(`${text.answerFormat}\n${task==='compare'&&format==='table'?text.compareTable:text.answer[format]??text.answer.text}`);
- // Visual formats get explicit encouragement; without it, models tend toward safe, generic designs.
- if(['interactive','animation'].includes(format))sections.push(text.design);
+ sections.push(`${text.answerFormat}\n${task==='compare'&&format==='table'?text.compareTable:task==='motion'&&format==='animation'?text.motionAnimation:text.answer[format]??text.answer.text}`);
+ // Motion design and the visual formats get explicit encouragement; without it, models tend toward safe, generic designs.
+ if(task==='motion'||['interactive','animation'].includes(format))sections.push(text.design);
  if(source.trim())sections.push(`${text.sourceMaterial}\n${source}`);
  return sections.join('\n\n');
 }

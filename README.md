@@ -100,7 +100,7 @@ sips -s format jpeg -s formatOptions 86 social-preview.png --out assets/social-p
 
 `scripts/check.mjs` covers:
 
-- 88 task/format combinations, comparison validation, and exact source preservation;
+- 96 task/format combinations, comparison validation, and exact source preservation;
 - 36 Humanize combinations, including multi-line, quoted, and HTML-like text;
 - draft restore, reset, and blocked or corrupt storage;
 - versioned module imports, a scan for network calls, social metadata, and the Evidence rows;

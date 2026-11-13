@@ -14,7 +14,7 @@ const stripImports=code=>code.replace(/^import[^\n]+\n/gm,'');
 class MemoryStorage{constructor(){this.items=new Map();}getItem(k){return this.items.has(k)?this.items.get(k):null;}setItem(k,v){this.items.set(k,String(v));}removeItem(k){this.items.delete(k);}}
 const storageFor=storage=>key=>draftStore(key,()=>{if(!storage)throw new Error('SecurityError: storage blocked');return storage;});
 
-const tasks=['custom','compare','review','debug','code','architecture','research','paper','summary','procedure','writing'];
+const tasks=['custom','compare','review','debug','code','architecture','research','paper','summary','procedure','writing','motion'];
 const formats=['text','steps','code','table','checklist','diagram','interactive','animation'];
 const brief='Explain why our payment retry can duplicate a charge after a timeout.';
 const source='  const response = await charge();\n\t// preserve whitespace, API names, and punctuation\n';
@@ -332,6 +332,22 @@ for(const [lang,table] of Object.entries(tables)){
   assert.ok(prompt.endsWith(source),'Source material stays last.');
  }
 }
+// Motion design: its own task, the animation format by default with motion-specific wording, and the design line in every format.
+for(const [lang,table] of Object.entries(tables)){
+ assert.equal(defaultFormats.motion,'animation');
+ for(const format of formats){
+  const prompt=buildTechnicalPrompt({brief,task:'motion',format,lang});
+  assert.ok(prompt.includes(table.prompt.task.motion)&&prompt.includes(table.prompt.design),`${lang}/motion/${format}: task guidance and design line`);
+  assert.equal(prompt.includes(table.prompt.motionAnimation),format==='animation');
+  assert.ok(format!=='animation'||!prompt.includes(table.prompt.answer.animation),'Motion design does not ask for the step controls of an explanatory animation.');
+ }
+ assert.ok(!buildTechnicalPrompt({brief,task:'custom',format:'animation',lang}).includes(table.prompt.motionAnimation));
+}
+for(const lang of Object.keys(tables)){
+ const page=await readFile(new URL(`../dist/${lang==='en'?'':lang+'/'}index.html`,import.meta.url),'utf8');
+ assert.equal((page.match(/<option value="motion">/g)||[]).length,1,`${lang}: the task menu offers motion design`);
+}
+assert.match(en.prompt.task.motion,/smooth and deliberate/);
 assert.match(en.prompt.ownership.own,/^This codebase is yours: /);assert.match(en.prompt.design,/Go beyond the basics/);
 const owned=runGuide(new MemoryStorage());
 assert.equal(owned.get('ownership-field').hidden,true,'The ownership question is hidden until the task is code.');
@@ -340,7 +356,7 @@ assert.equal(owned.get('ownership-field').hidden,false);assert.ok(!owned.get('te
 owned.get('code-ownership').value='own';owned.get('code-ownership').emit('change');
 assert.ok(owned.get('technical-prompt').textContent.includes(en.prompt.ownership.own),'Choosing "mine" adds the ownership line.');
 owned.get('clear-creator-draft').emit('click');assert.equal(owned.get('code-ownership').value,'','Clear draft resets the ownership choice.');
-console.log('PASS: code ownership lines (mine, someone else, not stated) only on code tasks, design encouragement only on visual formats, in three languages, with source material last and draft reset.');
+console.log('PASS: code ownership lines (mine, someone else, not stated) only on code tasks, design encouragement only on visual formats, in three languages, with source material last and draft reset; motion design task with its own animation wording.');
 console.log('PASS: screensaver appears after 12 s idle, stays while the pointer moves or a corner control is used, closes on a click elsewhere or a key without acting on the page, stops drawing when closed, has working speed, fade-in, color, and slow color-change controls, and stays off for touch, reduced motion, Motion off, and focused fields; the field pauses under it.');
 console.log('PASS: chaos renders and moves, pauses exactly, resumes, returns to figure cycling, and respects reduced motion.');
 

@@ -11,6 +11,7 @@ export const sv={
    paper:'Förklara artikelns forskningsfråga, metod, resultat och begränsningar. Behåll definitioner, ekvationer, osäkerhet och beläggens räckvidd. Håll isär författarnas resultat och din tolkning. Generalisera inte utöver de förhållanden som studerades.',
    summary:'Sammanfatta materialet för det syfte som jag har angett. Behåll huvudpunkterna, viktiga förbehåll och relevanta siffror. Håll isär källans påståenden och din tolkning. Om väsentligt material saknas, be om det.',
    procedure:'Förklara hur uppgiften utförs. Ta med relevanta förutsättningar, åtgärderna i ordning, förväntade resultat och ett sätt att återställa om något går fel, när informationen jag har gett stöder det.',
+   motion:'Designa och bygg den rörliga design jag beskriver. Innan du bygger: ange konceptet i en mening, en palett med fyra till sex färger, valet av typsnitt och tiden för varje scen. Hämta den visuella stilen från ämnet, inte från en mall. Om jag inte ber om en annan stil, sikta på ett modernt, rent utseende med gott om luft. Gör rörelsen mjuk och genomtänkt: låt elementen accelerera och bromsa in mjukt, håll ett jämnt tempo och låt besläktade element komma in efter varandra. Bygg mot ett minnesvärt ögonblick och håll resten lugnt. Granska sedan resultatet och rätta det som ser generiskt ut eller rör sig ryckigt.',
    writing:'Skriv eller redigera den efterfrågade webb- eller presentationstexten för dess tänkta läsare. Behåll fakta, förbehåll och tekniska termer. Ta bort utfyllnad, vagt beröm och löften utan grund. Om jag har gett ett textprov, efterlikna det utan att hitta på personliga erfarenheter.'
   },
   answer:{
@@ -32,6 +33,7 @@ export const sv={
   ownership:{own:'Den här kodbasen är din: du bestämmer vad den är till för och hur den är byggd, och du kommer att bygga vidare på den. Slå ihop upprepad kod och gör närliggande rättningar medan du arbetar. Lista det du ändrade utöver det jag bad om.',other:'Den här kodbasen tillhör någon annan. Följ dess befintliga struktur och gör bara den ändring jag ber om. Rapportera närliggande problem i stället för att rätta dem.'},
   design:'Se det här som ett tillfälle att visa ditt bästa designarbete. Gå längre än grunderna: välj en tydlig visuell stil och finslipa typografi, färg, luft och rörelse. Undvik generiska layouter och standardtypsnitt.',
   answerFormat:'Svarsformat:',
+  motionAnimation:'Skapa en fristående HTML-animation med inbäddad CSS och JavaScript. Använd inga externa beroenden eller nätverksanrop. Lägg till kontroller för att spela upp, pausa och starta om. Visa en statisk version när användaren har bett om minskad rörelse. Lista scenerna och deras tider under animationen.',
   compareTable:'Använd en jämförelsetabell med en rad per kriterium och en kolumn för varje alternativ. Följ upp med en kort förklaring av avvägningarna och beläggens begränsningar.',
   sourceMaterial:'Källmaterial för uppgiften:',
   issues:{
