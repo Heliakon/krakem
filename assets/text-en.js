@@ -102,9 +102,6 @@ export const en={
   scatter:'Scatter the particles'
  },
  screensaver:{
-  speed:'Letter speed',
-  fade:'Fade letters in',
-  color:'Letter color',
   on:'Screensaver on',
   off:'Screensaver off',
   turnOff:'Turn off screensaver'

@@ -100,9 +100,6 @@ export const pl={
   scatter:'Rozprosz cząsteczki'
  },
  screensaver:{
-  speed:'Prędkość liter',
-  fade:'Płynne pojawianie się liter',
-  color:'Kolor liter',
   on:'Wygaszacz włączony',
   off:'Wygaszacz wyłączony',
   turnOff:'Wyłącz wygaszacz'

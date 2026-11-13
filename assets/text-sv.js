@@ -100,9 +100,6 @@ export const sv={
   scatter:'Sprid ut partiklarna'
  },
  screensaver:{
-  speed:'Bokstävernas hastighet',
-  fade:'Tona in bokstäverna',
-  color:'Bokstävernas färg',
   on:'Skärmsläckare på',
   off:'Skärmsläckare av',
   turnOff:'Stäng av skärmsläckaren'
