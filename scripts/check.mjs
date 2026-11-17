@@ -40,23 +40,23 @@ assert.equal(validatePrompt({brief,task:'compare',criteria:'Capabilities',subjec
 assert.ok(buildTechnicalPrompt({brief,task:'custom',...comparison}).includes('My task:'));
 assert.ok(!buildTechnicalPrompt({brief,task:'custom',...comparison}).includes('Flint'));
 assert.ok(!buildTechnicalPrompt({brief,task:'compare',format:'table',...comparison}).includes('research question'));
-assert.ok(!buildTechnicalPrompt({brief,task:'compare',...comparison}).includes('ASD-STE100'));
+assert.ok(!buildTechnicalPrompt({brief,task:'compare',...comparison}).includes(en.prompt.procedure));
 assert.ok(buildTechnicalPrompt({brief,task:'paper'}).includes('equations'));
 assert.ok(!buildTechnicalPrompt({brief,task:'research'}).includes('equations'));
-assert.ok(buildTechnicalPrompt({brief,task:'procedure'}).includes('simultaneously'));
-assert.ok(buildTechnicalPrompt({brief,format:'steps'}).includes('ASD-STE100'));
-assert.ok(buildTechnicalPrompt({brief,source:'https://example.com'}).includes('A URL alone is not evidence'));
-assert.ok(buildTechnicalPrompt({brief:'Review https://example.com for our team.'}).includes('A URL alone is not evidence'),'A URL in the task gets the same source-access guidance.');
+assert.ok(buildTechnicalPrompt({brief,task:'procedure'}).includes(en.prompt.procedure));
+assert.ok(buildTechnicalPrompt({brief,format:'steps'}).includes(en.prompt.procedure));
+assert.ok(buildTechnicalPrompt({brief,source:'https://example.com'}).includes(en.prompt.sources));
+assert.ok(buildTechnicalPrompt({brief:'Review https://example.com for our team.'}).includes(en.prompt.sources),'A URL in the task gets the same source-access guidance.');
 assert.ok(buildTechnicalPrompt({brief:'Summarize this document.',task:'summary',source:'  Facts: 18%.\n\tScope: one team.  '}).endsWith('  Facts: 18%.\n\tScope: one team.  '),'Summaries preserve source material exactly.');
-assert.ok(buildTechnicalPrompt({brief:'Verify the migration.',format:'checklist'}).includes('independently checkable items'));
+assert.ok(buildTechnicalPrompt({brief:'Verify the migration.',format:'checklist'}).includes('concrete, checkable items'));
 const boundedComparison=buildTechnicalPrompt({brief:'Compare these using only the supplied documents; do not browse.',task:'compare',...comparison});
-assert.ok(boundedComparison.includes('Respect my source and browsing limits.'),'Current-source guidance respects a no-browsing task.');
+assert.ok(boundedComparison.includes(en.prompt.sources),'A comparison gets the source-access guidance.');
 assert.ok(!/(^|\n|\. )Verify time-sensitive claims/.test(boundedComparison),'A no-browsing comparison is never told to verify against current sources unconditionally.');
-assert.ok(!buildTechnicalPrompt({brief,task:'custom',subjectA:'https://a.example',subjectB:'b'}).includes('A URL alone'),'Hidden comparison fields do not change other tasks.');
+assert.ok(!buildTechnicalPrompt({brief,task:'custom',subjectA:'https://a.example',subjectB:'b'}).includes(en.prompt.sources),'Hidden comparison fields do not change other tasks.');
 const summaryChecklist=buildTechnicalPrompt({brief:'Summarize the meeting notes.',task:'summary',format:'checklist',source:'Decision: move to Deskly. Open: who administers it.'});
-assert.ok(summaryChecklist.includes('Keep decided facts and open questions as plain text')&&summaryChecklist.includes('Do not add actions the source does not state'),'A summary checklist keeps facts as facts and adds no invented actions.');
+assert.ok(summaryChecklist.includes('Write facts and open questions as plain text')&&summaryChecklist.includes('Add no actions the source does not state'),'A summary checklist keeps facts as facts and adds no invented actions.');
 assert.ok(buildTechnicalPrompt({brief:'Fix this function.',task:'code'}).includes('If you cannot edit the project'),'Code tasks remain useful in chat-only tools.');
-assert.ok(buildTechnicalPrompt({brief,task:'compare',...comparison}).includes('Do not infer that a feature is absent'));
+assert.ok(buildTechnicalPrompt({brief,task:'compare',...comparison}).includes('do not assume it is missing'));
 
 class Element{
  constructor(value=''){this.value=value;this.defaultValue=value;this.textContent='';this.innerHTML='';this.attrs={};this.dataset={};this.style={setProperty(key,value){this[key]=value;}};this.listeners={};this.disabled=false;this.width=600;this.height=475;this.classList={toggle(){},add(){},remove(){}};this.children=[];}
@@ -436,11 +436,13 @@ assert.ok(home.includes('<div class="footer-top"><p>Make the answer<br><em>worth
 for(const task of tasks)for(const format of formats){
  const text=buildTechnicalPrompt({brief,task,format,...comparison});
  for(const instruction of ['consistent terms','Distinguish evidence from inference','Preserve facts','important qualifications','ask a focused question rather than guessing'])assert.ok(text.includes(instruction),`${task}/${format}: ${instruction}`);
+ // Long prompts bury the user's task; the guidance stays brief.
+ assert.ok(text.split(/\s+/).length<=170,`${task}/${format}: prompt stays short`);
 }
 // Output styles live on their own page; the example file uses only documented frontmatter fields and keeps coding instructions.
 const claudePage=await readFile(new URL('../dist/claude/index.html',import.meta.url),'utf8');
 const outputsPage=await readFile(new URL('../dist/claude-outputs/index.html',import.meta.url),'utf8');
-const styleExample=outputsPage.match(/<pre id="plain-language-style"[^>]*>([\s\S]*?)<\/pre>/)[1];
+const styleExample=outputsPage.match(/<pre id="clear-style"[^>]*>([\s\S]*?)<\/pre>/)[1];
 const frontmatter=styleExample.match(/^---\n([\s\S]*?)\n---\n/)[1];
 for(const line of frontmatter.split('\n'))assert.ok(['name','description','keep-coding-instructions'].includes(line.split(':')[0]),`Undocumented style field: ${line}`);
 assert.match(frontmatter,/^keep-coding-instructions: true$/m);
@@ -462,7 +464,7 @@ assert.ok(claudeWords<=500,'CLAUDE.md stays under 500 words, so its reading cost
 assert.ok(claudePage.includes(`About ${Math.round(claudeWords/10)*10} words`),'The page states the current word count.');
 const normalizedClaude=claudeRules.replace(/\s+/g,' ');
 for(const rule of ['Project instructions and the user\'s request override these rules','take the most likely one and say which','Write the minimum code for the request','Edit source files, not generated output','Keep secrets out of code, logs, and output','reproduce it with a failing test','Do not weaken, skip, or delete tests','do not ask the user to check each fix','Report failures that existed before','Check version-specific claims','give each sequential action its own step','preserve facts, units, code, qualifications, and uncertainty'])assert.ok(normalizedClaude.includes(rule),rule);
-for(const text of ['id="output-styles"','/output-style concise','~/.claude/output-styles/','.claude/output-styles/','"outputStyle": "Concise"'])assert.ok(outputsPage.includes(text),text);
+for(const text of ['id="output-styles"','/output-style explanatory','~/.claude/output-styles/','.claude/output-styles/','"outputStyle": "Explanatory"'])assert.ok(outputsPage.includes(text),text);
 // Brand: the particle asterisk mark replaces the angled lines, the trailing asterisk, and the grass everywhere.
 const {brandMark,brandIcon,staticMark,markParticles}=await import('./brand-mark.mjs');
 for(const page of ['index.html','humanize/index.html','claude/index.html','claude-outputs/index.html','evidence/index.html']){

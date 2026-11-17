@@ -8,7 +8,7 @@
  "pages": {
   "guide": {"title": "Promptskapare", "description": "Beskriv uppgiften och kopiera en färdig prompt som ber AI:n om enhetliga termer, att hålla isär belägg och slutsatser och att fråga i stället för att gissa."},
   "humanize": {"title": "Skriv som dig själv", "description": "Skapa ett redigeringsuppdrag för tydlig och naturlig text på engelska, polska, portugisiska eller svenska, med fakta i behåll."},
-  "claude": {"title": "CLAUDE.md för Claude Code", "description": "Ladda ned en kortfattad CLAUDE.md med kodningsregler för Claude Code: avgränsade ändringar, tester och tydligt språk."},
+  "claude": {"title": "CLAUDE.md för Claude Code", "description": "Kopiera en kortfattad CLAUDE.md med kodningsregler för Claude Code: avgränsade ändringar, tester och tydligt språk."},
   "outputs": {"title": "Claudes svar", "description": "Ändra hur Claude Code svarar under en hel session: inbyggda svarsstilar, din egen stilfil och när CLAUDE.md passar bättre."},
   "evidence": {"title": "Beläggsregistret", "description": "Vad som håller, vad som behöver sammanhang och vad vi inte kunde verifiera."}
  },

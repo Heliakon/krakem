@@ -194,8 +194,8 @@
   .prompt-checklist a { color: var(--warning); }
 
   /* Decorative field; controls sit on an opaque, high-contrast surface. */
-  .figure-section { padding-block: 88px 72px; }
-  .figure-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 56px; margin-bottom: 32px; }
+  .figure-section { padding-block: 144px 72px; }
+  .figure-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 56px; margin-bottom: 64px; }
   .figure-heading h2 { margin-top: 16px; }
   .figure-heading > p { width: 380px; font-size: 18px; }
   .signal-stage { position: relative; isolation: isolate; min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: radial-gradient(ellipse at 40% 35%, #29451c66, transparent 65%), #080f19; }
@@ -372,7 +372,8 @@
     .creator-options, .comparison-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
     .source-note { display: block; }
     .source-note .pill { margin-bottom: 18px; }
-    .figure-section { padding-block: 64px 56px; }
+    .figure-section { padding-block: 104px 56px; }
+    .figure-heading { margin-bottom: 48px; }
     .signal-stage.expanded-field { height: 620px; }
     .stage-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
     .figure-selector { width: 100%; }
@@ -426,7 +427,8 @@
     .prompt-result pre { font-size: 16px; line-height: 1.75; }
     .prompt-result pre.empty-prompt { font-size: 18px; }
     .main-creator #task-brief { min-height: 170px; }
-    .figure-section { padding-block: 56px 44px; }
+    .figure-section { padding-block: 80px 44px; }
+    .figure-heading { margin-bottom: 40px; }
     .signal-stage.expanded-field { height: 560px; }
     .field-controls { top: 16px; right: 16px; gap: 8px; }
     .field-controls button { padding-inline: 12px; }

@@ -4,16 +4,16 @@
 </section>
 
 <section class="wrap section-pad" id="claude-md">
-  <div class="section-heading"><div><h2>Instructions for a good start.</h2></div><p>Download, or copy and paste into Claude Code.</p></div>
+  <div class="section-heading"><div><h2>Instructions for a good start.</h2></div><p>Copy it, paste it into Claude Code, and let Claude add it for you.</p></div>
   <div class="file-download">
     <div class="file-summary"><h3>CLAUDE.md</h3><p>Coding rules for Claude Code.</p><p class="file-meta">Scope, simplicity, tests, clear writing. About <!-- CLAUDE_MD_WORDS --> words, no imports.</p></div>
-    <div class="file-actions"><a class="button primary" href="/assets/downloads/CLAUDE.md" download="CLAUDE.md">Download CLAUDE.md <span aria-hidden="true">↓</span></a><button class="button" type="button" data-copy="claude-md-preview">Copy full file <span aria-hidden="true">⧉</span></button></div>
+    <div class="file-actions"><button class="button primary" type="button" data-copy="claude-md-preview">Copy full file <span aria-hidden="true">⧉</span></button><a class="button" href="/assets/downloads/CLAUDE.md" download="CLAUDE.md">Download CLAUDE.md <span aria-hidden="true">↓</span></a></div>
   </div>
   <details class="setup-details file-preview"><summary>Preview the file</summary><div><div class="snippet"><pre id="claude-md-preview" lang="en" tabindex="0" aria-label="Complete downloadable CLAUDE.md"><!-- CLAUDE_MD_PREVIEW --></pre></div></div></details>
   <ol class="install-steps compact-install">
-    <li><span aria-hidden="true">1</span><div><h3>Save</h3><p>One project: <code>CLAUDE.md</code> in its root.<br>All your projects: <code>~/.claude/CLAUDE.md</code>.</p></div></li>
-    <li><span aria-hidden="true">2</span><div><h3>Merge</h3><p>No project file yet? Run <code>/init</code> first; it adds your build and test commands. Then add these rules and resolve any conflicts. To find conflicts, run <code>/doctor prompt-audit</code> (Claude Code v2.1.283 or later).</p></div></li>
-    <li><span aria-hidden="true">3</span><div><h3>Check</h3><p>Start a Claude Code session. Run <code>/context</code> and check <strong>Memory files</strong>.</p></div></li>
+    <li><span aria-hidden="true">1</span><div><h3>Copy</h3><p>Press <strong>Copy full file</strong>. You do not need to save anything.</p></div></li>
+    <li><span aria-hidden="true">2</span><div><h3>Paste</h3><p>Paste it into Claude Code and add: “Add these rules to my CLAUDE.md. If I have none, create one with my build and test commands. List any conflicts instead of choosing.”<br>For all your projects, name <code>~/.claude/CLAUDE.md</code> instead.</p></div></li>
+    <li><span aria-hidden="true">3</span><div><h3>Check</h3><p>Start a new session. Run <code>/context</code> and check <strong>Memory files</strong>. To find conflicts later, run <code>/doctor prompt-audit</code> (Claude Code v2.1.283 or later).</p></div></li>
   </ol>
   <p class="setup-note">Using Claude chat? Paste the writing rules below into <a href="https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects" target="_blank" rel="noopener noreferrer">project instructions</a>. <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener noreferrer">Claude Code setup docs ↗</a></p>
   <details class="setup-details" id="standing-rules"><summary>Copy writing rules only</summary><div><div class="snippet standing-rules"><div class="prompt-toolbar"><span class="eyebrow">WRITING RULES</span><button class="copy-button" type="button" data-copy="clarity-rules">Copy rules ⧉</button></div><pre id="clarity-rules">Lead with the answer. Use concrete verbs, familiar words, and one consistent term per concept.
@@ -22,5 +22,5 @@ For procedures, aim for at most 20 words per sentence. Put conditions and warnin
 
 Preserve facts, definitions, equations, units, code, quotations, qualifications, and uncertainty. Check edits against the source for omissions or altered meaning.
 
-Use my task's language. Preserve the author's voice. Ask when missing information affects correctness. Treat these as STE-inspired guidance, not ASD-STE100 compliance.</pre></div></div></details>
+Use my task's language. Preserve the author's voice. Ask when missing information affects correctness.</pre></div></div></details>
 </section>
