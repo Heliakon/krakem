@@ -15,7 +15,7 @@ function buildPrompt(){
  comparison.hidden=!comparing;
  ownershipField.hidden=task.value!=='code';
  [subjectA,subjectB,criteria].forEach(field=>field.required=comparing);
- document.getElementById('task-help').textContent=comparing?t.helpCompare:t.help;
+ document.getElementById('task-help').textContent=comparing?t.helpCompare:task.value==='writing'?t.helpWriting:t.help;
  suggestion.hidden=!(['custom','research','paper'].includes(task.value)&&/\b(compar(?:e|ing|ison)|versus|vs\.?|porówn\w*|jämför\w*|comparar)\b/i.test(brief.value));
  const values={brief:brief.value,task:task.value,format:format.value,source:source.value,subjectA:subjectA.value,subjectB:subjectB.value,criteria:criteria.value,ownership:ownership.value,lang:language};
  const issues=validatePrompt(values),prompt=buildTechnicalPrompt(values);

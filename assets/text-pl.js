@@ -3,6 +3,7 @@ export const pl={
   task:{
    custom:'Zacznij od wyniku, którego potrzebuję, a potem dodaj to, co pozwoli go wykorzystać lub sprawdzić.',
    compare:'Porównaj dwie pozycje podane niżej pod kątem mojego celu i kryteriów, w tym samym zakresie dla obu. Przy faktach podawaj źródła. Jeśli czegoś nie udokumentowano, oznacz to jako nieznane; nie zakładaj, że tego brakuje. Nie wymyślaj ocen ani uniwersalnego zwycięzcy. Napisz, która opcja pasuje do jakich potrzeb.',
+   website:'Przejrzyj wskazaną stronę internetową, przechodząc ścieżkę użytkownika, którą opisuję. Przy każdym problemie podaj, co zauważono, jak wpływa na użytkownika, jak go naprawić i jak sprawdzić poprawkę. Zaznacz, czego nie udało się sprawdzić.',
    review:'Sprawdź kod pod kątem błędów i istotnych scenariuszy awarii. Uszereguj ustalenia według wagi skutków; przy każdym wskaż kod, co wywołuje problem i jak to sprawdzić.',
    debug:'Znajdź przyczynę na podstawie dowodów. Oddziel potwierdzone przyczyny od przypuszczeń. Zanim zaproponujesz poprawkę, wskaż sprawdzenia, które pozwolą je odróżnić.',
    code:'Wprowadź zmianę, o którą proszę. Jeśli nie możesz edytować projektu, podaj kod i napisz, gdzie go umieścić. Wymień założenia i sposób sprawdzenia wyniku. Nie twierdź, że wykonano sprawdzenia, których nie wykonano.',
@@ -16,12 +17,13 @@ export const pl={
   },
   answer:{
    text:'Jasne wyjaśnienie. Zacznij od odpowiedzi. Używaj nagłówków tylko wtedy, gdy pomagają.',
+   plaintext:'Zwykły tekst gotowy do wklejenia: bez Markdownu, nagłówków i tabel. Pisz krótkimi akapitami, a kroki podawaj w zwykłych numerowanych wierszach.',
    steps:'Ponumerowane kroki we właściwej kolejności. Warunki umieszczaj przed czynnościami, których dotyczą.',
    code:'Kod z krótką notą, jak go użyć i sprawdzić.',
    table:'Tabela z czytelnymi nagłówkami kolumn, a pod nią krótkie wyjaśnienie. Nieznane wartości oznacz jako nieznane.',
    checklist:'Krótka lista kontrolna z konkretnymi punktami, które da się sprawdzić. Fakty i otwarte pytania zapisz zwykłym tekstem, nie jako punkty. Nie dodawaj czynności, których źródło nie wymienia.',
    diagram:'Zwięzły diagram Mermaid z etykietami zgodnymi z wyjaśnieniem i krótkim opisem tekstowym.',
-   interactive:'Jeden samodzielny plik HTML z osadzonym CSS i JavaScriptem, bez zewnętrznych zależności. Dodaj opisane elementy sterujące i widoczne wyniki. Podaj założenia.',
+   interactive:'Jeden samodzielny plik HTML działający offline, z osadzonym CSS, JavaScriptem i wszystkimi zasobami. Zacznij od działającego przykładu. Każdy element sterujący ma zmieniać widoczny wynik. Narzędzie ma działać na telefonie. Podaj założenia.',
    animation:'Samodzielna animacja HTML z osadzonym CSS i JavaScriptem, bez zewnętrznych zależności. Dodaj przyciski odtwarzania, pauzy i przejścia o krok oraz etykietę każdego stanu.'
   },
   myTask:'Moje zadanie:',
@@ -53,6 +55,7 @@ export const pl={
   },
   help:'Opisz zadanie, oczekiwany wynik, powód, dla którego jest ważny, i ważne ograniczenia.',
   helpCompare:'Opisz decyzję, w której ma pomóc porównanie, odbiorców i ewentualne ograniczenia.',
+  helpWriting:'Opisz, kto przeczyta tekst i gdzie się pojawi. Aby zredagować gotowy tekst, wypróbuj Humanize.',
   empty:'Prompt pojawi się tutaj w trakcie pisania. Opisz zadanie i wybierz formę odpowiedzi.',
   emptyCompare:'Uzupełnij szczegóły porównania. Gotowy prompt obejmie obie pozycje, Twój cel i te same kryteria dla każdej z nich.',
   detailsLeft:count=>`${count} ${count===1?'szczegół':count%10>=2&&count%10<=4&&(count%100<12||count%100>14)?'szczegóły':'szczegółów'} do uzupełnienia przed skopiowaniem.`,

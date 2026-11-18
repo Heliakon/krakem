@@ -5,6 +5,7 @@ export const en={
   task:{
    custom:'Start with the result I need, then add what I need to use or check it.',
    compare:'Compare the two subjects below against my goal and criteria, with the same scope for both. Cite sources for facts. If something is not documented, mark it unknown; do not assume it is missing. Do not invent scores or a universal winner. Say which option fits which needs.',
+   website:'Review the website I name, following the user journey I describe. For each issue, give what you observed, its effect on the user, a fix, and how to verify the fix. Mark what you could not check.',
    review:'Review the code for bugs and failure modes that matter. List findings by impact, each with the code, what triggers it, and how to verify it.',
    debug:'Find the cause from the evidence. Separate confirmed causes from guesses. Suggest checks that tell them apart before proposing a fix.',
    code:'Implement the requested change. If you cannot edit the project, give the code and say where it goes. Note assumptions and how to verify the result. Do not claim checks you have not run.',
@@ -18,12 +19,13 @@ export const en={
   },
   answer:{
    text:'A clear explanation. Start with the answer. Use headings only when they help.',
+   plaintext:'Plain text, ready to paste: no Markdown, headings, or tables. Use short paragraphs, and plain numbered lines for steps.',
    steps:'Numbered steps in order. Put conditions before the actions they control.',
    code:'The code, with a short note on how to use and test it.',
    table:'A table with clear column labels, then a short explanation. Mark unknown values as unknown.',
    checklist:'A short checklist of concrete, checkable items. Write facts and open questions as plain text, not items. Add no actions the source does not state.',
    diagram:'A compact Mermaid diagram with labels that match the explanation, plus a short text summary.',
-   interactive:'One self-contained HTML file with embedded CSS and JavaScript and no external dependencies. Add labeled controls and visible results. State the assumptions.',
+   interactive:'One self-contained HTML file that works offline, with CSS, JavaScript, and any assets embedded. Start with a working example. Every control must change a visible result. Make it usable on a phone. State the assumptions.',
    animation:'A self-contained HTML animation with embedded CSS and JavaScript and no external dependencies. Add play, pause, and step controls, and label each state.'
   },
   myTask:'My task:',
@@ -55,6 +57,7 @@ export const en={
   },
   help:'Describe your task, the result you need, why it matters, and any important constraints.',
   helpCompare:'Describe the decision this comparison should support, your audience, and any constraints.',
+  helpWriting:'Describe who will read the text and where it will appear. To edit text you already have, try Humanize.',
   empty:'Your prompt will appear here as you type. Add your task and choose the answer you want.',
   emptyCompare:'Add your comparison details. Your complete prompt will include both subjects, your goal, and the same criteria for each.',
   detailsLeft:count=>`${count} ${count===1?'detail':'details'} to complete before copying.`,

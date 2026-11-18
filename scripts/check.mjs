@@ -14,8 +14,8 @@ const stripImports=code=>code.replace(/^import[^\n]+\n/gm,'');
 class MemoryStorage{constructor(){this.items=new Map();}getItem(k){return this.items.has(k)?this.items.get(k):null;}setItem(k,v){this.items.set(k,String(v));}removeItem(k){this.items.delete(k);}}
 const storageFor=storage=>key=>draftStore(key,()=>{if(!storage)throw new Error('SecurityError: storage blocked');return storage;});
 
-const tasks=['custom','compare','review','debug','code','architecture','research','paper','summary','procedure','writing','motion'];
-const formats=['text','steps','code','table','checklist','diagram','interactive','animation'];
+const tasks=['custom','compare','website','review','debug','code','architecture','research','paper','summary','procedure','writing','motion'];
+const formats=['text','plaintext','steps','code','table','checklist','diagram','interactive','animation'];
 const brief='Explain why our payment retry can duplicate a charge after a timeout.';
 const source='  const response = await charge();\n\t// preserve whitespace, API names, and punctuation\n';
 const comparison={subjectA:'https://cedar.example',subjectB:'Flint',criteria:'Accuracy; constraints; cost'};
@@ -57,6 +57,11 @@ const summaryChecklist=buildTechnicalPrompt({brief:'Summarize the meeting notes.
 assert.ok(summaryChecklist.includes('Write facts and open questions as plain text')&&summaryChecklist.includes('Add no actions the source does not state'),'A summary checklist keeps facts as facts and adds no invented actions.');
 assert.ok(buildTechnicalPrompt({brief:'Fix this function.',task:'code'}).includes('If you cannot edit the project'),'Code tasks remain useful in chat-only tools.');
 assert.ok(buildTechnicalPrompt({brief,task:'compare',...comparison}).includes('do not assume it is missing'));
+const siteReview=buildTechnicalPrompt({brief:'Check the sign-up journey on example.org.',task:'website'});
+assert.ok(siteReview.includes(en.prompt.task.website)&&siteReview.includes(en.prompt.sources),'A website review gets its guidance and the source-access line.');
+assert.equal(defaultFormats.website,'text');
+assert.ok(buildTechnicalPrompt({brief,format:'plaintext'}).includes('no Markdown'),'Plain text asks for no Markdown.');
+assert.ok(buildTechnicalPrompt({brief,format:'interactive'}).includes('Every control must change a visible result'),'Interactive tools have no decorative controls.');
 
 class Element{
  constructor(value=''){this.value=value;this.defaultValue=value;this.textContent='';this.innerHTML='';this.attrs={};this.dataset={};this.style={setProperty(key,value){this[key]=value;}};this.listeners={};this.disabled=false;this.width=600;this.height=475;this.classList={toggle(){},add(){},remove(){}};this.children=[];}
@@ -117,6 +122,9 @@ guide.get('task').value='paper';guide.get('task').emit('change');
 assert.ok(guide.get('technical-prompt').textContent.includes('equations'));
 guide.get('task').value='research';guide.get('task').emit('change');
 assert.ok(!guide.get('technical-prompt').textContent.includes('equations'));
+guide.get('task').value='writing';guide.get('task').emit('change');
+assert.equal(guide.get('task-help').textContent,en.creator.helpWriting,'Website or slide text asks for readers and placement.');
+guide.get('task').value='custom';guide.get('task').emit('change');assert.equal(guide.get('task-help').textContent,en.creator.help);
 
 
 // Creator drafts: survive a reload in the same tab, keep comparison validation, and clear completely.
@@ -228,7 +236,9 @@ assert.equal(reduced.get('chaos-toggle').attrs['aria-pressed'],'true');assert.eq
 reduced.buttons[1].emit('click');assert.equal(reduced.get('chaos-toggle').attrs['aria-pressed'],'false');assert.equal(reduced.raf.size,0);
 // Screensaver: appears after 12 seconds without input, only with a fine pointer and motion on, never while a field has focus or after it is switched off; real input dismisses it.
 const saverCode=stripImports(await readFile(new URL('../assets/screensaver.js',import.meta.url),'utf8'));
-function runSaver({fine=true,reduced=false,motion=true,focused=false,storage=new MemoryStorage()}={}){
+// Most runs are for a visitor who has turned the screensaver on.
+const optedIn=()=>{const storage=new MemoryStorage();storage.setItem('krakem-screensaver','on');return storage;};
+function runSaver({fine=true,reduced=false,motion=true,focused=false,storage=optedIn()}={}){
  const listeners={},timers=[],raf=new Map(),events=[],classes=new Set(),created=[],drawn={glyphs:0},toggle=new Element(),toggleLabel=new Element();let rafId=0;toggle.flip=()=>{toggle.checked=!toggle.checked;toggle.emit('change');};
  const context=vm.createContext({Math,Array,text:en,get localStorage(){if(!storage)throw new Error('SecurityError: storage blocked');return storage;},
   matchMedia:q=>({matches:q.includes('pointer: fine')?fine:q.includes('reduced-motion')?reduced:false}),
@@ -296,26 +306,28 @@ assert.equal(offButton.type,'button');assert.equal(offButton.value,'Turn off scr
 switched.send('pointerdown',{target:onControl});assert.deepEqual(switched.events,[true],'Pressing the button does not count as a click outside it.');
 offButton.emit('click');
 assert.deepEqual(switched.events,[true,false],'The button on the rain stops the screensaver.');
-assert.equal(switched.storage.getItem('krakem-screensaver'),'off');assert.equal(switched.toggle.checked,false,'The header checkbox follows the button on the rain.');
+assert.equal(switched.storage.getItem('krakem-screensaver'),null,'Switching off removes the saved choice.');assert.equal(switched.toggle.checked,false,'The header checkbox follows the button on the rain.');
 switched.frames(100);assert.equal(switched.raf.size,0,'The rain stops drawing when it is switched off.');
 switched.send('pointermove',{clientX:90,clientY:90});switched.idle();assert.deepEqual(switched.events,[true,false],'It does not come back while switched off.');
 switched.toggle.flip();
-assert.equal(switched.storage.getItem('krakem-screensaver'),null,'Only "off" is stored.');assert.equal(switched.toggle.checked,true);
+assert.equal(switched.storage.getItem('krakem-screensaver'),'on','Only "on" is stored.');assert.equal(switched.toggle.checked,true);
 switched.idle();assert.deepEqual(switched.events,[true,false,true],'Ticking the header checkbox turns it back on.');
+const fresh=runSaver({storage:new MemoryStorage()});fresh.idle();
+assert.deepEqual(fresh.events,[],'The screensaver stays off until a visitor turns it on.');assert.equal(fresh.toggle.checked,false);assert.ok(fresh.timers.length>1,'It re-arms for later.');
 const savedOff=new MemoryStorage();savedOff.setItem('krakem-screensaver','off');
 const returning=runSaver({storage:savedOff});returning.idle();
-assert.deepEqual(returning.events,[],'A saved "off" keeps it off on the next page.');assert.equal(returning.toggle.checked,false);assert.ok(returning.timers.length>1,'It re-arms for later.');
-const noStorage=runSaver({storage:null});assert.equal(noStorage.toggle.checked,true);
-noStorage.toggle.flip();noStorage.idle();assert.deepEqual(noStorage.events,[],'Without storage, the checkbox still works on the current page.');
+assert.deepEqual(returning.events,[],'An "off" saved by an earlier version keeps it off.');assert.equal(returning.toggle.checked,false);
+const noStorage=runSaver({storage:null});assert.equal(noStorage.toggle.checked,false);
+noStorage.toggle.flip();noStorage.idle();assert.deepEqual(noStorage.events,[true],'Without storage, the checkbox still works on the current page.');
 assert.equal(runSaver({fine:false}).toggleLabel.hidden,true,'The header checkbox is hidden on touch screens.');
 assert.ok(saverCode.includes("input:not([type=checkbox])"),'A focused checkbox does not hold the screensaver back the way a text field does.');
 const saverNames={en:'Screensaver',pl:'Wygaszacz',sv:'Skärmsläckare'};
 for(const lang of Object.keys(tables))for(const page of ['','humanize/','claude/','claude-outputs/','evidence/']){
  const html=await readFile(new URL(`../dist/${lang==='en'?'':lang+'/'}${page}index.html`,import.meta.url),'utf8'),header=html.match(/<header class="site-header">[\s\S]*?<\/header>/)[0];
- assert.ok(header.includes(`</nav><label class="saver-toggle" hidden><input type="checkbox" checked>${saverNames[lang]}</label></div>`),`${lang}/${page} has the Screensaver checkbox beside the language switcher`);
+ assert.ok(header.includes(`</nav><label class="saver-toggle" hidden><input type="checkbox">${saverNames[lang]}</label></div>`),`${lang}/${page} has the Screensaver checkbox beside the language switcher`);
  assert.equal(html.split('saver-toggle').length-1,1,`${lang}/${page} has one screensaver switch`);
 }
-console.log('PASS: the screensaver switches off from the button on the rain or the header checkbox on all 15 pages, stays off on later pages, switches back on, works without storage, and hides its checkbox on touch screens.');
+console.log('PASS: the screensaver stays off until the header checkbox turns it on, switches off from the button on the rain or the header checkbox on all 15 pages, stays off on later pages, switches back on, works without storage, and hides its checkbox on touch screens.');
 // Code ownership and design encouragement: optional lines that appear only where they apply.
 for(const [lang,table] of Object.entries(tables)){
  const base={brief,task:'code',format:'code',lang},plain=buildTechnicalPrompt(base);
@@ -437,7 +449,7 @@ for(const task of tasks)for(const format of formats){
  const text=buildTechnicalPrompt({brief,task,format,...comparison});
  for(const instruction of ['consistent terms','Distinguish evidence from inference','Preserve facts','important qualifications','ask a focused question rather than guessing'])assert.ok(text.includes(instruction),`${task}/${format}: ${instruction}`);
  // Long prompts bury the user's task; the guidance stays brief.
- assert.ok(text.split(/\s+/).length<=170,`${task}/${format}: prompt stays short`);
+ assert.ok(text.split(/\s+/).length<=190,`${task}/${format}: prompt stays short`);
 }
 // Output styles live on their own page; the example file uses only documented frontmatter fields and keeps coding instructions.
 const claudePage=await readFile(new URL('../dist/claude/index.html',import.meta.url),'utf8');

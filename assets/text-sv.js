@@ -3,6 +3,7 @@ export const sv={
   task:{
    custom:'Börja med det resultat jag behöver och lägg sedan till det jag behöver för att använda eller kontrollera det.',
    compare:'Jämför de två alternativen nedan utifrån mitt mål och mina kriterier, med samma avgränsning för båda. Ange källor för fakta. Om något inte är dokumenterat, markera det som okänt; anta inte att det saknas. Hitta inte på betyg eller en generell vinnare. Säg vilket alternativ som passar vilka behov.',
+   website:'Granska webbplatsen jag anger och följ den användarresa jag beskriver. För varje problem: ange vad du såg, hur det påverkar användaren, en lösning och hur lösningen kan verifieras. Markera det du inte kunde kontrollera.',
    review:'Granska koden efter fel och felscenarier som spelar roll. Lista fynden efter påverkan, vart och ett med koden, vad som utlöser problemet och hur det kan verifieras.',
    debug:'Hitta orsaken utifrån beläggen. Håll isär bekräftade orsaker och gissningar. Föreslå kontroller som skiljer mellan dem innan du föreslår en lösning.',
    code:'Implementera den efterfrågade ändringen. Om du inte kan redigera projektet, ge mig koden och säg var den ska in. Ange antaganden och hur resultatet kan verifieras. Påstå inte att du har kört kontroller som du inte har kört.',
@@ -16,12 +17,13 @@ export const sv={
   },
   answer:{
    text:'En tydlig förklaring. Börja med svaret. Använd rubriker bara när de hjälper.',
+   plaintext:'Vanlig text, klar att klistra in: ingen Markdown, inga rubriker eller tabeller. Använd korta stycken och vanliga numrerade rader för steg.',
    steps:'Numrerade steg i ordning. Skriv villkor före de åtgärder de styr.',
    code:'Koden, med en kort förklaring av hur den används och testas.',
    table:'En tabell med tydliga kolumnrubriker, följd av en kort förklaring. Markera okända värden som okända.',
    checklist:'En kort checklista med konkreta punkter som går att kontrollera. Skriv fakta och öppna frågor som vanlig text, inte som punkter. Lägg inte till åtgärder som källan inte nämner.',
    diagram:'Ett kompakt Mermaid-diagram med etiketter som stämmer med förklaringen, plus en kort textversion.',
-   interactive:'En enda fristående HTML-fil med inbäddad CSS och JavaScript och inga externa beroenden. Lägg till kontroller med etiketter och synliga resultat. Ange antagandena.',
+   interactive:'En enda fristående HTML-fil som fungerar offline, med CSS, JavaScript och alla resurser inbäddade. Börja med ett fungerande exempel. Varje kontroll ska ändra ett synligt resultat. Gör den användbar på mobilen. Ange antagandena.',
    animation:'En fristående HTML-animation med inbäddad CSS och JavaScript och inga externa beroenden. Lägg till kontroller för uppspelning, paus och stegning, och ge varje tillstånd en etikett.'
   },
   myTask:'Min uppgift:',
@@ -53,6 +55,7 @@ export const sv={
   },
   help:'Beskriv uppgiften, resultatet du behöver, varför det är viktigt och eventuella viktiga begränsningar.',
   helpCompare:'Beskriv beslutet som jämförelsen ska ge underlag för, vilka som ska läsa den och eventuella begränsningar.',
+  helpWriting:'Beskriv vem som ska läsa texten och var den ska visas. Vill du redigera en text du redan har, prova Humanize.',
   empty:'Din prompt visas här medan du skriver. Beskriv uppgiften och välj vilket svar du vill ha.',
   emptyCompare:'Fyll i uppgifterna för jämförelsen. Den färdiga prompten innehåller båda alternativen, ditt mål och samma kriterier för båda.',
   detailsLeft:count=>`${count} ${count===1?'detalj':'detaljer'} kvar att fylla i innan du kan kopiera.`,
